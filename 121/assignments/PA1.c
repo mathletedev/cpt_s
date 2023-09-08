@@ -25,7 +25,7 @@
 
 void part_1(void) {
 	// separate parts
-	printf("<--- Part 1 --->");
+	printf("<--- Part 1 --->\n");
 
 	double mass, acceleration;
 	// prompt for mass and acceleration
@@ -38,7 +38,7 @@ void part_1(void) {
 }
 
 void part_2(void) {
-	printf("<--- Part 2 --->");
+	printf("<--- Part 2 --->\n");
 
 	double radius, height;
 	printf("Enter radius (double) and height (double): ");
@@ -51,12 +51,12 @@ void part_2(void) {
 }
 
 void part_3(void) {
-	printf("<--- Part 3 --->");
+	printf("<--- Part 3 --->\n");
 
 	// plaintext_character is a char
 	char plaintext_character;
 	printf("Enter plaintext_character (char): ");
-	scanf("%c", &plaintext_character);
+	scanf(" %c", &plaintext_character);
 
 	// encoded_character will be the uppercase of plaintext_character if
 	// plaintext_character is lowercase
@@ -66,7 +66,7 @@ void part_3(void) {
 }
 
 void part_4(void) {
-	printf("<--- Part 4 --->");
+	printf("<--- Part 4 --->\n");
 
 	double mass1, mass2, distance;
 	printf("Enter mass1 (double), mass2 (double), and distance (double): ");
@@ -79,7 +79,7 @@ void part_4(void) {
 }
 
 void part_5(void) {
-	printf("<--- Part 5 --->");
+	printf("<--- Part 5 --->\n");
 
 	double r1, r2, vin;
 	printf("Enter r1 (double), r2 (double), and vin (double): ");
@@ -92,7 +92,7 @@ void part_5(void) {
 }
 
 void part_6(void) {
-	printf("<--- Part 6 --->");
+	printf("<--- Part 6 --->\n");
 
 	double x1, x2, y1, y2;
 	printf(
@@ -107,7 +107,7 @@ void part_6(void) {
 }
 
 void part_7(void) {
-	printf("<--- Part 7 --->");
+	printf("<--- Part 7 --->\n");
 
 	double x, z;
 	// a is an int

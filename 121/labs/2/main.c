@@ -12,9 +12,13 @@ int main(void) {
 	scanf("%lf%lf", &point2.x, &point2.y);
 
 	double slope = calculate_slope(point1, point2);
+	printf("Slope: %lf\n", slope);
 	Point midpoint = calculate_midpoint(point1, point2);
+	printf("Midpoint: (%lf, %lf)\n", midpoint.x, midpoint.y);
 	double rec_slope = calculate_reciprocal_slope(slope);
+	printf("Reciprocal of slope: %lf\n", rec_slope);
 	double y_int = calculate_y_intercept(midpoint, rec_slope);
+	printf("Y-intercept: %lf\n", y_int);
 
 	printf("Original points: (%lf, %lf) and (%lf, %lf)\n", point1.x,
 	       point1.y, point2.x, point2.y);

@@ -2,7 +2,7 @@
  * Programmer: Neal Wang
  * Class: CptS 121, Fall 2023; Lab Section 25
  * Programming Assignment: 2
- * Date: 2023-09-14
+ * Date: 2023-09-15
  * Description:
  *   1) Newton's Second Law
  *   2) Volume of a cylinder
@@ -24,11 +24,12 @@ int main(void) {
 	part(1);
 
 	double mass, acceleration;
-	// prompt for mass and acceleration
+	// prompt for input
 	printf("Enter mass (double) and acceleration (double): ");
-	// read mass and acceleration
+	// read input
 	scanf("%lf%lf", &mass, &acceleration);
 
+	// output formula and answer
 	printf("force = mass * acceleration = %.2lf * %.2lf = %.2lf\n\n", mass,
 	       acceleration, calculate_newtons_2nd_law(mass, acceleration));
 
@@ -38,7 +39,6 @@ int main(void) {
 	printf("Enter radius (double) and height (double): ");
 	scanf("%lf%lf", &radius, &height);
 
-	// use x * x instead of x^2
 	printf("volume_cylinder = PI * radius^2 * height = %.2lf * %.2lf^2 * "
 	       "%.2lf = "
 	       "%.2lf\n\n",
@@ -88,7 +88,6 @@ int main(void) {
 	    "Enter x1 (double), y1 (double), x2 (double), and y2 (double): ");
 	scanf("%lf%lf%lf%lf", &x1, &y1, &x2, &y2);
 
-	// use sqrt() from <math.h>
 	printf("distance = sqrt((x1 - x2)^2 + (y1 - y2)^2) = sqrt((%.2lf - "
 	       "%.2lf)^2 + (%.2lf - %.2lf)^2) = %.2lf\n\n",
 	       x1, x2, y1, y2, calculate_distance(x1, y1, x2, y2));
@@ -101,7 +100,6 @@ int main(void) {
 	printf("Enter x (double), z (double), and a (int): ");
 	scanf("%lf%lf%d", &x, &z, &a);
 
-	// cast 73 to double for precision
 	printf("y = (73 / 12) - x * z + a / (a %% 2) = (73 / 12) - %.2lf * "
 	       "%.2lf + "
 	       "%d / (%d %% 2) = %.2lf\n\n",

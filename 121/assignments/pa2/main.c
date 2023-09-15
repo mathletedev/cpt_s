@@ -17,6 +17,8 @@
 
 #include "headers.h"
 
+void part(int num);
+
 int main(void) {
 	// separate parts
 	part(1);
@@ -107,3 +109,5 @@ int main(void) {
 
 	return 0;
 }
+
+void part(int num) { printf("<--- Part %d --->\n", num); }

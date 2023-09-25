@@ -112,8 +112,10 @@ double calculate_standard_deviation(double variance) { return sqrt(variance); }
  */
 double find_max(double number1, double number2, double number3, double number4,
 		double number5) {
+	// store the current max
 	double curr_max = number1;
 
+	// if any number is greater than the current max, update the current max
 	if (number2 > curr_max)
 		curr_max = number2;
 	if (number3 > curr_max)
@@ -138,6 +140,7 @@ double find_max(double number1, double number2, double number3, double number4,
  */
 double find_min(double number1, double number2, double number3, double number4,
 		double number5) {
+	// see find_max for explanation
 	double curr_min = number1;
 
 	if (number2 < curr_min)

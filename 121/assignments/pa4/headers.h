@@ -5,10 +5,32 @@
 #include <stdlib.h>
 #include <time.h>
 
-void prompt(char *details);
-void info(char *details);
-void newline(void);
+// ANSI colour codes for cool text
+// https://stackoverflow.com/questions/3219393/stdlib-and-colored-output-in-c
+#define RED "\x1b[31m"
+#define GREEN "\x1b[32m"
+#define YELLOW "\x1b[33m"
+#define BLUE "\x1b[34m"
+#define MAGENTA "\x1b[35m"
+#define CYAN "\x1b[36m"
+#define RESET "\x1b[0m"
 
+// constants
+#define ROLL_TIME 1
+
+// my functions
+// comments and details are in functions.c
+void newline(void);
+void prompt(char *details);
+void warn_begin(void);
+void warn_end(void);
+char *warn_message(void);
+void display_result(int result);
+void display_balance(double bank_balance);
+char get_yes_no(void);
+int check_yes_no(char input);
+
+// PA functions
 void print_game_rules(void);
 double get_bank_balance(void);
 double get_wager_amount(void);

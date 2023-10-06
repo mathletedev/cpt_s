@@ -129,8 +129,7 @@ void print_game_rules() {
 	printf(YELLOW);
 	printf("  /$$$$$$  /$$$$$$$   /$$$$$$  /$$$$$$$   /$$$$$$ \n");
 	printf(" /$$__  $$| $$__  $$ /$$__  $$| $$__  $$ /$$__  $$\n");
-	printf(YELLOW
-	       "| $$  \\__/| $$  \\ $$| $$  \\ $$| $$  \\ $$| $$  \\__/\n");
+	printf("| $$  \\__/| $$  \\ $$| $$  \\ $$| $$  \\ $$| $$  \\__/\n");
 	printf("| $$      | $$$$$$$/| $$$$$$$$| $$$$$$$/|  $$$$$$ \n");
 	printf("| $$      | $$__  $$| $$__  $$| $$____/  \\____  $$\n");
 	printf("| $$    $$| $$  \\ $$| $$  | $$| $$       /$$  \\ $$\n");
@@ -216,7 +215,7 @@ double get_wager_amount() {
  * otherwise
  */
 int check_wager_amount(double wager, double balance) {
-	return wager <= balance;
+	return wager > 0 && wager <= balance;
 }
 
 /*

@@ -23,11 +23,18 @@ int main(void) {
 			// if not valid, warn the user
 			if (!input_valid) {
 				warn_begin();
-				printf("%s You can't wager $%.2lf when you've "
-				       "only got "
-				       "$%.2lf!",
-				       warn_message(), wager_amount,
-				       curr_balance);
+				if (wager_amount < 0)
+					printf("%s You can't wager a negative "
+					       "amount!",
+					       warn_message());
+				else if (wager_amount == 0)
+					printf("%s You can't wager $0.00!",
+					       warn_message());
+				else
+					printf("%s You can't wager $%.2lf when "
+					       "you've only got $%.2lf!",
+					       warn_message(), wager_amount,
+					       curr_balance);
 				warn_end();
 			}
 			input_valid = 0;
@@ -46,8 +53,8 @@ int main(void) {
 			// dice
 			// source:
 			// https://www.geeksforgeeks.org/time-function-in-c
-			time_t curr_time = time(NULL);
-			while (time(NULL) < curr_time + ROLL_TIME) {
+			time_t start = time(NULL);
+			while (time(NULL) < start + ROLL_TIME) {
 				// get 2 random rolls
 				die1 = roll_die();
 				die2 = roll_die();

@@ -1,5 +1,14 @@
-#ifndef headers_h
-#define headers_h
+/*
+ * Name: Neal Wang
+ * Date: 2023-10-07
+ * Lecture: 02
+ * Lab: 25
+ * Assignment: PA 3
+ * Description: Various definitions and library imports
+ */
+
+#ifndef HEADERS_H
+#define HEADERS_H
 
 #include <stdio.h>
 #include <stdlib.h>

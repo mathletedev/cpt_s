@@ -1,3 +1,12 @@
+/*
+ * Name: Neal Wang
+ * Date: 2023-10-07
+ * Lecture: 02
+ * Lab: 25
+ * Assignment: PA 3
+ * Description: An interactive game of craps
+ */
+
 #include "headers.h"
 
 int main(void) {

@@ -1,3 +1,12 @@
+/*
+ * Name: Neal Wang
+ * Date: 2023-10-07
+ * Lecture: 02
+ * Lab: 25
+ * Assignment: PA 3
+ * Description: Utility functions for the game
+ */
+
 #include "headers.h"
 
 /*
@@ -179,7 +188,7 @@ void print_game_rules() {
 double get_bank_balance() {
 	double data;
 
-	prompt("Enter your balance");
+	prompt("Enter your starting balance");
 	scanf("%lf", &data);
 	newline();
 

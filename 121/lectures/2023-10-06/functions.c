@@ -7,7 +7,7 @@ int dispense_change(double cost, double payment, int *twenties_ptr,
 	int total = 0;
 	double change = payment - cost;
 
-	double pennies = (int)(change * 100);
+	int pennies = (int)(change * 100);
 
 	*twenties_ptr = pennies / 2000;
 	pennies -= (*twenties_ptr) * 2000;

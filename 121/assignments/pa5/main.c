@@ -9,18 +9,18 @@
 
 #include "headers.h"
 #include "io.h"
+#include "utils.h"
 
 int main(void) {
 	srand(time(NULL));
 
-	int scores[2] = {0, 0};
-	int curr_player = 0;
-
 	while (1) {
+		// main menu
 		char input;
 		int valid;
 		do {
 			write_menu();
+			// validate user input
 		} while (!read_option("123", &input));
 
 		if (input == '1') {
@@ -29,7 +29,17 @@ int main(void) {
 		} else if (input == '3')
 			break;
 
-		for (int i = 0; i < 13 * 2; ++i) {
+		// store scores of players in a 2-D array
+		// a score of -1 means the combination has not been used yet
+		int score_card[2][NUM_COMBINATIONS];
+		for (int i = 0; i < 2; ++i) {
+			for (int j = 0; j < NUM_COMBINATIONS; ++j)
+				score_card[i][j] = -1;
+		}
+		int curr_player = 0;
+
+		// repeat NUM_COMBINATIONS times for 2 players (26 times total)
+		for (int i = 0; i < NUM_COMBINATIONS * 2; ++i) {
 			clear();
 			NEWLINE;
 
@@ -43,6 +53,7 @@ int main(void) {
 			NEWLINE;
 
 			int num_rolls = 0;
+			// store which dice the player wants to keep
 			int keep[NUM_DICE + 1] = {0};
 			while (num_rolls < 3) {
 				++num_rolls;
@@ -61,6 +72,7 @@ int main(void) {
 							     : "Final"));
 				NEWLINE;
 
+				// IDs of each die
 				printf(GREEN "ID [1] [2] [3] [4] [5]\n");
 
 				// copied from PA 4
@@ -72,6 +84,8 @@ int main(void) {
 
 					printf("🎲");
 					for (int i = 0; i < NUM_DICE; ++i) {
+						// only print blue colour for
+						// non-kept dice
 						if (keep[i + 1])
 							printf(" [%d]",
 							       dice[i]);
@@ -85,6 +99,7 @@ int main(void) {
 					printf("\r" RESET);
 				}
 
+				// print resulting dice
 				printf("🎲");
 				for (int i = 0; i < NUM_DICE; ++i) {
 					if (!keep[i + 1])
@@ -96,6 +111,8 @@ int main(void) {
 				NEWLINE;
 
 				int sum = 0;
+				// frequency array for single-number
+				// combinations
 				int frequency[7] = {0};
 				for (int i = 0; i < NUM_DICE; ++i) {
 					sum += dice[i];
@@ -105,6 +122,8 @@ int main(void) {
 				int three, four, full, small, large, yahtzee;
 				three = four = full = small = large = yahtzee =
 				    0;
+
+				// x-of-a-kind combinations
 				for (int i = 1; i < 7; ++i) {
 					if (frequency[i] >= 3)
 						three = sum;
@@ -114,34 +133,46 @@ int main(void) {
 						yahtzee = 50;
 				}
 
+				// store all combination data in arrays for easy
+				// access
+				char labels[] = "123456abcdefg";
+				char *descriptions[] = {
+				    "Sum of 1's      ", "Sum of 2's      ",
+				    "Sum of 3's      ", "Sum of 4's      ",
+				    "Sum of 5's      ", "Sum of 6's      ",
+				    "Three of a kind ", "Four of a kind  ",
+				    "Full house      ", "Small straight  ",
+				    "Large straight  ", "YAHTZEE         ",
+				    "Chance          "};
+				int points[] = {frequency[1],
+						frequency[2] * 2,
+						frequency[3] * 3,
+						frequency[4] * 4,
+						frequency[5] * 5,
+						frequency[6] * 6,
+						three,
+						four,
+						full,
+						small,
+						large,
+						yahtzee,
+						sum};
+
 				printf(GREEN
 				       " Here are your combinations:\n" RESET);
 				NEWLINE;
-				write_combination('1', "Sum of 1's      ",
-						  frequency[1]);
-				write_combination('2', "Sum of 2's      ",
-						  frequency[2] * 2);
-				write_combination('3', "Sum of 3's      ",
-						  frequency[3] * 3);
-				write_combination('4', "Sum of 4's      ",
-						  frequency[4] * 4);
-				write_combination('5', "Sum of 5's      ",
-						  frequency[5] * 5);
-				write_combination('6', "Sum of 6's      ",
-						  frequency[6] * 6);
-				write_combination('a', "Three-of-a-kind ",
-						  three);
-				write_combination('b', "Four-of-a-kind  ",
-						  four);
-				write_combination('c', "Full house      ",
-						  full);
-				write_combination('d', "Small straight  ",
-						  small);
-				write_combination('e', "Large straight  ",
-						  large);
-				write_combination('f', "Yahtzee         ",
-						  yahtzee);
-				write_combination('g', "Chance          ", sum);
+				// iterate over combination data and write each
+				// one
+				for (int i = 0; i < NUM_COMBINATIONS; ++i) {
+					// don't display combination if already
+					// used
+					if (score_card[curr_player][i] != -1)
+						continue;
+
+					write_combination(labels[i],
+							  descriptions[i],
+							  points[i]);
+				}
 				NEWLINE;
 
 				if (num_rolls < 3) {
@@ -168,6 +199,7 @@ int main(void) {
 
 				NEWLINE;
 
+				// player wants to use a combination
 				if (input == 'y') {
 					valid = -1;
 					do {
@@ -179,57 +211,26 @@ int main(void) {
 						write_prompt(
 						    "Select a combination");
 						valid = 0;
-					} while (!read_option("123456abcdefg",
-							      &input));
+					} while (
+					    !read_option("123456abcdefg",
+							 &input) ||
+					    score_card[curr_player]
+						      [combination_to_index(
+							  input)] != -1);
 
 					NEWLINE;
 
-					int points;
-					switch (input) {
-					case '1':
-						points = frequency[1];
-						break;
-					case '2':
-						points = frequency[2] * 2;
-						break;
-					case '3':
-						points = frequency[3] * 3;
-						break;
-					case '4':
-						points = frequency[4] * 4;
-						break;
-					case '5':
-						points = frequency[5] * 5;
-						break;
-					case '6':
-						points = frequency[6] * 6;
-						break;
-					case 'a':
-						points = three;
-						break;
-					case 'b':
-						points = four;
-						break;
-					case 'c':
-						points = full;
-						break;
-					case 'd':
-						points = small;
-						break;
-					case 'e':
-						points = large;
-						break;
-					case 'f':
-						points = yahtzee;
-						break;
-					case 'g':
-						points = sum;
-						break;
-					}
-
-					scores[curr_player] += points;
+					// add points to score
+					// note that this also uses up the
+					// combination
+					score_card
+					    [curr_player]
+					    [combination_to_index(input)] =
+						points[combination_to_index(
+						    input)];
 					break;
 				} else {
+					// user wants to re-roll
 					valid = -1;
 					int num;
 					do {
@@ -277,10 +278,10 @@ int main(void) {
 			}
 
 			printf(CYAN " Player 1's score: " YELLOW "%d\n" RESET,
-			       scores[0]);
+			       sum_score(score_card[0]));
 			NEWLINE;
 			printf(CYAN " Player 2's score: " YELLOW "%d\n" RESET,
-			       scores[1]);
+			       sum_score(score_card[1]));
 			NEWLINE;
 
 			curr_player = !curr_player;

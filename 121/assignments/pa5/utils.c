@@ -95,3 +95,43 @@ void roll_dice(int *dice) {
 	for (int i = 0; i < NUM_DICE; ++i)
 		dice[i] = rand() % 6 + 1;
 }
+
+/*
+ * Converts a combination input to an index from 0-12
+ *
+ * Parameters:
+ * - char combination: User-selected combination
+ *
+ * Pre-conditions: combination is one of "123456abcdefg"
+ *
+ * Returns an index from 0-12
+ */
+int combination_to_index(char combination) {
+	// ASCII codes from https://www.asciitable.com
+	if (combination < 'a')
+
+		return combination - '1';
+	// shift index by 6
+	return combination - 'a' + 6;
+}
+
+/*
+ * Calculates a player's score
+ *
+ * Parameters:
+ * - int *arr: Scores of the player
+ *
+ * Returns the sum of the elements of arr, excluding -1s
+ */
+int sum_score(int *arr) {
+	int sum = 0;
+	for (int i = 0; i < NUM_COMBINATIONS; ++i) {
+		if (arr[i] != -1)
+			sum += arr[i];
+		// if upper section sums to more than 63,
+		// add a bonus 35 points
+		if (i == 5 && sum >= 63)
+			sum += 35;
+	}
+	return sum;
+}

@@ -8,11 +8,18 @@
  */
 
 #include "headers.h"
-#include "io.h"
-#include "utils.h"
 
 int main(void) {
 	srand(time(NULL));
+
+	// store all combination details in arrays for easy access
+	char labels[] = "123456abcdefg";
+	char *descriptions[] = {
+	    "Sum of 1's      ", "Sum of 2's      ", "Sum of 3's      ",
+	    "Sum of 4's      ", "Sum of 5's      ", "Sum of 6's      ",
+	    "Three of a kind ", "Four of a kind  ", "Full house      ",
+	    "Small straight  ", "Large straight  ", "YAHTZEE         ",
+	    "Chance          "};
 
 	while (1) {
 		// main menu
@@ -39,7 +46,7 @@ int main(void) {
 		int curr_player = 0;
 
 		// repeat NUM_COMBINATIONS times for 2 players (26 times total)
-		for (int i = 0; i < NUM_COMBINATIONS * 2; ++i) {
+		for (int i = 0; i < 1 * 2; ++i) {
 			clear();
 			NEWLINE;
 
@@ -123,8 +130,12 @@ int main(void) {
 				three = four = full = small = large = yahtzee =
 				    0;
 
+				// full house pair
+				int has_pair = 0;
 				// x-of-a-kind combinations
 				for (int i = 1; i < 7; ++i) {
+					if (frequency[i] == 2)
+						has_pair = 1;
 					if (frequency[i] >= 3)
 						three = sum;
 					if (frequency[i] >= 4)
@@ -132,18 +143,27 @@ int main(void) {
 					if (frequency[i] == 5)
 						yahtzee = 50;
 				}
+				if (has_pair && three != 0)
+					full = 25;
 
-				// store all combination data in arrays for easy
-				// access
-				char labels[] = "123456abcdefg";
-				char *descriptions[] = {
-				    "Sum of 1's      ", "Sum of 2's      ",
-				    "Sum of 3's      ", "Sum of 4's      ",
-				    "Sum of 5's      ", "Sum of 6's      ",
-				    "Three of a kind ", "Four of a kind  ",
-				    "Full house      ", "Small straight  ",
-				    "Large straight  ", "YAHTZEE         ",
-				    "Chance          "};
+				// straights
+				int curr_straight = 0, longest_straight = 0;
+				for (int i = 1; i <= 6; ++i) {
+					if (frequency[i] > 0) {
+						++curr_straight;
+						if (curr_straight >
+						    longest_straight)
+							longest_straight =
+							    curr_straight;
+					} else
+						curr_straight = 0;
+				}
+				if (longest_straight >= 4) {
+					small = 30;
+					if (longest_straight == 5)
+						large = 40;
+				}
+
 				int points[] = {frequency[1],
 						frequency[2] * 2,
 						frequency[3] * 3,
@@ -194,10 +214,10 @@ int main(void) {
 						write_prompt(NULL);
 						valid = 0;
 					} while (!read_option("yn", &input));
+
+					NEWLINE;
 				} else
 					input = 'y';
-
-				NEWLINE;
 
 				// player wants to use a combination
 				if (input == 'y') {
@@ -212,8 +232,7 @@ int main(void) {
 						    "Select a combination");
 						valid = 0;
 					} while (
-					    !read_option("123456abcdefg",
-							 &input) ||
+					    !read_option(labels, &input) ||
 					    score_card[curr_player]
 						      [combination_to_index(
 							  input)] != -1);
@@ -242,15 +261,18 @@ int main(void) {
 						write_prompt(
 						    "Enter the IDs of the "
 						    "dice you want to keep "
-						    "(without spaces)");
+						    "(without spaces)\n   "
+						    "Enter a 0 if you do not "
+						    "want to keep any dice");
 
 						valid = 0;
 						if (scanf("%d", &num) != 1)
 							continue;
 
-						printf("%d\n", num);
-
 						valid = 1;
+						if (num == 0)
+							continue;
+
 						int tmp_keep[NUM_DICE + 1] = {
 						    0};
 						// get individual digits of num
@@ -289,6 +311,22 @@ int main(void) {
 			printf(GREEN " Press any key to continue...");
 			wait_for_keypress();
 		}
+
+		clear();
+		NEWLINE;
+
+		printf(GREEN " 🎮 Game over!\n" RESET);
+		NEWLINE;
+
+		printf(CYAN " Player 1's score: " YELLOW "%d\n" RESET,
+		       sum_score(score_card[0]));
+		NEWLINE;
+		printf(CYAN " Player 2's score: " YELLOW "%d\n" RESET,
+		       sum_score(score_card[1]));
+		NEWLINE;
+
+		printf(GREEN " Press any key to continue...");
+		wait_for_keypress();
 	}
 
 	return 0;

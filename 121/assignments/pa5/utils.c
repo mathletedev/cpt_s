@@ -109,7 +109,6 @@ void roll_dice(int *dice) {
 int combination_to_index(char combination) {
 	// ASCII codes from https://www.asciitable.com
 	if (combination < 'a')
-
 		return combination - '1';
 	// shift index by 6
 	return combination - 'a' + 6;

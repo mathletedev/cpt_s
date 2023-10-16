@@ -46,7 +46,7 @@ int main(void) {
 		int curr_player = 0;
 
 		// repeat NUM_COMBINATIONS times for 2 players (26 times total)
-		for (int i = 0; i < 1 * 2; ++i) {
+		for (int i = 0; i < NUM_COMBINATIONS * 2; ++i) {
 			clear();
 			NEWLINE;
 
@@ -315,19 +315,29 @@ int main(void) {
 		clear();
 		NEWLINE;
 
-		printf(GREEN " 🎮 Game over!\n" RESET);
+		printf(GREEN "🎮 Game over!\n" RESET);
 		NEWLINE;
 
-		printf(CYAN " Player 1's score: " YELLOW "%d\n" RESET,
-		       sum_score(score_card[0]));
+		int score1 = sum_score(score_card[0]);
+		int score2 = sum_score(score_card[1]);
+
+		printf(CYAN " Player 1's score: " YELLOW "%d\n" RESET, score1);
 		NEWLINE;
-		printf(CYAN " Player 2's score: " YELLOW "%d\n" RESET,
-		       sum_score(score_card[1]));
+		printf(CYAN " Player 2's score: " YELLOW "%d\n" RESET, score2);
+		NEWLINE;
+
+		if (score1 == score2)
+			printf(YELLOW "🏅 It's a tie!\n" RESET);
+		else
+			printf(YELLOW "🏅 Player %d wins!\n" RESET,
+			       (score2 > score1) + 1);
 		NEWLINE;
 
 		printf(GREEN " Press any key to continue...");
 		wait_for_keypress();
 	}
+
+	clear();
 
 	return 0;
 }

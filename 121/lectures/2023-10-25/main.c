@@ -7,7 +7,7 @@ int main(void) {
 
 	char lines[MAX_ROWS][MAX_COLS] = {{'\0'}};
 	int curr_line = 0;
-	struct StudentRecord student1;
+	StudentRecord student1;
 	while (fgets(lines[curr_line], MAX_COLS, input_stream)) {
 		puts(strtok(lines[curr_line], ","));
 		puts(strtok(NULL, ","));

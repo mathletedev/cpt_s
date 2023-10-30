@@ -18,7 +18,41 @@
 #define CYAN "\x1b[36m"
 #define RESET "\x1b[0m"
 
-void init_board(char board[ROWS][COLS]);
-void write_board(char board[ROWS][COLS]);
+#define WATER ' '
+#define HIT '*'
+#define MISS 'm'
+
+#define NEWLINE printf("\n")
+
+typedef struct Stats {
+	int hits;
+	int misses;
+	int total;
+	int percentage;
+	int won;
+} Stats;
+
+typedef struct Coordinates {
+	int row;
+	int col;
+} Coordinates;
+
+typedef struct Board {
+	char cells[ROWS][COLS];
+	size_t rows;
+	size_t cols;
+} Board;
+
+void pause(void);
+void clear(void);
+void welcome(void);
+
+void init_board(Board *board);
+void write_board(Board board, int show_ships);
+void place_random(Board *board, int size, char ship);
+
+void warn_invalid(void);
+void consume_input(void);
+int read_coordinates(Coordinates *coords, Board board);
 
 #endif

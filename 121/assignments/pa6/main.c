@@ -4,7 +4,7 @@ int main(void) {
 	srand(time(NULL));
 	FILE *logfile = fopen("battleship.log", "w");
 
-	int curr_player = 0;
+	int curr_player = rand() % 2;
 
 	Stats p1_stats = {0, 0, 0, 0, 0};
 	Stats p2_stats = {0, 0, 0, 0, 0};
@@ -18,8 +18,11 @@ int main(void) {
 	p2_board.cols = COLS;
 	init_board(&p2_board);
 
+	int p1_frequency[5] = {0};
+	int p2_frequency[5] = {0};
+
 	welcome();
-	pause();
+	wait_for_keypress();
 
 	place_random(&p1_board, 5, 'c');
 	place_random(&p1_board, 4, 'b');
@@ -45,10 +48,7 @@ int main(void) {
 		write_board(p2_board, 0);
 		NEWLINE;
 
-		if (curr_player) {
-			Coordinates target = {0, 0};
-			p1_board.cells[target.row][target.col] = HIT;
-		} else {
+		if (curr_player == HUMAN) {
 			Coordinates target;
 			while (1) {
 				printf(MAGENTA "🎯 Enter a target: " RESET);
@@ -61,12 +61,41 @@ int main(void) {
 			}
 			consume_input();
 
-			if (p2_board.cells[target.row][target.col] != WATER)
-				p2_board.cells[target.row][target.col] = HIT;
-			else
-				p2_board.cells[target.row][target.col] = MISS;
+			NEWLINE;
+
+			char ship = take_shot(target, &p2_board, &p1_stats);
+			update_frequency(p2_frequency, p2_board);
+			int sunk = check_sunk(ship, p2_frequency);
+			if (sunk)
+				write_sunk(ship);
+			write_move(logfile, curr_player, target, ship != WATER,
+				   sunk ? ship : ' ');
+		} else {
+			Coordinates target = random_target(p1_board);
+			printf(MAGENTA "🎯 Computer selects: " RESET "...");
+			fflush(stdout);
+			sleep(1);
+
+			printf(MAGENTA "\r🎯 Computer selects: " RESET "%d %d\n",
+			       target.row, target.col);
+
+			NEWLINE;
+
+			char ship = take_shot(target, &p1_board, &p2_stats);
+			update_frequency(p1_frequency, p1_board);
+			int sunk = check_sunk(ship, p1_frequency);
+			if (sunk)
+				write_sunk(ship);
+			write_move(logfile, curr_player, target, ship != WATER,
+				   sunk ? ship : ' ');
 		}
 
 		curr_player = !curr_player;
+
+		wait_for_keypress();
 	}
+
+	fclose(logfile);
+
+	return 0;
 }

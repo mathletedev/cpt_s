@@ -1,6 +1,6 @@
 #include "headers.h"
 
-void pause(void) {
+void wait_for_keypress(void) {
 	printf(GREEN "Press Enter to continue..." RESET);
 	char c;
 	scanf("%c", &c);
@@ -62,12 +62,23 @@ void write_board(Board board, int show_ships) {
 		printf(CYAN "%d " BLUE, i);
 		for (int j = 0; j < board.cols; ++j) {
 			printf("│");
-			if (board.cells[i][j] != WATER)
-				printf(RESET);
-			if (board.cells[i][j] == HIT)
-				printf(RED);
 
 			char state = board.cells[i][j];
+			switch (state) {
+			case HIT:
+				printf(RED);
+				break;
+			case MISS:
+				printf(GREEN);
+				break;
+			case WATER:
+				printf(BLUE);
+				break;
+			default:
+				printf(RESET);
+				break;
+			}
+
 			if (!show_ships && state != HIT && state != MISS)
 				state = ' ';
 
@@ -140,9 +151,124 @@ int read_coordinates(Coordinates *coords, Board board) {
 	if (coords->row < 0 || coords->row >= board.rows || coords->col < 0 ||
 	    coords->col >= board.cols)
 		valid = 0;
-	char state = board.cells[coords->row][coords->col];
-	if (state == HIT || state == MISS)
+	if (check_shot(*coords, board) == -1)
 		valid = 0;
 
 	return valid;
+}
+
+int check_shot(Coordinates target, Board board) {
+	int state = board.cells[target.row][target.col];
+
+	if (state == HIT || state == MISS)
+		return -1;
+	return state != WATER;
+}
+
+char take_shot(Coordinates target, Board *board, Stats *stats) {
+	char ship = board->cells[target.row][target.col];
+
+	int hit = check_shot(target, *board);
+	board->cells[target.row][target.col] = hit ? HIT : MISS;
+
+	printf(CYAN "%s %d, %d" GREEN " is a %s!\n", hit ? "💥" : "💬",
+	       target.row, target.col, hit ? "hit" : "miss");
+	NEWLINE;
+
+	++stats->total;
+	if (hit)
+		++stats->hits;
+	else
+		++stats->misses;
+	stats->percentage = ((double)stats->hits / stats->total) * 100;
+
+	return ship;
+}
+
+Coordinates random_target(Board board) {
+	Coordinates target;
+
+	while (1) {
+		int row = rand() % board.rows;
+		int col = rand() % board.cols;
+
+		target.row = row;
+		target.col = col;
+
+		if (check_shot(target, board) != -1)
+			break;
+	}
+
+	return target;
+}
+
+int ship_to_int(char ship) {
+	switch (ship) {
+	case 'c':
+		return 0;
+	case 'b':
+		return 1;
+	case 'r':
+		return 2;
+	case 's':
+		return 3;
+	case 'd':
+		return 4;
+	}
+
+	return -1;
+}
+
+char *ship_to_name(char ship) {
+	switch (ship) {
+	case 'c':
+		return "Carrier";
+	case 'b':
+		return "Battleship";
+	case 'r':
+		return "Cruiser";
+	case 's':
+		return "Submarine";
+	case 'd':
+		return "Destroyer";
+	}
+
+	return "";
+}
+
+void update_frequency(int *frequency, Board board) {
+	for (int i = 0; i < 5; ++i)
+		frequency[i] = 0;
+
+	for (int i = 0; i < board.rows; ++i) {
+		for (int j = 0; j < board.cols; ++j) {
+			int index = ship_to_int(board.cells[i][j]);
+			if (index == -1)
+				continue;
+
+			++frequency[index];
+		}
+	}
+}
+
+int check_sunk(char ship, int *frequency) {
+	int index = ship_to_int(ship);
+	if (index == -1)
+		return 0;
+
+	return !frequency[index];
+}
+
+void write_sunk(char ship) {
+	printf(RED "💣 Sunk %s!\n" RESET, ship_to_name(ship));
+	NEWLINE;
+}
+
+void write_move(FILE *logfile, int player, Coordinates target, int hit,
+		char sunk) {
+	fprintf(logfile, "Player %d: %d, %d \"%s\"%s%s%s\n", player + 1,
+		target.row, target.col, hit ? "hit" : "miss",
+		sunk == ' ' ? "" : " Sunk ", ship_to_name(sunk),
+		sunk == ' ' ? "" : "!");
+	fflush(logfile);
 }

@@ -186,7 +186,7 @@ void ai(Cell board[3][3]) {
 			board[i][j].occupied = 1;
 
 			int res = minimax(board, 1);
-			if (res > best) {
+			if (res > best || (res == best && rand() % 2)) {
 				best = res;
 
 				row = i;

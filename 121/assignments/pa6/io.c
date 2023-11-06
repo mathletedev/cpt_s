@@ -34,6 +34,24 @@ void welcome(void) {
 			"                                                                /_/      \n"
 	    // clang-format on
 	);
+	// rules written with the help of ChatGPT
+	puts("Battleship Rules:");
+	NEWLINE;
+	puts("1. Each player has a 10x10 grid.");
+	NEWLINE;
+	puts("2. Place your ships on the grid without overlapping or extending "
+	     "off the board.");
+	NEWLINE;
+	puts("3. Take turns guessing coordinates to try to hit your opponent's "
+	     "ships.");
+	NEWLINE;
+	puts("4. If a guess hits, it is marked with a \"*\". Otherwise, "
+	     "it is marked with a \"m\".");
+	NEWLINE;
+	puts("5. The game ends when all of one player's ships are sunk.");
+	NEWLINE;
+	puts("6. Good luck and have fun!");
+	NEWLINE;
 	printf(RESET);
 }
 

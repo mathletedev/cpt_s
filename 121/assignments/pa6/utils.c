@@ -1,36 +1,6 @@
-#include "headers.h"
-
-void wait_for_keypress(void) {
-	printf(GREEN "Press Enter to continue..." RESET);
-	char c;
-	scanf("%c", &c);
-}
-
-void clear(void) {
-	// https://stackoverflow.com/a/36253316
-#ifdef _WIN_32
-	system("cls");
-#else
-	system("clear");
-#endif
-}
-
-void welcome(void) {
-	clear();
-
-	printf(YELLOW);
-	printf(
-	    // clang-format off
-			" ________         _____ _____ ______              ______  _____          \n"
-			" ___  __ )______ ___  /___  /____  /_____ ___________  /_ ___(_)________ \n"
-			" __  __  |_  __ `/_  __/_  __/__  / _  _ \\__  ___/__  __ \\__  / ___  __ \\\n"
-			" _  /_/ / / /_/ / / /_  / /_  _  /  /  __/_(__  ) _  / / /_  /  __  /_/ /\n"
-			" /_____/  \\__,_/  \\__/  \\__/  /_/   \\___/ /____/  /_/ /_/ /_/   _  .___/ \n"
-			"                                                                /_/      \n"
-	    // clang-format on
-	);
-	printf(RESET);
-}
+#include "utils.h"
+#include "helpers.h"
+#include "io.h"
 
 void init_board(Board *board) {
 	for (int i = 0; i < board->rows; ++i) {
@@ -39,63 +9,7 @@ void init_board(Board *board) {
 	}
 }
 
-void write_board(Board board, int show_ships) {
-	printf(CYAN "    ");
-	for (int i = 0; i < board.cols; ++i)
-		printf("%-4d", i);
-	printf("\n");
-
-	printf(BLUE);
-	printf("  ╭");
-	for (int i = 0; i < board.cols - 1; ++i)
-		printf("───┬");
-	printf("───╮\n");
-
-	for (int i = 0; i < board.rows; ++i) {
-		if (i != 0) {
-			printf("  ├");
-			for (int j = 0; j < board.cols - 1; ++j)
-				printf("───┼");
-			printf("───┤\n");
-		}
-
-		printf(CYAN "%d " BLUE, i);
-		for (int j = 0; j < board.cols; ++j) {
-			printf("│");
-
-			char state = board.cells[i][j];
-			switch (state) {
-			case HIT:
-				printf(RED);
-				break;
-			case MISS:
-				printf(GREEN);
-				break;
-			case WATER:
-				printf(BLUE);
-				break;
-			default:
-				printf(RESET);
-				break;
-			}
-
-			if (!show_ships && state != HIT && state != MISS)
-				state = ' ';
-
-			printf("%2c ", state);
-			printf(BLUE);
-		}
-		printf("│\n");
-	}
-
-	printf("  ╰");
-	for (int i = 0; i < board.cols - 1; ++i)
-		printf("───┴");
-	printf("───╯\n");
-	printf(RESET);
-}
-
-void place_random(Board *board, int size, char ship) {
+void place_random_one(Board *board, int size, char ship) {
 	while (1) {
 		int dir = rand() % 2;
 
@@ -137,52 +51,105 @@ void place_random(Board *board, int size, char ship) {
 	}
 }
 
-void warn_invalid(void) { printf(RED "🚨 Invalid input\n" RESET); }
-
-void consume_input(void) {
-	for (char c; c != '\n'; scanf("%c", &c))
-		;
+void place_random_all(Board *board) {
+	place_random_one(board, 5, 'c');
+	place_random_one(board, 4, 'b');
+	place_random_one(board, 3, 'r');
+	place_random_one(board, 3, 's');
+	place_random_one(board, 2, 'd');
 }
 
-int read_coordinates(Coordinates *coords, Board board) {
-	int valid = 1;
-	if (scanf("%d%d", &coords->row, &coords->col) != 2)
-		valid = 0;
-	if (coords->row < 0 || coords->row >= board.rows || coords->col < 0 ||
-	    coords->col >= board.cols)
-		valid = 0;
-	if (check_shot(*coords, board) == -1)
-		valid = 0;
+void place_manual_one(Board *board, int size, char ship) {
+	Coordinates coords[5];
+	while (1) {
+		printf(MAGENTA "🚢 Enter " CYAN "%d" MAGENTA
+			       " cells to place the " CYAN "%s" MAGENTA
+			       " across: " RESET,
+		       size, ship_to_name(ship));
 
-	return valid;
+		int valid = 1;
+		for (int i = 0; i < size; ++i) {
+			if (!read_coordinates(coords + i, *board) ||
+			    board->cells[coords[i].row][coords[i].col] !=
+				WATER) {
+				valid = 0;
+				break;
+			}
+		}
+
+		if (!valid) {
+			consume_input();
+			warn_invalid();
+			continue;
+		}
+		consume_input();
+
+		NEWLINE;
+
+		int horizontal = 1, vertical = 1;
+		int cols[COLS] = {0}, rows[ROWS] = {0};
+		for (int i = 0; i < size; ++i) {
+			cols[coords[i].col] = 1;
+			rows[coords[i].row] = 1;
+
+			if (i == 0)
+				continue;
+
+			if (coords[i].row != coords[0].row)
+				horizontal = 0;
+			if (coords[i].col != coords[0].col)
+				vertical = 0;
+		}
+
+		if (!horizontal && !vertical) {
+			warn_invalid();
+			continue;
+		}
+
+		int *frequency = horizontal ? cols : rows;
+		int start = -1, end = -1;
+		for (int i = 0; i < ROWS; ++i) {
+			if (frequency[i] && start == -1)
+				start = i;
+			if (!frequency[i] && start != -1) {
+				end = i;
+				break;
+			}
+		}
+		if (end == -1)
+			end = ROWS;
+
+		if (end - start == size)
+			break;
+		else
+			warn_invalid();
+	}
+
+	for (int i = 0; i < size; ++i)
+		board->cells[coords[i].row][coords[i].col] = ship;
 }
 
-int check_shot(Coordinates target, Board board) {
-	int state = board.cells[target.row][target.col];
-
-	if (state == HIT || state == MISS)
-		return -1;
-	return state != WATER;
+void place_manual_all(Board *board) {
+	place_manual_one(board, 5, 'c');
+	place_manual_one(board, 4, 'b');
+	place_manual_one(board, 3, 'r');
+	place_manual_one(board, 3, 's');
+	place_manual_one(board, 2, 'd');
 }
 
-char take_shot(Coordinates target, Board *board, Stats *stats) {
-	char ship = board->cells[target.row][target.col];
+void take_shot(Coordinates target, Board *board, Stats *stats, char *ship_ptr,
+	       int *hit_ptr) {
+	*ship_ptr = board->cells[target.row][target.col];
+	*hit_ptr = check_shot(target, *board);
 
-	int hit = check_shot(target, *board);
-	board->cells[target.row][target.col] = hit ? HIT : MISS;
-
-	printf(CYAN "%s %d, %d" GREEN " is a %s!\n", hit ? "💥" : "💬",
-	       target.row, target.col, hit ? "hit" : "miss");
-	NEWLINE;
+	board->cells[target.row][target.col] = *hit_ptr ? HIT : MISS;
 
 	++stats->total;
-	if (hit)
+	if (*hit_ptr)
 		++stats->hits;
 	else
 		++stats->misses;
-	stats->percentage = ((double)stats->hits / stats->total) * 100;
-
-	return ship;
+	stats->percentage = round(((double)stats->hits / stats->total) * 100);
 }
 
 Coordinates random_target(Board board) {
@@ -200,40 +167,6 @@ Coordinates random_target(Board board) {
 	}
 
 	return target;
-}
-
-int ship_to_int(char ship) {
-	switch (ship) {
-	case 'c':
-		return 0;
-	case 'b':
-		return 1;
-	case 'r':
-		return 2;
-	case 's':
-		return 3;
-	case 'd':
-		return 4;
-	}
-
-	return -1;
-}
-
-char *ship_to_name(char ship) {
-	switch (ship) {
-	case 'c':
-		return "Carrier";
-	case 'b':
-		return "Battleship";
-	case 'r':
-		return "Cruiser";
-	case 's':
-		return "Submarine";
-	case 'd':
-		return "Destroyer";
-	}
-
-	return "";
 }
 
 void update_frequency(int *frequency, Board board) {
@@ -259,16 +192,12 @@ int check_sunk(char ship, int *frequency) {
 	return !frequency[index];
 }
 
-void write_sunk(char ship) {
-	printf(RED "💣 Sunk %s!\n" RESET, ship_to_name(ship));
-	NEWLINE;
-}
+int check_lost(int *frequency) {
+	int lost = 1;
+	for (int i = 0; i < 5; ++i) {
+		if (frequency[i])
+			lost = 0;
+	}
 
-void write_move(FILE *logfile, int player, Coordinates target, int hit,
-		char sunk) {
-	fprintf(logfile, "Player %d: %d, %d \"%s\"%s%s%s\n", player + 1,
-		target.row, target.col, hit ? "hit" : "miss",
-		sunk == ' ' ? "" : " Sunk ", ship_to_name(sunk),
-		sunk == ' ' ? "" : "!");
-	fflush(logfile);
+	return lost;
 }

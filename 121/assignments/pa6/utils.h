@@ -8,18 +8,16 @@
 
 void init_board(Board *board);
 
-void place_random_one(Board *board, int size, char ship);
-void place_random_all(Board *board);
+void place_random_one(Board *board, int size, char ship, int *ships);
+void place_random_all(Board *board, int *ships);
 
-void place_manual_one(Board *board, int size, char ship);
-void place_manual_all(Board *board);
+void place_manual_one(Board *board, int size, char ship, int *ships);
+void place_manual_all(Board *board, int *ships);
 
 void take_shot(Coordinates target, Board *board, Stats *stats, char *ship_ptr,
 	       int *hit_ptr);
 Coordinates random_target(Board board);
 
-void update_frequency(int *frequency, Board board);
-int check_sunk(char ship, int *frequency);
-int check_lost(int *frequency);
+int check_lost(int *ships);
 
 #endif

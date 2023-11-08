@@ -1,0 +1,48 @@
+Player 2: 1, 1 "hit"
+Player 1: 0, 3 "hit"
+Player 2: 1, 8 "miss"
+Player 1: 0, 4 "hit"
+Player 2: 5, 7 "miss"
+Player 1: 0, 5 "hit"
+Player 2: 8, 9 "miss"
+Player 1: 0, 6 "hit"
+Player 2: 7, 5 "miss"
+Player 1: 0, 7 "hit" Sunk Carrier!
+Player 2: 2, 1 "miss"
+Player 1: 1, 3 "hit"
+Player 2: 0, 1 "miss"
+Player 1: 1, 4 "hit"
+Player 2: 1, 6 "hit"
+Player 1: 1, 5 "hit" Sunk Destroyer!
+Player 2: 2, 7 "miss"
+Player 1: 2, 3 "hit"
+Player 2: 0, 7 "miss"
+Player 1: 3, 3 "hit"
+Player 2: 8, 7 "hit"
+Player 1: 4, 3 "hit" Sunk Battleship!
+Player 2: 8, 4 "miss"
+Player 1: 6, 3 "hit"
+Player 2: 3, 0 "miss"
+Player 1: 6, 4 "hit"
+Player 2: 9, 5 "miss"
+Player 1: 6, 5 "hit" Sunk Submarine!
+Player 2: 0, 0 "miss"
+Player 1: 5, 8 "hit"
+Player 2: 6, 1 "miss"
+Player 1: 6, 8 "hit"
+Player 2: 0, 4 "miss"
+Player 1: 7, 8 "hit" Sunk Cruiser!
+
+Player 1 wins, Player 2 loses
+
+**** Player 1's Stats ****
+Hits: 17
+Misses: 0
+Total shots: 17
+Hit/miss ratio: 100%
+
+**** Player 2's Stats ****
+Hits: 3
+Misses: 14
+Total shots: 17
+Hit/miss ratio: 18%

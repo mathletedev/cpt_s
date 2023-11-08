@@ -1,22 +1,5 @@
 #include "helpers.h"
 
-int ship_to_int(char ship) {
-	switch (ship) {
-	case 'c':
-		return 0;
-	case 'b':
-		return 1;
-	case 'r':
-		return 2;
-	case 's':
-		return 3;
-	case 'd':
-		return 4;
-	}
-
-	return -1;
-}
-
 char *ship_to_name(char ship) {
 	switch (ship) {
 	case 'c':

@@ -23,8 +23,8 @@ int main(void) {
 	p2_board.cols = COLS;
 	init_board(&p2_board);
 
-	int p1_frequency[5] = {0};
-	int p2_frequency[5] = {0};
+	int p1_ships[26] = {0};
+	int p2_ships[26] = {0};
 
 	clear();
 
@@ -55,11 +55,11 @@ int main(void) {
 	NEWLINE;
 
 	if (selection == 1)
-		place_random_all(&p1_board);
+		place_random_all(&p1_board, p1_ships);
 	else
-		place_manual_all(&p1_board);
+		place_manual_all(&p1_board, p1_ships);
 
-	place_random_all(&p2_board);
+	place_random_all(&p2_board, p2_ships);
 
 	puts(GREEN "✅ Boards generated successfully\n");
 
@@ -104,8 +104,7 @@ int main(void) {
 
 		Board *enemy_board =
 		    curr_player == HUMAN ? &p2_board : &p1_board;
-		int *enemy_frequency =
-		    curr_player == HUMAN ? p2_frequency : p1_frequency;
+		int *enemy_ships = curr_player == HUMAN ? p2_ships : p1_ships;
 		Stats *curr_stats =
 		    curr_player == HUMAN ? &p1_stats : &p2_stats;
 
@@ -116,11 +115,15 @@ int main(void) {
 		take_shot(target, enemy_board, curr_stats, &ship, &hit);
 		write_shot(target, hit);
 
-		update_frequency(enemy_frequency, *enemy_board);
+		int sunk = 0;
+		if (hit) {
+			--enemy_ships[ship - 'a'];
 
-		int sunk = check_sunk(ship, enemy_frequency);
-		if (sunk)
-			write_sunk(ship);
+			if (enemy_ships[ship - 'a'] == 0) {
+				sunk = 1;
+				write_sunk(ship);
+			}
+		}
 
 		write_move(logfile, curr_player, target, ship != WATER,
 			   sunk ? ship : ' ');
@@ -129,7 +132,7 @@ int main(void) {
 
 		wait_for_keypress();
 
-		if (check_lost(enemy_frequency))
+		if (check_lost(enemy_ships))
 			break;
 	}
 

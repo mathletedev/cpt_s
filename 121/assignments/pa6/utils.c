@@ -8,8 +8,9 @@ void init_board(Board *board) {
 			board->cells[i][j] = WATER;
 	}
 }
+void place_random_one(Board *board, int size, char ship, int *ships) {
+	ships[ship - 'a'] = size;
 
-void place_random_one(Board *board, int size, char ship) {
 	while (1) {
 		int dir = rand() % 2;
 
@@ -51,15 +52,17 @@ void place_random_one(Board *board, int size, char ship) {
 	}
 }
 
-void place_random_all(Board *board) {
-	place_random_one(board, 5, 'c');
-	place_random_one(board, 4, 'b');
-	place_random_one(board, 3, 'r');
-	place_random_one(board, 3, 's');
-	place_random_one(board, 2, 'd');
+void place_random_all(Board *board, int *ships) {
+	place_random_one(board, 5, 'c', ships);
+	place_random_one(board, 4, 'b', ships);
+	place_random_one(board, 3, 'r', ships);
+	place_random_one(board, 3, 's', ships);
+	place_random_one(board, 2, 'd', ships);
 }
 
-void place_manual_one(Board *board, int size, char ship) {
+void place_manual_one(Board *board, int size, char ship, int *ships) {
+	ships[ship - 'a'] = size;
+
 	Coordinates coords[5];
 	while (1) {
 		printf(MAGENTA "🚢 Enter " CYAN "%d" MAGENTA
@@ -129,12 +132,12 @@ void place_manual_one(Board *board, int size, char ship) {
 		board->cells[coords[i].row][coords[i].col] = ship;
 }
 
-void place_manual_all(Board *board) {
-	place_manual_one(board, 5, 'c');
-	place_manual_one(board, 4, 'b');
-	place_manual_one(board, 3, 'r');
-	place_manual_one(board, 3, 's');
-	place_manual_one(board, 2, 'd');
+void place_manual_all(Board *board, int *ships) {
+	place_manual_one(board, 5, 'c', ships);
+	place_manual_one(board, 4, 'b', ships);
+	place_manual_one(board, 3, 'r', ships);
+	place_manual_one(board, 3, 's', ships);
+	place_manual_one(board, 2, 'd', ships);
 }
 
 void take_shot(Coordinates target, Board *board, Stats *stats, char *ship_ptr,
@@ -169,33 +172,10 @@ Coordinates random_target(Board board) {
 	return target;
 }
 
-void update_frequency(int *frequency, Board board) {
-	for (int i = 0; i < 5; ++i)
-		frequency[i] = 0;
-
-	for (int i = 0; i < board.rows; ++i) {
-		for (int j = 0; j < board.cols; ++j) {
-			int index = ship_to_int(board.cells[i][j]);
-			if (index == -1)
-				continue;
-
-			++frequency[index];
-		}
-	}
-}
-
-int check_sunk(char ship, int *frequency) {
-	int index = ship_to_int(ship);
-	if (index == -1)
-		return 0;
-
-	return !frequency[index];
-}
-
-int check_lost(int *frequency) {
+int check_lost(int *ships) {
 	int lost = 1;
-	for (int i = 0; i < 5; ++i) {
-		if (frequency[i])
+	for (int i = 0; i < 26; ++i) {
+		if (ships[i])
 			lost = 0;
 	}
 

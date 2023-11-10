@@ -1,11 +1,19 @@
 #include "io.h"
 
+// Waits for Enter to be pressed
 void wait_for_keypress(void) {
 	printf(GREEN "Press Enter to continue..." RESET);
 	char c;
 	scanf("%c", &c);
 }
 
+/*
+ * Clears the console
+ *
+ * Pre-conditions: _WIN_32 is defined for Windows systems
+ *
+ * Post-conditions: Terminal is cleared
+ */
 void clear(void) {
 	// https://stackoverflow.com/a/36253316
 #ifdef _WIN_32
@@ -15,13 +23,21 @@ void clear(void) {
 #endif
 }
 
+// Writes a warning for invalid input
 void warn_invalid(void) { printf(RED "🚨 Invalid input\n" RESET); }
 
+/*
+ * Consume input until \n
+ *
+ * Post-conditions: scanf() will be ready for the next read
+ */
 void consume_input(void) {
+	// note: gcc on my system does not produce a warning for this line
 	for (char c; c != '\n'; scanf("%c", &c))
 		;
 }
 
+// Displays a welcome screen with rules
 void welcome(void) {
 	printf(YELLOW);
 	printf(
@@ -55,8 +71,16 @@ void welcome(void) {
 	printf(RESET);
 }
 
+/*
+ * Formats and displays a game board
+ *
+ * Parameters:
+ * - Board board: Player's game board
+ * - int show_ships: if 0, hides ships by replacing them with water
+ */
 void write_board(Board board, int show_ships) {
 	printf(CYAN "    ");
+	// column indicators
 	for (int i = 0; i < board.cols; ++i)
 		printf("%-4d", i);
 	printf("\n");
@@ -75,6 +99,7 @@ void write_board(Board board, int show_ships) {
 			printf("───┤\n");
 		}
 
+		// row indicators
 		printf(CYAN "%d " BLUE, i);
 		for (int j = 0; j < board.cols; ++j) {
 			printf("│");
@@ -95,6 +120,7 @@ void write_board(Board board, int show_ships) {
 				break;
 			}
 
+			// hide ship
 			if (!show_ships && state != HIT && state != MISS)
 				state = ' ';
 
@@ -111,6 +137,15 @@ void write_board(Board board, int show_ships) {
 	printf(RESET);
 }
 
+/*
+ * Reads and validates a pair of coordinates
+ *
+ * Parameters:
+ * - Coordinates *coords: Pointer to returned coordinates
+ * - Board board: Board to validate against
+ *
+ * Returns 1 if the input is valid
+ */
 int read_coordinates(Coordinates *coords, Board board) {
 	int valid = 1;
 	if (scanf("%d%d", &coords->row, &coords->col) != 2)
@@ -124,17 +159,41 @@ int read_coordinates(Coordinates *coords, Board board) {
 	return valid;
 }
 
+/*
+ * Displays the result of a shot
+ *
+ * Parameters:
+ * - Coordinates target: Player's target
+ * - int hit: 1 if the shot hit a ship
+ */
 void write_shot(Coordinates target, int hit) {
 	printf(CYAN "%s %d, %d" GREEN " is a %s!\n", hit ? "💥" : "💬",
 	       target.row, target.col, hit ? "hit" : "miss");
 	NEWLINE;
 }
 
+/*
+ * Writes that a ship was sunk
+ *
+ * Parameters:
+ * - char ship: Type of ship that was sunk
+ */
 void write_sunk(char ship) {
 	printf(RED "💣 Sunk %s!\n" RESET, ship_to_name(ship));
 	NEWLINE;
 }
 
+/*
+ * Writes a move to a log file
+ *
+ * Parameters:
+ * - FILE *logfile: Log file to output to
+ * - int player: Current player
+ * - Coordinates target: Player's target
+ * - int hit: 1 if the shot hit a ship
+ *
+ * Post-conditions: Move will be written to the log file
+ */
 void write_move(FILE *logfile, int player, Coordinates target, int hit,
 		char sunk) {
 	fprintf(logfile, "Player %d: %d, %d \"%s\"%s%s%s\n", player + 1,
@@ -145,6 +204,16 @@ void write_move(FILE *logfile, int player, Coordinates target, int hit,
 	fflush(logfile);
 }
 
+/*
+ * Writes a player's stats to a log file
+ *
+ * Parameters:
+ * - FILE *logfile: Log file to output to
+ * - int player: Current player
+ * - Stats stats: Player's stats
+ *
+ * Post-conditions: Stats will be written to the log file
+ */
 void write_stats(FILE *logfile, int player, Stats stats) {
 	fprintf(logfile, "**** Player %d's Stats ****\n", player);
 	fprintf(logfile, "Hits: %d\n", stats.hits);

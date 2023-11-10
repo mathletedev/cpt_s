@@ -1,3 +1,12 @@
+/*
+ * Name: Neal Wang
+ * Due Date: 2023-11-10
+ * Lecture: 02
+ * Lab: 25
+ * Assignment: PA 6
+ * Description: Global imports, constants, and structs
+ */
+
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
@@ -26,6 +35,7 @@
 
 #define NEWLINE printf("\n")
 
+// player stats struct
 typedef struct Stats {
 	int hits;
 	int misses;

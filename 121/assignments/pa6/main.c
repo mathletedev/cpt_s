@@ -1,5 +1,8 @@
 #include "headers.h"
 
+// compiled using
+// gcc *.c -lm -Wall -Wextra -o main
+// with no warnings
 int main(void) {
 	srand(time(NULL));
 	FILE *logfile = fopen("battleship.log", "w");
@@ -9,6 +12,7 @@ int main(void) {
 		return 1;
 	}
 
+	// random starting player
 	int curr_player = rand() % 2;
 
 	Stats p1_stats = {0, 0, 0, 0};
@@ -23,6 +27,7 @@ int main(void) {
 	p2_board.cols = COLS;
 	init_board(&p2_board);
 
+	// frequency of ship characters
 	int p1_ships[26] = {0};
 	int p2_ships[26] = {0};
 
@@ -50,6 +55,7 @@ int main(void) {
 			warn_invalid();
 		}
 	}
+	// make sure all input is gone so it doesn't skip
 	consume_input();
 
 	NEWLINE;
@@ -93,6 +99,7 @@ int main(void) {
 		} else {
 			target = random_target(p1_board);
 			printf(MAGENTA "🎯 Player 2 selects: " RESET "...");
+			// flush text to screen before sleep
 			fflush(stdout);
 			sleep(1);
 
@@ -102,6 +109,8 @@ int main(void) {
 			       target.row, target.col);
 		}
 
+		// enemy variables relative to current player
+		// avoid writing duplicate code
 		Board *enemy_board =
 		    curr_player == HUMAN ? &p2_board : &p1_board;
 		int *enemy_ships = curr_player == HUMAN ? p2_ships : p1_ships;
@@ -119,6 +128,8 @@ int main(void) {
 		if (hit) {
 			--enemy_ships[ship - 'a'];
 
+			// ship is sunk if frequency is 0
+			// this code will never run twice
 			if (enemy_ships[ship - 'a'] == 0) {
 				sunk = 1;
 				write_sunk(ship);
@@ -154,6 +165,7 @@ int main(void) {
 	printf(YELLOW "🏆 Player %d" GREEN " wins!\n" RESET, winner);
 	NEWLINE;
 
+	// write stats to logfile
 	fprintf(logfile, "\n");
 	fprintf(logfile, "Player 1 %s, Player 2 %s\n",
 		winner == 1 ? "wins" : "loses", winner == 2 ? "wins" : "loses");

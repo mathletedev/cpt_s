@@ -1,3 +1,12 @@
+/*
+ * Name: Neal Wang
+ * Due Date: 2023-11-10
+ * Lecture: 02
+ * Lab: 25
+ * Assignment: PA 6
+ * Description: Header file for io.c
+ */
+
 #ifndef IO_H
 #define IO_H
 

@@ -1,0 +1,16 @@
+Smith, Susan
+B
+80.0
+17.76
+Sanders, Fred
+M
+87.25
+23.45
+Kerr, Heidi
+M
+80.0
+47.86
+Russo, Rick
+B
+83.75
+12.15

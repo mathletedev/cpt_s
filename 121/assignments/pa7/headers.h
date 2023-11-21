@@ -3,9 +3,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #include "example_code.h"
+#include "io.h"
 #include "types.h"
 #include "utils.h"
 

@@ -11,4 +11,11 @@
 #define CYAN "\x1b[36m"
 #define RESET "\x1b[0m"
 
+#define NEWLINE printf("\n")
+
+#define NUM_CARDS 5
+
+// max length of message
+#define MESSAGE_SIZE 100
+
 #endif

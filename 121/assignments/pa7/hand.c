@@ -1,0 +1,159 @@
+#include "hand.h"
+
+void sort(int *frequency, int *res) {
+	for (int i = 0; i < NUM_CARDS; ++i)
+		res[i] = -1;
+
+	for (int i = NUM_FACES - 1; i >= 0; --i) {
+		if (!frequency[i])
+			continue;
+
+		for (int j = 0; j < NUM_CARDS; ++j) {
+			if (res[j] == -1) {
+				res[j] = i;
+				break;
+			}
+		}
+	}
+}
+
+int qual_x(int *frequency, int x, int *max) {
+	for (int i = 0; i < NUM_FACES; ++i) {
+		if (frequency[i] == x)
+			// weight the x-of-a-kind but also include max card
+			return i * NUM_FACES + (max[0] == i ? max[1] : max[0]);
+	}
+	return -1;
+}
+
+int qual_pair(int *frequency, int *max) { return qual_x(frequency, 2, max); }
+
+int qual_two_pairs(int *frequency) {
+	int first = -1, second = -1, rem = -1;
+	// count backwards to automatically get max
+	for (int i = NUM_FACES - 1; i >= 0; --i) {
+		if (frequency[i] == 2) {
+			if (first == -1)
+				first = i;
+			else
+				second = i;
+		} else if (frequency[i] == 1)
+			rem = i;
+	}
+
+	if (first == -1 || second == -1 || rem == -1)
+		return -1;
+	// weight pairs higher
+	return first * NUM_FACES * NUM_FACES + second * NUM_FACES + rem;
+}
+
+int qual_three(int *frequency, int *max) { return qual_x(frequency, 3, max); }
+
+int qual_four(int *frequency, int *max) { return qual_x(frequency, 4, max); }
+
+int qual_full(int *frequency) {
+	int pair = -1, three = -1;
+
+	for (int i = 0; i < NUM_FACES; ++i) {
+		if (frequency[i] == 2)
+			pair = i;
+		else if (frequency[i] == 3)
+			three = i;
+	}
+
+	if (pair == -1 || three == -1)
+		return -1;
+	return three * NUM_FACES + pair;
+}
+
+int qual_flush(int *frequency, Hand *hand, int *max) {
+	for (int i = 1; i < NUM_CARDS; ++i) {
+		if (hand->cards[i].suit != hand->cards[0].suit)
+			return -1;
+	}
+
+	return max[0];
+}
+
+int qual_straight(int *frequency) {
+	int length = 0;
+	// since Ace can be used as a 1, bring Ace to the front
+	if (frequency[NUM_FACES - 1] == 1)
+		length = 1;
+
+	for (int i = 0; i < NUM_FACES; ++i) {
+		if (frequency[i]) {
+			++length;
+
+			if (length == 5)
+				// ending index = max card
+				return i;
+			continue;
+		}
+
+		// reset length if there's a break
+		// only useful for high/low card Ace
+		if (length)
+			length = 0;
+	}
+
+	return -1;
+}
+
+int qual(Hand *hand) {
+	int frequency[NUM_FACES] = {0};
+	for (int i = 0; i < NUM_CARDS; ++i)
+		++frequency[hand->cards[i].face];
+
+	int max[NUM_CARDS];
+	sort(frequency, max);
+
+	int res = qual_straight(frequency);
+	if (res != -1 && qual_flush(frequency, hand, max) != -1)
+		// weight higher quality hands
+		return 8 * WEIGHT + res;
+
+	res = qual_four(frequency, max);
+	if (res != -1)
+		return 7 * WEIGHT + res;
+
+	res = qual_full(frequency);
+	if (res != -1)
+		return 6 * WEIGHT + res;
+
+	res = qual_flush(frequency, hand, max);
+	if (res != -1)
+		return 5 * WEIGHT + res;
+
+	res = qual_straight(frequency);
+	if (res != -1)
+		return 4 * WEIGHT + res;
+
+	res = qual_three(frequency, max);
+	if (res != -1)
+		return 3 * WEIGHT + res;
+
+	// TODOOOOOOOOO
+	res = qual_two_pairs(frequency);
+	if (res != -1)
+		return 2 * WEIGHT + res;
+
+	res = qual_pair(frequency, max);
+	if (res != -1)
+		return WEIGHT + res;
+
+	// if no combinations, return highest card
+	return max[0];
+}
+
+int winner(Hand *dealer_hand, Hand *player_hand) {
+	int dealer_qual = qual(dealer_hand);
+	int player_qual = qual(player_hand);
+
+	// 0: tie
+	if (player_qual == dealer_qual)
+		return 0;
+	// 1: player won
+	// -1: dealer won
+	return (player_qual > dealer_qual) * 2 - 1;
+}

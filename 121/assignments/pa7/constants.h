@@ -14,8 +14,12 @@
 #define NEWLINE printf("\n")
 
 #define NUM_CARDS 5
+#define NUM_FACES 13
 
 // max length of message
 #define MESSAGE_SIZE 100
+
+// weight of a better quality hand
+#define WEIGHT 10000
 
 #endif

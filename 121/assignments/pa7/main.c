@@ -1,13 +1,12 @@
 #include "headers.h"
-#include "utils.h"
 
 int main(void) {
 	srand((unsigned)time(NULL));
 
 	int deck[52];
 
-	Hand *dealer = malloc(sizeof(Hand));
-	Hand *player = malloc(sizeof(Hand));
+	Hand *dealer_hand = malloc(sizeof(Hand));
+	Hand *player_hand = malloc(sizeof(Hand));
 
 	// store input validity
 	int valid;
@@ -25,12 +24,12 @@ int main(void) {
 
 		int seed = 0;
 		// set all bits in bitmask: 100000 - 1 = 11111
-		deal(dealer, deck, &seed, (1 << 5) - 1);
-		deal(player, deck, &seed, (1 << 5) - 1);
+		deal(dealer_hand, deck, &seed, (1 << 5) - 1);
+		deal(player_hand, deck, &seed, (1 << 5) - 1);
 
 		/* write_hand(*dealer, 0, 1); */
 		/* NEWLINE; */
-		write_hand(*player, 1, 1);
+		write_hand(player_hand, 1, 1);
 		NEWLINE;
 
 		// mostly copied from PA 5
@@ -45,7 +44,7 @@ int main(void) {
 				clear();
 				NEWLINE;
 
-				write_hand(*player, 1, 1);
+				write_hand(player_hand, 1, 1);
 				NEWLINE;
 			}
 
@@ -105,8 +104,8 @@ int main(void) {
 					goto skip;
 				}
 				--digit;
-				// use bit math to check validity
-				if (mask != (mask & ~(1 << digit))) {
+				// will be > 0 if 1 at position
+				if (mask & (1 << digit)) {
 					strncpy(message,
 						"Cannot re-draw the same card",
 						MESSAGE_SIZE);
@@ -120,23 +119,28 @@ int main(void) {
 		skip:;
 		} while (!valid);
 
-		deal(player, deck, &seed, mask);
+		deal(player_hand, deck, &seed, mask);
 
 		clear();
 		NEWLINE;
 
-		puts(CYAN "🃏 Dealer's hand" RESET);
-		write_hand(*dealer, 1, 0);
+		int w = winner(dealer_hand, player_hand);
+
+		puts(CYAN "  Dealer's hand" RESET);
+		write_hand(dealer_hand, 1, 0);
 		NEWLINE;
-		puts(CYAN "🃏 Your hand" RESET);
-		write_hand(*player, 1, 0);
+		puts(CYAN "  Your hand" RESET);
+		write_hand(player_hand, 1, 0);
+		NEWLINE;
+
+		printf(YELLOW "🏆 %s won!\n" RESET, w == 1 ? "You" : "Dealer");
 		NEWLINE;
 
 		wait_for_enter();
 	}
 
-	free(dealer);
-	free(player);
+	free(dealer_hand);
+	free(player_hand);
 
 	return 0;
 }

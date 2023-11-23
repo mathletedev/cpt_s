@@ -7,8 +7,8 @@
 #include <time.h>
 
 #include "example_code.h"
+#include "hand.h"
 #include "io.h"
 #include "types.h"
-#include "utils.h"
 
 #endif

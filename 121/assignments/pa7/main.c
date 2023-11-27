@@ -24,9 +24,6 @@ int main(void) {
 			continue;
 		}
 
-		clear();
-		NEWLINE;
-
 		// initialise deck
 		for (int i = 0; i < 52; ++i)
 			deck[i] = -1;
@@ -37,8 +34,49 @@ int main(void) {
 		deal(dealer_hand, deck, &seed, (1 << 5) - 1);
 		deal(player_hand, deck, &seed, (1 << 5) - 1);
 
-		/* write_hand(*dealer, 0, 1); */
-		/* NEWLINE; */
+		clear();
+		NEWLINE;
+
+		puts(GREEN "💾 Dealer's turn" RESET);
+		NEWLINE;
+		write_hand(dealer_hand, 1, 1);
+		NEWLINE;
+
+		int ai_mask = ai(dealer_hand);
+
+		puts(MAGENTA "🃏 Dealer re-draws:" RESET);
+		NEWLINE;
+
+		printf(" > ...");
+		fflush(stdout);
+		sleep(1);
+		printf("\r > ");
+
+		if (ai_mask == 0)
+			printf("0");
+		else {
+			for (int i = 0; i < NUM_CARDS; ++i) {
+				// print dealer's choices
+				// will be > 0 if 1 at position
+				if (ai_mask & 1 << i)
+					printf("%d", i + 1);
+			}
+		}
+		// clear ...
+		printf("   ");
+		NEWLINE;
+		NEWLINE;
+
+		wait_for_enter();
+
+		// AI dealer bitmask
+		deal(dealer_hand, deck, &seed, ai(dealer_hand));
+
+		clear();
+		NEWLINE;
+
+		puts(GREEN "👤 Player's turn" RESET);
+		NEWLINE;
 		write_hand(player_hand, 1, 1);
 		NEWLINE;
 
@@ -54,6 +92,8 @@ int main(void) {
 				clear();
 				NEWLINE;
 
+				puts(GREEN "👤 Player's turn" RESET);
+				NEWLINE;
 				write_hand(player_hand, 1, 1);
 				NEWLINE;
 			}
@@ -115,7 +155,7 @@ int main(void) {
 				}
 				--digit;
 				// will be > 0 if 1 at position
-				if (mask & (1 << digit)) {
+				if (mask & 1 << digit) {
 					strncpy(message,
 						"Cannot re-draw the same card",
 						MESSAGE_SIZE);

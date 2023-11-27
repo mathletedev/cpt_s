@@ -157,3 +157,86 @@ int winner(Hand *dealer_hand, Hand *player_hand) {
 	// -1: dealer won
 	return (player_qual > dealer_qual) * 2 - 1;
 }
+
+int ai_x(Hand *hand, int *frequency, int x) {
+	// which card is being used for the combination?
+	int used;
+	for (int i = 0; i < NUM_FACES; ++i) {
+		if (frequency[i] == x)
+			used = i;
+	}
+
+	// start by selecting no cards
+	int mask = 0;
+	for (int i = 0; i < NUM_CARDS; ++i) {
+		// select card if not used and small
+		if (hand->cards[i].face != used &&
+		    // higher chance of picking a larger card
+		    hand->cards[i].face < NUM_FACES / 2)
+			mask |= 1 << i;
+	}
+
+	return mask;
+}
+
+int ai(Hand *hand) {
+	int res = qual(hand);
+	int strength = res / WEIGHT;
+
+	int frequency[NUM_FACES] = {0};
+	for (int i = 0; i < NUM_CARDS; ++i)
+		++frequency[hand->cards[i].face];
+
+	int max[NUM_CARDS];
+	sort(frequency, max);
+
+	// don't break straight flush
+	if (strength >= STRAIGHT_FLUSH)
+		return 0;
+
+	if (strength >= FOUR)
+		return ai_x(hand, frequency, 4);
+
+	// don't break full house, flush, or straight
+	if (strength >= STRAIGHT)
+		return 0;
+
+	if (strength >= THREE)
+		return ai_x(hand, frequency, 3);
+
+	if (strength >= TWO_PAIRS) {
+		int first = -1, second = -1;
+		for (int i = 0; i < NUM_FACES; ++i) {
+			if (frequency[i] == 2) {
+				if (first == -1)
+					first = i;
+				else
+					second = i;
+			}
+		}
+
+		int mask = 0;
+		for (int i = 0; i < NUM_CARDS; ++i) {
+			int face = hand->cards[i].face;
+			// if remaining card is small, set bit
+			if (face != first && face != second &&
+			    face < NUM_FACES / 2)
+				mask |= 1 << i;
+		}
+
+		return mask;
+	}
+
+	if (strength >= PAIR)
+		return ai_x(hand, frequency, 2);
+
+	// start by selecting everything
+	int mask = ~0;
+	for (int i = 0; i < NUM_CARDS; ++i) {
+		// keep high card by reversing bit
+		if (hand->cards[i].face == max[0])
+			mask ^= 1 << i;
+	}
+
+	return mask;
+}

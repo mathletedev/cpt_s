@@ -21,4 +21,7 @@ int qual(Hand *hand);
 
 int winner(Hand *dealer_hand, Hand *player_hand);
 
+int ai_x(Hand *hand, int *frequency, int x);
+int ai(Hand *hand);
+
 #endif

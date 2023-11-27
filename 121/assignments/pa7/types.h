@@ -12,7 +12,7 @@ typedef struct hand {
 	Card cards[NUM_CARDS];
 } Hand;
 
-typedef enum quality {
+typedef enum strength {
 	SINGLE,
 	PAIR,
 	TWO_PAIRS,
@@ -22,6 +22,6 @@ typedef enum quality {
 	FULL,
 	FOUR,
 	STRAIGHT_FLUSH
-} Quality;
+} Strength;
 
 #endif

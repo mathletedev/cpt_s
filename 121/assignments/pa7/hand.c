@@ -111,39 +111,39 @@ int qual(Hand *hand) {
 	int res = qual_straight(frequency);
 	if (res != -1 && qual_flush(frequency, hand, max) != -1)
 		// weight higher quality hands
-		return 8 * WEIGHT + res;
+		return STRAIGHT_FLUSH * WEIGHT + res;
 
 	res = qual_four(frequency, max);
 	if (res != -1)
-		return 7 * WEIGHT + res;
+		return FOUR * WEIGHT + res;
 
 	res = qual_full(frequency);
 	if (res != -1)
-		return 6 * WEIGHT + res;
+		return FULL * WEIGHT + res;
 
 	res = qual_flush(frequency, hand, max);
 	if (res != -1)
-		return 5 * WEIGHT + res;
+		return FLUSH * WEIGHT + res;
 
 	res = qual_straight(frequency);
 	if (res != -1)
-		return 4 * WEIGHT + res;
+		return STRAIGHT * WEIGHT + res;
 
 	res = qual_three(frequency, max);
 	if (res != -1)
-		return 3 * WEIGHT + res;
+		return THREE * WEIGHT + res;
 
 	// TODOOOOOOOOO
 	res = qual_two_pairs(frequency);
 	if (res != -1)
-		return 2 * WEIGHT + res;
+		return TWO_PAIRS * WEIGHT + res;
 
 	res = qual_pair(frequency, max);
 	if (res != -1)
-		return WEIGHT + res;
+		return PAIR * WEIGHT + res;
 
 	// if no combinations, return highest card
-	return max[0];
+	return SINGLE * WEIGHT + max[0];
 }
 
 int winner(Hand *dealer_hand, Hand *player_hand) {

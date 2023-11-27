@@ -36,6 +36,83 @@ void consume_input(void) {
 
 void warn(char *message) { printf(RED "🚨 Warning: %s\n" RESET, message); }
 
+int menu(void) {
+	int valid = 1;
+	char message[MESSAGE_SIZE];
+	int choice;
+
+	do {
+		clear();
+		NEWLINE;
+
+		// https://patorjk.com/software/taag/#p=display&f=Graceful&t=Poker
+		printf(RED);
+		printf(
+		    // clang-format off
+		"   ____   __  __ _  ____  ____ \n"
+		"  (  _ \\ /  \\(  / )(  __)(  _ \\\n"
+		"   ) __/(  O ))  (  ) _)  )   /\n"
+		"  (__)   \\__/(__\\_)(____)(__\\_)\n"
+		    // clang-format on
+		);
+		printf(RESET);
+		NEWLINE;
+
+		puts(CYAN " 1. " MAGENTA "View rules");
+		puts(CYAN " 2. " MAGENTA "Play game");
+		puts(CYAN " 3. " MAGENTA "Exit" RESET);
+		NEWLINE;
+
+		if (!valid) {
+			warn(message);
+			NEWLINE;
+		}
+
+		printf(" > ");
+
+		valid = 0;
+
+		int data;
+		int num_read = scanf("%d", &data);
+		consume_input();
+
+		if (num_read != 1) {
+			strncpy(message, "Input must be a single integer",
+				MESSAGE_SIZE);
+			continue;
+		}
+		if (data < 1 || data > 3) {
+			strncpy(message, "Input must be between 1 and 3",
+				MESSAGE_SIZE);
+			continue;
+		}
+
+		valid = 1;
+		choice = data;
+	} while (!valid);
+
+	return choice;
+}
+
+void rules(void) {
+	clear();
+	NEWLINE;
+
+	printf(YELLOW);
+	// written with the help of ChatGPT
+	// clang-format off
+	puts(" 1. The computer dealer will shuffle and deal five cards to you.");
+	puts(" 2. You can exchange up to 3 cards for new ones.");
+	puts(" 3. The goal is to make the best hand possible.");
+	puts(" 4. The computer dealer will then reveal its own hand.");
+	puts(" 5. The player with the best hand wins.");
+	puts(" 6. In case of a tie, the game is a draw.");
+	puts(" 7. Enjoy the game and good luck!");
+	// clang-format on
+	printf(RESET);
+	NEWLINE;
+}
+
 void write_hand(Hand *hand, int visible, int show_ids) {
 	const char *suit[4] = {"♥️ ", "♦️ ", "♣️ ", "♠️ "};
 	// kind of scuffed, but Ace is the highest card
@@ -54,7 +131,7 @@ void write_hand(Hand *hand, int visible, int show_ids) {
 	NEWLINE;
 	printf(" ");
 	for (int i = 0; i < 5; ++i)
-		printf("│ %s │ ", visible ? suit[hand->cards[i].suit] : "❔");
+		printf("│ %s│ ", visible ? suit[hand->cards[i].suit] : "❔");
 	NEWLINE;
 	printf(" ");
 	for (int i = 0; i < 5; ++i)

@@ -12,4 +12,16 @@ typedef struct hand {
 	Card cards[NUM_CARDS];
 } Hand;
 
+typedef enum quality {
+	SINGLE,
+	PAIR,
+	TWO_PAIRS,
+	THREE,
+	STRAIGHT,
+	FLUSH,
+	FULL,
+	FOUR,
+	STRAIGHT_FLUSH
+} Quality;
+
 #endif

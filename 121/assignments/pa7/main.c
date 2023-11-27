@@ -14,6 +14,16 @@ int main(void) {
 	char message[MESSAGE_SIZE];
 
 	while (1) {
+		int choice = menu();
+
+		if (choice == 3)
+			break;
+		if (choice == 1) {
+			rules();
+			wait_for_enter();
+			continue;
+		}
+
 		clear();
 		NEWLINE;
 
@@ -133,7 +143,11 @@ int main(void) {
 		write_hand(player_hand, 1, 0);
 		NEWLINE;
 
-		printf(YELLOW "🏆 %s won!\n" RESET, w == 1 ? "You" : "Dealer");
+		if (w == 0)
+			puts(YELLOW "🤝 It's a tie!" RESET);
+		else
+			printf(YELLOW "🏆 %s won!\n" RESET,
+			       w == 1 ? "You" : "Dealer");
 		NEWLINE;
 
 		wait_for_enter();

@@ -29,6 +29,7 @@ int main(void) {
 			deck[i] = -1;
 		shuffle(deck);
 
+		// seed for dealing, increment to avoid duplicates
 		int seed = 0;
 		// set all bits in bitmask: 100000 - 1 = 11111
 		deal(dealer_hand, deck, &seed, (1 << 5) - 1);
@@ -39,7 +40,7 @@ int main(void) {
 
 		puts(GREEN "💾 Dealer's turn" RESET);
 		NEWLINE;
-		write_hand(dealer_hand, 1, 1);
+		write_hand(dealer_hand, 0, 1);
 		NEWLINE;
 
 		int ai_mask = ai(dealer_hand);

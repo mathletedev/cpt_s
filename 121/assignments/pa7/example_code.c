@@ -27,7 +27,9 @@ void deal(Hand *hand, int *deck, int *seed, int mask) {
 			continue;
 
 		int card = deck[*seed];
+		// face from 0-12
 		hand->cards[i].face = card % 13;
+		// suit from 0-3
 		hand->cards[i].suit = card / 13;
 
 		++*seed;

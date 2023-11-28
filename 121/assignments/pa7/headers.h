@@ -1,3 +1,12 @@
+/*
+ * Name: Neal Wang
+ * Due Date: 2023-11-29
+ * Lecture: 02
+ * Lab: 25
+ * Assignment: PA 7
+ * Description: Interactive Five-card draw game
+ */
+
 #ifndef HEADERS_H
 #define HEADERS_H
 

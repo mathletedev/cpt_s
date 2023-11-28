@@ -1,3 +1,12 @@
+/*
+ * Name: Neal Wang
+ * Due Date: 2023-11-29
+ * Lecture: 02
+ * Lab: 25
+ * Assignment: PA 7
+ * Description: Various poker hand utility functions
+ */
+
 #ifndef HAND_H
 #define HAND_H
 

@@ -1,6 +1,9 @@
 #include "io.h"
 
-// Waits for Enter to be pressed
+/* Waits for Enter to be pressed
+ *
+ * Pre-conditions: consume_input() has been called to avoid "skipping"
+ */
 void wait_for_enter(void) {
 	printf(GREEN "Press Enter to continue..." RESET);
 	char c;
@@ -34,8 +37,19 @@ void consume_input(void) {
 		;
 }
 
+/*
+ * Writes a warning
+ *
+ * Parameters:
+ * - char *message: Info for the warning
+ */
 void warn(char *message) { printf(RED "🚨 Warning: %s\n" RESET, message); }
 
+/*
+ * Writes a menu
+ *
+ * Returns a validated user choice (1, 2, or 3)
+ */
 int menu(void) {
 	int valid = 1;
 	char message[MESSAGE_SIZE];
@@ -94,6 +108,7 @@ int menu(void) {
 	return choice;
 }
 
+// Writes the game rules
 void rules(void) {
 	clear();
 	NEWLINE;
@@ -113,6 +128,18 @@ void rules(void) {
 	NEWLINE;
 }
 
+/*
+ * Writes a hand
+ *
+ * Pre-conditions:
+ * - Suits are all between 0 and 3
+ * - Faces are all between 0 and 12
+ *
+ * Parameters:
+ * - Hand *hand: Pointer to a hand
+ * - int visible: 1 if values should be shown
+ * - int show_ids: 1 if cards should have IDs above them
+ */
 void write_hand(Hand *hand, int visible, int show_ids) {
 	const char *suit[4] = {"♥️ ", "♦️ ", "♣️ ", "♠️ "};
 	// kind of scuffed, but Ace is the highest card
@@ -131,7 +158,7 @@ void write_hand(Hand *hand, int visible, int show_ids) {
 	NEWLINE;
 	printf(" ");
 	for (int i = 0; i < 5; ++i)
-		printf("│ %s│ ", visible ? suit[hand->cards[i].suit] : "❔");
+		printf("│ %s│ ", visible ? suit[hand->cards[i].suit] : "❔ ");
 	NEWLINE;
 	printf(" ");
 	for (int i = 0; i < 5; ++i)

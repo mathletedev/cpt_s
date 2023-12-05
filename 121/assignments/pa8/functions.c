@@ -1,5 +1,15 @@
 #include "headers.h"
 
+/*
+ * Determines the length of a string
+ *
+ * Pre-conditions: String is null-terminated
+ *
+ * Parameters:
+ * - char *string: String to determine length of
+ *
+ * Returns the length of the string
+ */
 int my_strlen(char *string) {
 	int res = 0;
 	// keep increasing res until null terminator is found
@@ -9,6 +19,18 @@ int my_strlen(char *string) {
 	return res;
 }
 
+/*
+ * Concatenates up to n characters of src to the end of dest
+ *
+ * Pre-conditions: Size of dest is large enough to contain characters
+ *
+ * Parameters:
+ * - char *dest: Destination string
+ * - char *src: Source string
+ * - int n: Number of characters to concatenate
+ *
+ * Returns a pointer to dest
+ */
 char *my_str_n_cat(char *dest, char *src, int n) {
 	int len_src = my_strlen(src);
 	int len_dest = my_strlen(dest);
@@ -26,6 +48,18 @@ char *my_str_n_cat(char *dest, char *src, int n) {
 	return dest;
 }
 
+/*
+ * Performs binary search on an array of integers
+ *
+ * Pre-conditions: arr is sorted in ascending order
+ *
+ * Parameters:
+ * - int *arr: Integer array
+ * - int n: Size of arr
+ * - int target: Value to find
+ *
+ * Returns 1 if target is found in arr
+ */
 int binary_search(int *arr, int n, int target) {
 	int low = 0, high = n;
 	while (low < high) {
@@ -40,7 +74,44 @@ int binary_search(int *arr, int n, int target) {
 	return arr[low] == target;
 }
 
+/*
+ * Performs bubble sort on an array of strings
+ *
+ * Post-conditions: arr is sorted in lexicographic order
+ *
+ * Parameters:
+ * - char **arr: String array
+ * - int n: Size of arr
+ */
+void bubble_sort(char **arr, int n) {
+	int u = n;
+
+	while (u > 1) {
+		int c = 1;
+
+		while (c < u) {
+			if (strcmp(arr[c], arr[c - 1]) < 0) {
+				char *tmp = arr[c];
+				arr[c] = arr[c - 1];
+				arr[c - 1] = tmp;
+			}
+			++c;
+		}
+		--u;
+	}
+}
+
+/*
+ * Determines if a string is a palindrome
+ *
+ * Parameters:
+ * - char *string: String to check
+ * - int length: Length of string
+ *
+ * Returns 1 if string is a palindrome
+ */
 int is_palindrome(char *string, int length) {
+	// base case: single characters are always palindromes
 	if (length <= 1)
 		return 1;
 	if (string[0] == string[length - 1])
@@ -49,6 +120,14 @@ int is_palindrome(char *string, int length) {
 	return 0;
 }
 
+/*
+ * Computes the sum of all primes from 2 to n
+ *
+ * Parameters:
+ * - int n: Number to sum to
+ *
+ * Returns the sum of all primes from 2 to n
+ */
 unsigned int sum_primes(unsigned int n) {
 	// base cases
 	if (n < 2)
@@ -66,6 +145,21 @@ unsigned int sum_primes(unsigned int n) {
 	return sum_primes(n - 1) + (is_prime ? n : 0);
 }
 
+/*
+ * Finds the maximum occurences of a character in a string
+ *
+ * Post-conditions:
+ * - occurences will be populated with correct values
+ * - max and max_char will contain the max occurences
+ *
+ * Parameters:
+ * - char *string: String to use
+ * - Occurences *occurences: Array of occurences
+ * - int *max: Pointer to max occurences
+ * - char *max_char: Pointer to character with max occurences
+ *
+ * Returns 1 if successful
+ */
 int maximum_occurences(char *string, Occurences *occurences, int *max,
 		       char *max_char) {
 	*max = 0;
@@ -93,6 +187,18 @@ int maximum_occurences(char *string, Occurences *occurences, int *max,
 	return 1;
 }
 
+/*
+ * Finds the longest sequence of consecutive integers in a 2D array
+ *
+ * Post-conditions: start and max_length will refer to the longest sequence
+ *
+ * Parameters:
+ * - int *integers[]: 2D array of integers
+ * - int rows: Number of rows
+ * - int cols: Number of columns
+ * - int **start: Pointer to pointer to starting address of sequence
+ * - int *max_length: Pointer to length of longest sequence
+ */
 void max_consecutive_integers(int (*integers)[COLS], int rows, int cols,
 			      int **start, int *max_length) {
 	// beginning address of integers

@@ -1,3 +1,12 @@
+/*
+ * Name: Neal Wang
+ * Due Date: 2023-12-08
+ * Lecture: 02
+ * Lab: 25
+ * Assignment: PA 8
+ * Description: Extra credit interview questions
+ */
+
 #ifndef HEADERS_H
 #define HEADERS_H
 
@@ -22,6 +31,7 @@ int my_strlen(char *string);
 
 char *my_str_n_cat(char *dest, char *src, int n);
 int binary_search(int *arr, int n, int target);
+void bubble_sort(char **arr, int n);
 int is_palindrome(char *string, int length);
 unsigned int sum_primes(unsigned int n);
 int maximum_occurences(char *string, Occurences *occurences, int *max,

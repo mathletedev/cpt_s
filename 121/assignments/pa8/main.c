@@ -1,5 +1,6 @@
 #include "headers.h"
 
+// Test cases for all tasks
 int main(void) {
 	puts("Task 1: String Concatenation");
 	char str1[100] = "dog";
@@ -20,6 +21,14 @@ int main(void) {
 	printf("21 in arr1: %d\n", binary_search(arr1, 8, 21));
 	printf("1 in arr1: %d\n", binary_search(arr1, 8, 1));
 	printf("4 in arr1: %d\n", binary_search(arr1, 8, 4));
+	NEWLINE;
+
+	puts("Task 3: Bubble Sort");
+	char *arr2[] = {"red",	"orange", "yellow", "green",
+			"blue", "indigo", "violet"};
+	bubble_sort(arr2, 7);
+	for (int i = 0; i < 7; ++i)
+		puts(arr2[i]);
 	NEWLINE;
 
 	puts("Task 4: Palindrome");
@@ -73,13 +82,13 @@ int main(void) {
 	NEWLINE;
 
 	puts("Task 7: Consecutive Integers");
-	int arr2[4][5] = {{-5, 6, 0, 2, 2},
+	int arr3[4][5] = {{-5, 6, 0, 2, 2},
 			  {2, 2, 2, 9, 3},
 			  {3, 3, 2, 1, -8},
 			  {7, -2, 6, 0, 4}};
 	int *start;
 	int max_length;
-	max_consecutive_integers(arr2, 4, 5, &start, &max_length);
+	max_consecutive_integers(arr3, 4, 5, &start, &max_length);
 	printf("start: %p\n", start);
 	printf("value @ start: %d\n", *start);
 	printf("max length: %d\n", max_length);

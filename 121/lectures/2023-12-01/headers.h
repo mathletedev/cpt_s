@@ -11,5 +11,7 @@ typedef struct node {
 
 Node *create_node(int data);
 int insert_front(Node **head, int data);
+int insert(Node **head, int data);
+void write_list(Node *head);
 
 #endif

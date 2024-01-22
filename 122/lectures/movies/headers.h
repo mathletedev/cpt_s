@@ -13,4 +13,12 @@ typedef struct movie_record {
 	int year;
 } MovieRecord;
 
+typedef struct node {
+	MovieRecord data;
+	struct node *next;
+	struct node *prev;
+} Node;
+
+int insert_front(Node *head, MovieRecord data);
+
 #endif

@@ -7,7 +7,7 @@ int main(void) {
 		return 1;
 	}
 
-	char lines[MAX_ROWS][MAX_COLS];
+	/* char lines[MAX_ROWS][MAX_COLS];
 	MovieRecord records[MAX_ROWS];
 	int curr_line = 0;
 
@@ -22,7 +22,9 @@ int main(void) {
 	}
 
 	for (int i = 0; i < curr_line; ++i)
-		printf("%s,%d\n", records[i].title, records[i].year);
+		printf("%s,%d\n", records[i].title, records[i].year); */
+
+	Node *head = malloc(sizeof(Node));
 
 	return 0;
 }

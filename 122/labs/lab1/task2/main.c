@@ -43,6 +43,9 @@ char *my_strtok(char *str, const char *delim) {
 }
 
 int main(void) {
+	reverse_print("Hello, world!");
+	printf("\n");
+
 	char string[] = "Hello World, I am?in;CptS 122";
 	puts(my_strtok(string, " ,;?"));
 	puts(my_strtok(NULL, " ,;?"));

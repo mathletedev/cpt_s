@@ -7,8 +7,8 @@ int main(void) {
 		return 1;
 	}
 
-	/* char lines[MAX_ROWS][MAX_COLS];
-	MovieRecord records[MAX_ROWS];
+	char lines[MAX_ROWS][MAX_COLS];
+	Node *head = NULL;
 	int curr_line = 0;
 
 	while (fgets(lines[curr_line], MAX_COLS, infile) != NULL) {
@@ -17,14 +17,14 @@ int main(void) {
 	}
 
 	for (int i = 0; i < curr_line; ++i) {
-		strcpy(records[i].title, strtok(lines[i], ","));
-		records[i].year = atoi(strtok(NULL, "\n"));
+		MovieRecord record;
+		strcpy(record.title, strtok(lines[i], ","));
+		record.year = atoi(strtok(NULL, "\n"));
+
+		insert_front(&head, record);
 	}
 
-	for (int i = 0; i < curr_line; ++i)
-		printf("%s,%d\n", records[i].title, records[i].year); */
-
-	Node *head = malloc(sizeof(Node));
+	print_list(head);
 
 	return 0;
 }

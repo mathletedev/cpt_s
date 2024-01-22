@@ -16,9 +16,10 @@ typedef struct movie_record {
 typedef struct node {
 	MovieRecord data;
 	struct node *next;
-	struct node *prev;
 } Node;
 
-int insert_front(Node *head, MovieRecord data);
+void insert_front(Node **head, MovieRecord data);
+MovieRecord remove_front(Node **head);
+void print_list(Node *head);
 
 #endif

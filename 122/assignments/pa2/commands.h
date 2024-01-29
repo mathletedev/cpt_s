@@ -13,6 +13,8 @@ int main_menu(void);
 void load(Node **head);
 void store(Node *head);
 void display(Node *head);
-void edit(Node **head);
+void edit(Node *head);
+void rate(Node *head);
+void play(Node *head);
 
 #endif

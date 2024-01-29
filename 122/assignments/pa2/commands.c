@@ -1,4 +1,5 @@
 #include "commands.h"
+#include "linked_list.h"
 
 // displays a main menu, returns a validated choice
 int main_menu(void) {
@@ -62,6 +63,17 @@ void load(Node **head) {
 	fclose(stream);
 }
 
+// writes str to stream, adds quotes if str contains a comma
+void write_field(FILE *stream, char *str) {
+	if (strchr(str, ','))
+		fprintf(stream, "\"");
+	fprintf(stream, "%s", str);
+	if (strchr(str, ','))
+		fprintf(stream, "\"");
+
+	fprintf(stream, ",");
+}
+
 // writes all nodes in head to musicPlayList.csv
 void store(Node *head) {
 	FILE *stream = fopen("musicPlayList.csv", "w");
@@ -72,17 +84,16 @@ void store(Node *head) {
 
 	int num = 0;
 	for (; head != NULL; head = head->next) {
-		// add quote for commas
-		if (strchr(head->data.artist, ','))
-			fprintf(stream, "\"");
-		fprintf(stream, "%s", head->data.artist);
-		if (strchr(head->data.artist, ','))
-			fprintf(stream, "\"");
+		Record record = head->data;
+		// add quotes for commas
+		write_field(stream, head->data.artist);
+		write_field(stream, head->data.album);
+		write_field(stream, head->data.title);
+		write_field(stream, head->data.genre);
 
-		fprintf(stream, "%s,%s,%s,%d:%d,%d,%d\n", head->data.album,
-			head->data.title, head->data.genre,
-			head->data.length.minutes, head->data.length.seconds,
-			head->data.plays, head->data.rating);
+		fprintf(stream, "%d:%d,%d,%d\n", head->data.length.minutes,
+			head->data.length.seconds, head->data.plays,
+			head->data.rating);
 
 		++num;
 	}
@@ -104,15 +115,10 @@ void display(Node *head) {
 
 	clear();
 
-	int i = 1;
-	for (; head != NULL; head = head->next) {
-		// check if artist matches
-		if (strlen(artist) > 0 &&
-		    strcmp(head->data.artist, artist) != 0)
-			continue;
-		printf("%d. %s\n", i, head->data.title);
-		++i;
-	}
+	printf("Records by %s\n", strlen(artist) == 0 ? "all artists" : artist);
+	NEWLINE;
+
+	print_list(head, strlen(artist) == 0 ? NULL : artist);
 }
 
 // edits a string field
@@ -141,7 +147,7 @@ void edit_int(int *x, char *label) {
 }
 
 // prompts user for artist, gets songs, and edits one
-void edit(Node **head) {
+void edit(Node *head) {
 	puts("Edit records by artist:");
 	NEWLINE;
 	printf("> ");
@@ -153,7 +159,7 @@ void edit(Node **head) {
 
 	clear();
 
-	Node *found = find_by_artist(*head, artist);
+	Node *found = find_by_artist(head, artist);
 	if (found == NULL) {
 		puts("Artist not found");
 		return;
@@ -185,7 +191,7 @@ void edit(Node **head) {
 	Node *curr = found;
 	for (int j = 0; j < choice; ++j)
 		curr = curr->next;
-	Node *selected = find_one_by_title(*head, curr->data.title);
+	Node *selected = find_one_by_title(head, curr->data.title);
 
 	clear();
 
@@ -201,4 +207,79 @@ void edit(Node **head) {
 	edit_int(&selected->data.rating, "Rating");
 
 	free_list(&found);
+}
+
+// rate a song by title
+void rate(Node *head) {
+	char title[MAX_STR];
+
+	printf("Rate song by title: ");
+	fgets(title, MAX_STR, stdin);
+	title[strlen(title) - 1] = '\0';
+
+	Node *selected = find_one_by_title(head, title);
+	if (selected == NULL) {
+		puts("Song not found");
+		return;
+	}
+
+	clear();
+
+	printf("Enter rating from 1 - 5 (%d):\n", selected->data.rating);
+
+	int rating;
+	int num_read = -1;
+	do {
+		if (num_read != -1)
+			puts("Invalid input");
+
+		NEWLINE;
+		printf("> ");
+
+		num_read = scanf("%d", &rating);
+		consume_input();
+	} while (num_read != 1 || rating < 1 || rating > 5);
+
+	selected->data.rating = rating;
+}
+
+// allows user to select a song and plays songs in order
+void play(Node *head) {
+	int count = print_list(head, NULL);
+
+	NEWLINE;
+	puts("Select a song to play:");
+
+	int choice;
+	int num_read = -1;
+	do {
+		if (num_read != -1)
+			puts("Invalid input");
+
+		NEWLINE;
+		printf("> ");
+
+		num_read = scanf("%d", &choice);
+		consume_input();
+	} while (num_read != 1 || choice < 1 || choice > count);
+	--choice;
+
+	for (int i = 0; i < choice; ++i)
+		head = head->next;
+
+	for (; head != NULL; head = head->next) {
+		clear();
+
+		puts("Playing...");
+		NEWLINE;
+		printf("🎵 %s", head->data.title);
+		// https://stackoverflow.com/questions/1716296/why-does-printf-not-flush-after-the-call-unless-a-newline-is-in-the-format-strin
+		fflush(stdout);
+
+		_sleep(1);
+	}
+
+	clear();
+
+	puts("End of playlist");
 }

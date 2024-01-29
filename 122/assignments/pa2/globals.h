@@ -1,6 +1,14 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#ifdef _WIN_32
+#include <windows.h>
+#define _sleep(x) Sleep(x * 1000)
+#else
+#include <unistd.h>
+#define _sleep(x) sleep(x)
+#endif
+
 #define NEWLINE printf("\n")
 
 #define MAX_STR 100

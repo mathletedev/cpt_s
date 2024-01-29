@@ -16,17 +16,33 @@ Node *create_node(Record data) {
 	return node;
 }
 
-Node *insert_front(Node **head, Record data) {
+int insert_front(Node **head, Record data) {
 	Node *node = create_node(data);
 	if (node == NULL)
-		return NULL;
+		return 0;
 
 	node->next = *head;
 	if (*head != NULL)
 		(*head)->prev = node;
 	*head = node;
 
-	return node;
+	return 1;
+}
+
+// prints records, returns number of records printed
+// optional artist parameter for filtering by artist
+int print_list(Node *head, char *artist) {
+	int i = 1;
+	for (; head != NULL; head = head->next) {
+		// check if artist matches
+		if (artist != NULL && strcmp(head->data.artist, artist) != 0)
+			continue;
+
+		printf("%d. %s - %s\n", i, head->data.artist, head->data.title);
+		++i;
+	}
+
+	return i - 1;
 }
 
 // recursively frees nodes of list

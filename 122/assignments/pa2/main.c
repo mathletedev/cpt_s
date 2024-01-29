@@ -10,6 +10,7 @@ int main(void) {
 
 		clear();
 
+		// exit command
 		if (command == 11) {
 			store(head);
 			break;
@@ -26,7 +27,13 @@ int main(void) {
 			display(head);
 			break;
 		case 6:
-			edit(&head);
+			edit(head);
+			break;
+		case 8:
+			rate(head);
+			break;
+		case 9:
+			play(head);
 			break;
 		}
 

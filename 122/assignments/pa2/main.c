@@ -1,12 +1,6 @@
-#include "headers.h"
+#include "commands.h"
 
 int main(void) {
-	FILE *stream = fopen("musicPlayList.csv", "rw");
-	if (stream == NULL) {
-		puts("Failed to open musicPlayList.csv");
-		return 1;
-	}
-
 	Node *head = NULL;
 
 	while (1) {
@@ -16,20 +10,31 @@ int main(void) {
 
 		clear();
 
-		switch (command) {
-		case 1:
-			load(&head, stream);
-			break;
-		case 2:
-			store(head, stream);
-			break;
-		case 3:
-			display(head, NULL);
+		if (command == 11) {
+			store(head);
 			break;
 		}
 
+		switch (command) {
+		case 1:
+			load(&head);
+			break;
+		case 2:
+			store(head);
+			break;
+		case 3:
+			display(head);
+			break;
+		case 6:
+			edit(&head);
+			break;
+		}
+
+		NEWLINE;
 		suspend();
 	}
+
+	free_list(&head);
 
 	return 0;
 }

@@ -115,10 +115,22 @@ void display(Node *head) {
 
 	clear();
 
+	Node *found = head;
+	if (strlen(artist) > 0) {
+		found = find_by_artist(head, artist);
+		if (found == NULL) {
+			puts("Artist not found");
+			return;
+		}
+	}
+
 	printf("Records by %s\n", strlen(artist) == 0 ? "all artists" : artist);
 	NEWLINE;
 
-	print_list(head, strlen(artist) == 0 ? NULL : artist);
+	print_list(found);
+	// make sure to free allocated space
+	if (found != head)
+		free_list(&found);
 }
 
 // edits a string field
@@ -245,7 +257,7 @@ void rate(Node *head) {
 
 // allows user to select a song and plays songs in order
 void play(Node *head) {
-	int count = print_list(head, NULL);
+	int count = print_list(head);
 
 	NEWLINE;
 	puts("Select a song to play:");

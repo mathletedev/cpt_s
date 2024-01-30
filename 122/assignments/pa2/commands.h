@@ -1,3 +1,11 @@
+/*
+ * Programming Assignment 2
+ * Author: Neal Wang
+ * Lab: 05
+ * Due date: 2024-01-31
+ * Individual commands
+ */
+
 #ifndef COMMANDS_H
 #define COMMANDS_H
 

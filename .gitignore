@@ -4,3 +4,5 @@
 !clean
 *.zip
 *.log
+.idea
+cmake-build-debug

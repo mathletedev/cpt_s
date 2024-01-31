@@ -14,7 +14,7 @@ add_executable(
         linked_list.h
         main.c
         utils.c
-        utils.h1
+        utils.h
 )
 
 add_custom_command(

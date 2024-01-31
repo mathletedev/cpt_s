@@ -5,6 +5,8 @@ Node *create_node(Contact data) {
 	if (node == NULL)
 		return NULL;
 
+	node->next = NULL;
+
 	strcpy(node->data.name, data.name);
 	strcpy(node->data.phone, data.phone);
 	strcpy(node->data.email, data.email);

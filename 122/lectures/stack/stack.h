@@ -4,16 +4,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct data {
+typedef struct data_t {
 	char letter;
 } Data;
 
-typedef struct node {
+typedef struct node_t {
 	Data data;
-	struct node *next;
+	struct node_t *next;
 } Node;
 
-typedef struct stack {
+typedef struct stack_t {
 	Node *top;
 } Stack;
 

@@ -1,4 +1,6 @@
 BasedOnStyle: LLVM
 IndentWidth: 8
 UseTab: Always
+AllowShortIfStatementsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: Empty
 IndentCaseLabels: false

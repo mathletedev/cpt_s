@@ -79,23 +79,21 @@ void store(Node *head) {
 		return;
 	}
 
-	int num = 0;
-	for (; head != NULL; head = head->next) {
-		Record record = head->data;
+	int i = 0;
+	for (Node *curr = head; i < get_length(head); curr = curr->next, ++i) {
+		Record record = curr->data;
 		// add quotes for commas
-		write_field(stream, head->data.artist);
-		write_field(stream, head->data.album);
-		write_field(stream, head->data.title);
-		write_field(stream, head->data.genre);
+		write_field(stream, curr->data.artist);
+		write_field(stream, curr->data.album);
+		write_field(stream, curr->data.title);
+		write_field(stream, curr->data.genre);
 
-		fprintf(stream, "%d:%d,%d,%d\n", head->data.length.minutes,
-			head->data.length.seconds, head->data.plays,
-			head->data.rating);
-
-		++num;
+		fprintf(stream, "%d:%d,%d,%d\n", curr->data.length.minutes,
+			curr->data.length.seconds, curr->data.plays,
+			curr->data.rating);
 	}
 
-	printf("Successfully stored %d records\n", num);
+	printf("Successfully stored %d records\n", i);
 	fclose(stream);
 }
 
@@ -180,14 +178,12 @@ void edit(Node *head) {
 		return;
 	}
 
-	int i = 1;
-	for (Node *curr = found; curr != NULL; curr = curr->next, ++i)
-		printf("%d. %s\n", i, curr->data.title);
-
-	--i;
-
-	NEWLINE;
 	puts("Select a song:");
+	NEWLINE;
+
+	int i = 0;
+	for (Node *curr = found; i < get_length(found); curr = curr->next, ++i)
+		printf("%d. %s\n", i + 1, curr->data.title);
 
 	int choice;
 	int num_read = -1;
@@ -237,7 +233,9 @@ void rate(Node *head) {
 
 	Node *selected = find_one_by_title(head, title);
 	if (selected == NULL) {
+		clear();
 		puts("Song not found");
+
 		return;
 	}
 
@@ -287,12 +285,13 @@ void play(Node *head) {
 	for (int i = 0; i < choice; ++i)
 		head = head->next;
 
-	for (; head != NULL; head = head->next) {
+	int i = 0;
+	for (Node *curr = head; i < get_length(head); curr = curr->next, ++i) {
 		clear();
 
 		puts("Playing...");
 		NEWLINE;
-		printf("🎵 %s", head->data.title);
+		printf("🎵 %s", curr->data.title);
 		// https://stackoverflow.com/questions/1716296/why-does-printf-not-flush-after-the-call-unless-a-newline-is-in-the-format-strin
 		fflush(stdout);
 

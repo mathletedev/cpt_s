@@ -3,7 +3,7 @@
  * Author: Neal Wang
  * Lab: 05
  * Due date: 2024-02-09
- * Implementation of linked list data structure
+ * Implementation of circular doubly linked list data structure
  */
 
 #ifndef LINKED_LIST_H

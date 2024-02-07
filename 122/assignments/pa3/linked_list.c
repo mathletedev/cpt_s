@@ -60,12 +60,15 @@ int insert_front(Node **head, Record data) {
 }
 
 int delete_node(Node **head, char *title) {
+	int length = get_length(*head);
+
 	// special case for head, need to adjust head pointer
 	if (strcmp((*head)->data.title, title) == 0) {
 		(*head)->prev->next = (*head)->next;
 		(*head)->next->prev = (*head)->prev;
 
-		Node *next = (*head)->next;
+		// set to NULL if last element
+		Node *next = length == 1 ? NULL : (*head)->next;
 		free(*head);
 		*head = next;
 
@@ -73,8 +76,7 @@ int delete_node(Node **head, char *title) {
 	}
 
 	int i = 0;
-	for (Node *curr = *head; i < get_length(*head);
-	     curr = curr->next, ++i) {
+	for (Node *curr = *head; i < length; curr = curr->next, ++i) {
 		if (strcmp(curr->data.title, title) == 0) {
 			curr->prev->next = curr->next;
 			curr->next->prev = curr->prev;

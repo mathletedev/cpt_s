@@ -21,6 +21,8 @@ void test_insert(void) {
 		puts("Test passed");
 	else
 		puts("Test failed");
+
+	free_list(&head);
 }
 
 void test_delete(void) {
@@ -44,10 +46,12 @@ void test_delete(void) {
 
 	delete_node(&head, "Chained to the Rhythm");
 
-	if (head != NULL)
+	if (head == NULL)
 		puts("Test passed");
 	else
 		puts("Test failed");
+
+	free_list(&head);
 }
 
 void test_shuffle(void) {
@@ -96,4 +100,6 @@ void test_shuffle(void) {
 
 	puts("Actual output:");
 	shuffle_play(head, order, 3, 1);
+
+	free_list(&head);
 }

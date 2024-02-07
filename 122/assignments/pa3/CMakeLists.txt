@@ -13,6 +13,8 @@ add_executable(
         linked_list.c
         linked_list.h
         main.c
+				test.c
+				test.h
         utils.c
         utils.h
 )

@@ -13,6 +13,7 @@
 #include "linked_list.h"
 #include "utils.h"
 #include <stdio.h>
+#include <time.h>
 
 #define MAX_LINE 1000
 
@@ -28,5 +29,6 @@ void insert(Node **head);
 // delete() already exists
 void _delete(Node **head);
 void sort(Node *head);
+void shuffle_play(Node *head, int *order, int n, int testing);
 
 #endif

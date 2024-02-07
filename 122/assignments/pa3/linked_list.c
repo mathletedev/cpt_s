@@ -45,6 +45,7 @@ int insert_front(Node **head, Record data) {
 		node->next = node;
 		node->prev = node;
 		*head = node;
+
 		return 1;
 	}
 
@@ -59,7 +60,11 @@ int insert_front(Node **head, Record data) {
 }
 
 int delete_node(Node **head, char *title) {
+	// special case for head, need to adjust head pointer
 	if (strcmp((*head)->data.title, title) == 0) {
+		(*head)->prev->next = (*head)->next;
+		(*head)->next->prev = (*head)->prev;
+
 		Node *next = (*head)->next;
 		free(*head);
 		*head = next;
@@ -67,31 +72,40 @@ int delete_node(Node **head, char *title) {
 		return 1;
 	}
 
-	Node *curr = *head;
-	while (curr != NULL && strcmp(curr->data.title, title) != 0)
-		curr = curr->next;
+	int i = 0;
+	for (Node *curr = *head; i < get_length(*head);
+	     curr = curr->next, ++i) {
+		if (strcmp(curr->data.title, title) == 0) {
+			curr->prev->next = curr->next;
+			curr->next->prev = curr->prev;
+			free(curr);
 
-	if (curr == NULL) return 0;
+			return 1;
+		}
+	}
 
-	curr->prev->next = curr->next;
-	if (curr->next != NULL) curr->next->prev = curr->prev;
-	free(curr);
-
-	return 1;
+	// didn't find record
+	return 0;
 }
 
 // prints records, returns number of records printed
 int print_list(Node *head) {
 	int i = 0;
+	// clang-format off
+	puts(" # | Artist               | Album                | Song                 | Genre      | Time  | Plays     | Rating");
+	puts("---------------------------------------------------------------------------------------------------------------------");
+	// clang-format on
 	for (Node *curr = head; i < get_length(head); curr = curr->next, ++i)
-		printf(
-		    "%d. %s | %s | %s | %s | %d:%d | %d plays | %d/5 rating\n",
-		    i + 1, curr->data.artist, curr->data.album,
-		    curr->data.title, curr->data.genre,
-		    curr->data.length.minutes, curr->data.length.seconds,
-		    curr->data.plays, curr->data.rating);
+		printf("%2d | %-20s | %-20s | %-20s | %-10s | "
+		       "%02d:%02d | %3d "
+		       "plays | %d/5 "
+		       "rating\n",
+		       i + 1, curr->data.artist, curr->data.album,
+		       curr->data.title, curr->data.genre,
+		       curr->data.length.minutes, curr->data.length.seconds,
+		       curr->data.plays, curr->data.rating);
 
-	return i - 1;
+	return i;
 }
 
 // recursively frees nodes of list
@@ -176,5 +190,19 @@ void sort_list(Node *head, Sort method) {
 		Record tmp = initial->data;
 		initial->data = best->data;
 		best->data = tmp;
+	}
+}
+
+void randomise(int *arr, int n) {
+	for (int i = 0; i < n; ++i)
+		arr[i] = i + 1;
+
+	// use N swaps
+	for (int i = 0; i < n; ++i) {
+		int pos = rand() % n;
+
+		int tmp = arr[i];
+		arr[i] = arr[pos];
+		arr[pos] = tmp;
 	}
 }

@@ -31,5 +31,6 @@ void free_list(Node **head);
 Node *find_by_artist(Node *head, char *artist);
 Node *find_one_by_title(Node *head, char *title);
 void sort_list(Node *head, Sort method);
+void randomise(int *arr, int n);
 
 #endif

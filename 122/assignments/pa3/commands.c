@@ -338,6 +338,7 @@ void _delete(Node **head) {
 		puts("Song not found");
 }
 
+// sorts the records by given method
 void sort(Node *head) {
 	puts("Select a sorting method:");
 	NEWLINE;
@@ -364,4 +365,38 @@ void sort(Node *head) {
 	clear();
 
 	puts("Successfully sorted list!");
+}
+
+// first generates a random order,
+// then traverses the linked list and plays songs
+void shuffle_play(Node *head, int *order, int n, int testing) {
+	int curr = 1;
+	for (int i = 0; i < n; ++i) {
+		// traverse linked list
+		for (; curr < order[i]; ++curr)
+			head = head->next;
+		for (; curr > order[i]; --curr)
+			head = head->prev;
+
+		if (testing)
+			printf("%s -> ", head->data.title);
+		else {
+			clear();
+
+			puts("Playing...");
+			NEWLINE;
+
+			printf("🎵 %s", head->data.title);
+
+			fflush(stdout);
+
+			_sleep(1);
+		}
+	}
+
+	if (!testing) {
+		clear();
+
+		puts("End of playlist");
+	}
 }

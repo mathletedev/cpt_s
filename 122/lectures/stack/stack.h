@@ -1,5 +1,4 @@
-#ifndef STACK_H
-#define STACK_H
+#pragma once
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,5 +21,3 @@ int is_empty(const Stack *stack);
 Data peek(const Stack *stack);
 int push(Stack *stack, Data data);
 int pop(Stack *stack);
-
-#endif

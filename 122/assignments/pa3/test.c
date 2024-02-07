@@ -17,10 +17,14 @@ void test_insert(void) {
 	};
 	// clang-format on
 
-	if (insert_front(&head, data) == 0 && head == NULL)
-		puts("Test passed");
-	else
-		puts("Test failed");
+	if (insert_front(&head, data) != 0)
+		puts("Test failed: did not return 0");
+	else {
+		if (head != NULL)
+			puts("Test failed: head is not set to NULL");
+		else
+			puts("Test passed!");
+	}
 
 	free_list(&head);
 }
@@ -46,10 +50,10 @@ void test_delete(void) {
 
 	delete_node(&head, "Chained to the Rhythm");
 
-	if (head == NULL)
-		puts("Test passed");
+	if (head != NULL)
+		puts("Test failed: head is not set to NULL");
 	else
-		puts("Test failed");
+		puts("Test passed!");
 
 	free_list(&head);
 }

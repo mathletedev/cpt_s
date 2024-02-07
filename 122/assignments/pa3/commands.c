@@ -36,6 +36,9 @@ int main_menu(void) {
 
 // reads and inserts records from musicPlayList.csv to front of linked list
 void load(Node **head) {
+	// overwrite contents of head
+	free_list(head);
+
 	FILE *stream = fopen("musicPlayList.csv", "r");
 	if (stream == NULL) {
 		puts("Failed to open musicPlayList.csv");

@@ -5,9 +5,32 @@ Complex::Complex(double real, double imaginary) {
 	this->imaginary = imaginary;
 }
 
-Complex Complex::add(Complex &other) {
+void Complex::setReal(double real) {
+	this->real = real;
+}
+
+void Complex::setImaginary(double imaginary) {
+	this->imaginary = imaginary;
+}
+
+double Complex::getReal() {
+	return real;
+}
+
+double Complex::getImaginary() {
+	return imaginary;
+}
+
+Complex Complex::add(const Complex &other) {
 	real += other.real;
 	imaginary += other.imaginary;
+
+	return *this;
+}
+
+Complex Complex::subtract(const Complex &other) {
+	real -= other.real;
+	imaginary -= other.imaginary;
 
 	return *this;
 }
@@ -26,32 +49,41 @@ void Complex::print() {
 	std::cout << real << " + " << imaginary << "i" << std::endl;
 }
 
-Complex add(Complex &c1, Complex &c2) {
-	return Complex(c1.real + c2.real, c1.imaginary + c2.imaginary);
+Complex add(const Complex &c1, const Complex &c2) {
+	Complex res = c1;
+	return res.add(c2);
 }
 
-Complex operator+(Complex &c1, Complex &c2) {
+Complex subtract(const Complex &c1, const Complex &c2) {
+	Complex res = c1;
+	return res.subtract(c2);
+}
+
+Complex operator+(const Complex &c1, const Complex &c2) {
 	return add(c1, c2);
 }
 
-Complex operator-(Complex &c1, Complex &c2) {
-	return Complex(c1.real - c2.real, c1.imaginary - c2.imaginary);
+Complex operator-(const Complex &c1, const Complex &c2) {
+	return subtract(c1, c2);
 }
 
 std::istream &operator>>(std::istream &stream, Complex &complex) {
-	stream >> complex.real;
+	double data;
+	stream >> data;
+	complex.setReal(data);
 
 	char c = '\0';
 	while (!(c == '+' || c == '-'))
 		stream >> c;
 
-	stream >> complex.imaginary >> c;
+	stream >> data >> c;
+	complex.setImaginary(data);
 
 	return stream;
 }
 
 std::ostream &operator<<(std::ostream &stream, Complex &complex) {
-	stream << complex.real << " + " << complex.imaginary << "i";
+	stream << complex.getReal() << " + " << complex.getImaginary() << "i";
 
 	return stream;
 }

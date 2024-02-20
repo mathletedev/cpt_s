@@ -1,6 +1,7 @@
 BasedOnStyle: LLVM
+AccessModifierOffset: 0
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: true
+IndentAccessModifiers: true
 IndentWidth: 8
 UseTab: Always
-AllowShortIfStatementsOnASingleLine: true
-AllowShortFunctionsOnASingleLine: Empty
-IndentCaseLabels: false

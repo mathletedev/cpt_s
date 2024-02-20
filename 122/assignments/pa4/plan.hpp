@@ -1,26 +1,31 @@
 #pragma once
 
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
 
 class Plan {
 	public:
-	void setGoal(int goal);
+		std::string toString() const;
+
+		void setGoal(int goal);
+
+		void editGoal();
+
+		friend std::ifstream &operator>>(std::ifstream &fileStream,
+						 Plan &plan);
+		friend std::ostream &operator<<(std::ostream &stream,
+						const Plan &plan);
+		friend std::ofstream &operator<<(std::ofstream &fileStream,
+						 const Plan &plan);
 
 	protected:
-	int goal;
-	std::string name;
-	std::string date;
+		int goal = 0;
+		std::string name = "Goal";
+		std::string date = "01/01/1970";
 };
 
 class DietPlan : public Plan {};
 
 class ExercisePlan : public Plan {};
-
-class FitnessAppWrapper {
-	public:
-	void runApp(void);
-	void loadWeeklyPlan(std::ifstream &fileStream,
-			    std::vector<DietPlan> weeklyPlan);
-};

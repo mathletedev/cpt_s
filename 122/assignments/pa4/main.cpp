@@ -4,7 +4,8 @@
 
 int main() {
 	DietPlan plan;
-	std::cin >> plan;
+
+	plan.editGoal();
 
 	return 0;
 }

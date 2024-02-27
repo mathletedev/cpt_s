@@ -7,7 +7,7 @@
 class List {
 	public:
 		List();
-		List(const List &copyList);
+		List(const List &other);
 
 		~List();
 

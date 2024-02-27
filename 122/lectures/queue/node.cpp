@@ -1,18 +1,22 @@
 #include "node.hpp"
 
-Node::Node(std::string printJob) {
-	this->printJob = printJob;
+template <class T>
+Node<T>::Node(T data) {
+	this->data = data;
 	this->next = nullptr;
 }
 
-std::string Node::getPrintJob() const {
-	return printJob;
+template <class T>
+T Node<T>::getData() const {
+	return data;
 }
 
-Node *Node::getNext() const {
+template <class T>
+Node<T> *Node<T>::getNext() const {
 	return next;
 }
 
-void Node::setNext(Node *const next) {
+template <class T>
+void Node<T>::setNext(Node<T> *const next) {
 	this->next = next;
 }

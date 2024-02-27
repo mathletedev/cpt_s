@@ -1,12 +1,14 @@
 #include "queue.hpp"
 
-Queue::Queue(Node *head, Node *tail) {
-	this->head = head;
-	this->tail = tail;
+template <class T>
+Queue<T>::Queue() {
+	this->head = nullptr;
+	this->tail = nullptr;
 }
 
-bool Queue::enqueue(std::string printJob) {
-	Node *node = new Node(printJob);
+template <class T>
+bool Queue<T>::enqueue(T data) {
+	Node<T> *node = new Node<T>(data);
 	if (node == nullptr) return false;
 
 	if (head == nullptr) {
@@ -20,9 +22,10 @@ bool Queue::enqueue(std::string printJob) {
 	return true;
 }
 
-std::string Queue::dequeue() {
-	std::string data = head->getPrintJob();
-	Node *next = head;
+template <class T>
+T Queue<T>::dequeue() {
+	T data = head->getData();
+	Node<T> *next = head;
 
 	if (head == tail) tail = nullptr;
 	head = head->getNext();
@@ -31,6 +34,7 @@ std::string Queue::dequeue() {
 	return data;
 }
 
-bool Queue::isEmpty() const {
+template <class T>
+bool Queue<T>::isEmpty() const {
 	return head == nullptr;
 }

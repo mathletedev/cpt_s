@@ -4,14 +4,15 @@
 #include <iostream>
 #include <string>
 
+template <class T>
 class Queue {
 	public:
-		Queue(Node *head = nullptr, Node *tail = nullptr);
-		bool enqueue(std::string printJob);
-		std::string dequeue();
+		Queue();
+		bool enqueue(T data);
+		T dequeue();
 		bool isEmpty() const;
 
 	private:
-		Node *head;
-		Node *tail;
+		Node<T> *head;
+		Node<T> *tail;
 };

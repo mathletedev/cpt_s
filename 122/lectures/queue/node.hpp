@@ -3,16 +3,17 @@
 #include <iostream>
 #include <string>
 
+template <class T>
 class Node {
 	public:
-		Node(std::string printJob);
+		Node(T data);
 
-		std::string getPrintJob() const;
+		T getData() const;
 
-		Node *getNext() const;
-		void setNext(Node *const next);
+		Node<T> *getNext() const;
+		void setNext(Node<T> *const next);
 
 	private:
-		std::string printJob;
-		Node *next;
+		T data;
+		Node<T> *next;
 };

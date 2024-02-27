@@ -1,11 +1,7 @@
-#include "plan.hpp"
-
-#include <iostream>
+#include "fitnessappwrapper.hpp"
 
 int main() {
-	DietPlan plan;
-
-	plan.editGoal();
+	(new FitnessAppWrapper())->runApp();
 
 	return 0;
 }

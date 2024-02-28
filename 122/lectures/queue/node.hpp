@@ -8,6 +8,8 @@ class Node {
 	public:
 		Node(T data);
 
+		~Node();
+
 		T getData() const;
 
 		Node<T> *getNext() const;
@@ -22,6 +24,12 @@ template <class T>
 Node<T>::Node(T data) {
 	this->data = data;
 	this->next = nullptr;
+}
+
+template <class T>
+Node<T>::~Node() {
+	std::cout << "deleting: " << data << std::endl;
+	delete next;
 }
 
 template <class T>

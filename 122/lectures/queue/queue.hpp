@@ -8,13 +8,19 @@ template <class T>
 class Queue {
 	public:
 		Queue();
+
 		bool enqueue(T data);
 		T dequeue();
+
 		bool isEmpty() const;
+
+		~Queue();
 
 	private:
 		Node<T> *head;
 		Node<T> *tail;
+
+		void destroyQueue();
 };
 
 template <class T>
@@ -42,11 +48,11 @@ bool Queue<T>::enqueue(T data) {
 template <class T>
 T Queue<T>::dequeue() {
 	T data = head->getData();
-	Node<T> *next = head;
+	Node<T> *next = head->getNext();
 
 	if (head == tail) tail = nullptr;
-	head = head->getNext();
 	delete head;
+	head = next;
 
 	return data;
 }
@@ -54,4 +60,14 @@ T Queue<T>::dequeue() {
 template <class T>
 bool Queue<T>::isEmpty() const {
 	return head == nullptr;
+}
+
+template <class T>
+Queue<T>::~Queue() {
+	destroyQueue();
+}
+
+template <class T>
+void Queue<T>::destroyQueue() {
+	delete head;
 }

@@ -1,19 +1,14 @@
 #pragma once
 
-#include <iostream>
-#include <string>
-
 template <class T>
 class Node {
 	public:
 		Node(const T &data);
 
-		~Node();
-
 		T getData() const;
-
 		Node<T> *getNext() const;
-		void setNext(Node<T> *const &next);
+
+		void setNext(Node<T> *&next);
 
 	private:
 		T data;
@@ -23,13 +18,7 @@ class Node {
 template <class T>
 Node<T>::Node(const T &data) {
 	this->data = data;
-	this->next = nullptr;
-}
-
-template <class T>
-Node<T>::~Node() {
-	std::cout << "deleting: " << data << std::endl;
-	delete next;
+	next = nullptr;
 }
 
 template <class T>
@@ -43,6 +32,6 @@ Node<T> *Node<T>::getNext() const {
 }
 
 template <class T>
-void Node<T>::setNext(Node<T> *const &next) {
+void Node<T>::setNext(Node<T> *&next) {
 	this->next = next;
 }

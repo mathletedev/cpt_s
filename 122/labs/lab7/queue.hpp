@@ -2,31 +2,33 @@
 
 #include "node.hpp"
 #include <iostream>
-#include <string>
 
 template <class T>
 class Queue {
 	public:
 		Queue();
 
-		bool enqueue(const T &data);
-		T dequeue();
-
 		bool isEmpty() const;
 
-		~Queue();
+		bool enqueue(const T &data);
+		T dequeue();
+		void printRecursive() const;
 
 	private:
 		Node<T> *head;
 		Node<T> *tail;
 
-		void destroyQueue();
+		void printRecursiveHelper(Node<T> *curr) const;
 };
 
 template <class T>
 Queue<T>::Queue() {
-	this->head = nullptr;
-	this->tail = nullptr;
+	head = tail = nullptr;
+}
+
+template <class T>
+bool Queue<T>::isEmpty() const {
+	return head == nullptr;
 }
 
 template <class T>
@@ -48,26 +50,27 @@ bool Queue<T>::enqueue(const T &data) {
 template <class T>
 T Queue<T>::dequeue() {
 	T data = head->getData();
-	Node<T> *next = head->getNext();
+	Node<T> *tmp = head->getNext();
 
-	if (head == tail) tail = nullptr;
+	if (tail == head) tail = nullptr;
 	delete head;
-	head = next;
+	head = tmp;
 
 	return data;
 }
 
 template <class T>
-bool Queue<T>::isEmpty() const {
-	return head == nullptr;
+void Queue<T>::printRecursive() const {
+	printRecursiveHelper(head);
 }
 
 template <class T>
-Queue<T>::~Queue() {
-	destroyQueue();
-}
+void Queue<T>::printRecursiveHelper(Node<T> *curr) const {
+	if (curr == nullptr) {
+		std::cout << "nullptr" << std::endl;
+		return;
+	}
 
-template <class T>
-void Queue<T>::destroyQueue() {
-	delete head;
+	std::cout << curr->getData() << " -> ";
+	printRecursiveHelper(curr->getNext());
 }

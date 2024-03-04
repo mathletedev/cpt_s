@@ -34,7 +34,7 @@ bool Queue<T>::enqueue(const T &data) {
 	Node<T> *node = new Node<T>(data);
 	if (node == nullptr) return false;
 
-	if (head == nullptr) {
+	if (isEmpty()) {
 		head = tail = node;
 		return true;
 	}
@@ -50,9 +50,9 @@ T Queue<T>::dequeue() {
 	T data = head->getData();
 	Node<T> *next = head->getNext();
 
-	if (head == tail) tail = nullptr;
 	delete head;
 	head = next;
+	if (isEmpty()) tail = nullptr;
 
 	return data;
 }

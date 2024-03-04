@@ -8,6 +8,7 @@ class TestQueue {
 		void runTests();
 
 	private:
+		void testIsEmpty();
 		void testEnqueue();
 		void testDequeue();
 		void testPrintRecursive();

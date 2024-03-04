@@ -1,9 +1,23 @@
 #include "testqueue.hpp"
 
 void TestQueue::runTests() {
+	testIsEmpty();
 	testEnqueue();
 	testDequeue();
 	testPrintRecursive();
+}
+
+void TestQueue::testIsEmpty() {
+	Queue<std::string> q;
+
+	bool passed = true;
+
+	passed &= q.isEmpty();
+	q.enqueue("Item1");
+	passed &= !q.isEmpty();
+
+	std::cout << "testIsEmpty():" << std::endl;
+	std::cout << (passed ? "passed" : "failed") << std::endl;
 }
 
 void TestQueue::testEnqueue() {

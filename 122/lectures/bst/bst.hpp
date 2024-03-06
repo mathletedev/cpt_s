@@ -1,17 +1,27 @@
 #pragma once
 
 #include "node.hpp"
+#include <iostream>
 
 template <class T>
 class bst {
 	public:
+		bst();
+
 		void insert(const T &data);
+		void inorder_traversal() const;
 
 	private:
 		node<T> *p_root_;
 
 		void insert(node<T> *curr, const T &data);
+		void inorder_traversal(const node<T> *const curr) const;
 };
+
+template <class T>
+bst<T>::bst() {
+	p_root_ = nullptr;
+}
 
 template <class T>
 void bst<T>::insert(const T &data) {
@@ -21,6 +31,11 @@ void bst<T>::insert(const T &data) {
 	}
 
 	insert(p_root_, data);
+}
+
+template <class T>
+void bst<T>::inorder_traversal() const {
+	inorder_traversal(p_root_);
 }
 
 template <class T>
@@ -42,4 +57,13 @@ void bst<T>::insert(node<T> *curr, const T &data) {
 
 		insert(curr->get_right(), data);
 	}
+}
+
+template <class T>
+void bst<T>::inorder_traversal(const node<T> *const curr) const {
+	if (curr == nullptr) return;
+
+	inorder_traversal(curr->get_left());
+	std::cout << curr->get_data() << std::endl;
+	inorder_traversal(curr->get_right());
 }

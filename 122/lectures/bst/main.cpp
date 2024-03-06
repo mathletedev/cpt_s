@@ -9,5 +9,7 @@ int main() {
 	tree.insert(2);
 	tree.insert(5);
 
+	tree.inorder_traversal();
+
 	return 0;
 }

@@ -24,3 +24,7 @@ add_custom_command(
 	TARGET ${EXEC} POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy "../data/input3.txt" "./data/input3.txt"
 )
+add_custom_command(
+	TARGET ${EXEC} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy "../data/input4.txt" "./data/input4.txt"
+)

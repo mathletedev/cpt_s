@@ -20,6 +20,8 @@ class stack {
 
 		bool is_empty() const;
 
+		void clear();
+
 	private:
 		int size_;
 		int max_size_;
@@ -71,4 +73,9 @@ bool stack<T>::peek(T &item) const {
 template <class T>
 bool stack<T>::is_empty() const {
 	return size_ == 0;
+}
+
+template <class T>
+void stack<T>::clear() {
+	size_ = 0;
 }

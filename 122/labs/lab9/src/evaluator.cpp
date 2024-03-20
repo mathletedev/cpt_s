@@ -7,7 +7,7 @@ evaluator::evaluator() {
 
 int evaluator::evaluate(std::ifstream &fstream) {
 	c_ = '\0';
-	s_ = stack<int>();
+	s_.clear();
 
 	while (true) {
 		if (!(fstream >> c_)) throw;
@@ -30,7 +30,6 @@ int evaluator::evaluate(std::ifstream &fstream) {
 		int s1, s2;
 		s_.pop(s2);
 		s_.pop(s1);
-		// std::cout << s_.get_size() << std::endl;
 
 		int v;
 		switch (c_) {

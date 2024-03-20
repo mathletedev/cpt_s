@@ -2,7 +2,6 @@
 
 #include "stack.hpp"
 #include <fstream>
-#include <string>
 
 class evaluator {
 	public:

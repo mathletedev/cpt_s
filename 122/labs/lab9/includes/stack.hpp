@@ -11,6 +11,8 @@ class stack {
 		stack(int size = 0);
 
 		~stack();
+		stack(stack &other);
+		stack &operator=(stack const &other);
 
 		int get_size() const;
 
@@ -37,7 +39,24 @@ stack<T>::stack(int size) {
 
 template <class T>
 stack<T>::~stack() {
-	delete[] p_top_;
+	if (p_top_ != nullptr) delete[] p_top_;
+}
+
+template <class T>
+stack<T>::stack(stack &other) {
+	*this = other;
+}
+
+template <class T>
+stack<T> &stack<T>::operator=(stack const &other) {
+	size_ = other.size_;
+	max_size_ = other.max_size_;
+
+	p_top_ = new T[MAX_SIZE];
+	for (int i = 0; i < size_; ++i)
+		p_top_[i] = other.p_top_[i];
+
+	return *this;
 }
 
 template <class T>
@@ -59,6 +78,7 @@ bool stack<T>::pop(T &item) {
 
 	peek(item);
 	--size_;
+
 	return true;
 }
 

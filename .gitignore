@@ -5,4 +5,7 @@
 *.zip
 *.log
 .idea
-cmake-build-debug
+cmake-build-debug/
+build/
+compile_commands.json
+.cache/

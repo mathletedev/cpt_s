@@ -1,7 +1,6 @@
 *
 !*/
 !*.*
-!clean
 *.zip
 *.log
 .idea

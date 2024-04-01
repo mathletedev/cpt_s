@@ -32,6 +32,12 @@ bool utils::read_token(std::ifstream &fstream, std::string &string,
 	return string.size() != 0;
 }
 
+std::string utils::format_token(std::string const &string, char delim) {
+	// https://stackoverflow.com/a/43629706
+	if (string.find(delim) == std::string::npos) return string;
+	return "\"" + string + "\"";
+}
+
 // ignores a line of input
 void utils::ignore_line(std::ifstream &fstream) {
 	fstream.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -41,13 +47,12 @@ void utils::ignore_line(std::ifstream &fstream) {
 std::string utils::get_date() {
 	// http://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
 	time_t t = time(0);
+	// don't need to delete, memory managed by stdlib
 	tm *now = localtime(&t);
 
 	std::string res = std::to_string(now->tm_year + 1900) + "-" +
 			  std::to_string(now->tm_mon + 1) + "-" +
 			  std::to_string(now->tm_mday);
-
-	delete now;
 
 	return res;
 }

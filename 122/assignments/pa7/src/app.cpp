@@ -4,7 +4,7 @@ app::app() {
 	std::string warning = "";
 
 	while (true) {
-		system("clear");
+		system(CLEAR);
 
 		std::cout << "1. Import course list" << std::endl;
 		std::cout << "2. Load master list" << std::endl;
@@ -32,12 +32,20 @@ app::app() {
 		// ignore following newline
 		std::cin.ignore();
 
+		system(CLEAR);
+
 		switch (option) {
 		case 1:
 			import();
 			break;
 		case 2:
 			load();
+			break;
+		case 3:
+			store();
+			break;
+		case 4:
+			mark();
 			break;
 		case 7:
 			return;
@@ -46,8 +54,6 @@ app::app() {
 }
 
 void app::import() {
-	system("clear");
-
 	students_.clear();
 
 	std::ifstream fstream;
@@ -57,8 +63,8 @@ void app::import() {
 	utils::ignore_line(fstream);
 
 	data curr;
-	while (fstream >> curr)
-		students_.insert(curr);
+	while (curr.read(fstream, false))
+		students_.push_front(curr);
 
 	std::cout << "Course list imported successfully!" << std::endl;
 	utils::suspend();
@@ -67,8 +73,73 @@ void app::import() {
 }
 
 void app::load() {
+	students_.clear();
+
 	std::ifstream fstream;
 	fstream.open("data/master.csv");
 
+	utils::ignore_line(fstream);
+
+	data curr;
+	while (curr.read(fstream, true))
+		students_.push_front(curr);
+
+	std::cout << "Master list loaded successfully!" << std::endl;
+	utils::suspend();
+
 	fstream.close();
+}
+
+void app::store() {
+	std::ofstream fstream;
+	fstream.open("data/master.csv");
+
+	fstream << ",ID,Name,Email,Units,Program,Level,Absences,Dates\n";
+
+	// cycle through student list
+	list<data> tmp;
+	while (!students_.is_empty())
+		tmp.push_front(students_.pop_front());
+
+	while (!tmp.is_empty()) {
+		data curr = tmp.pop_front();
+		curr.write(fstream);
+		fstream << '\n';
+
+		students_.push_front(curr);
+	}
+
+	std::cout << "Master list stored successfully!" << std::endl;
+	utils::suspend();
+
+	fstream.close();
+}
+
+void app::mark() {
+	list<data> tmp;
+	while (!students_.is_empty())
+		tmp.push_front(students_.pop_front());
+
+	std::string date = utils::get_date();
+
+	while (!tmp.is_empty()) {
+		system(CLEAR);
+		std::cout << "Date: " << date << std::endl;
+
+		data curr = tmp.pop_front();
+		std::cout << curr.name_ << " absent? y/n (n): ";
+
+		char c;
+		std::cin.get(c);
+
+		if (c == 'y' || c == 'Y') {
+			++curr.num_absences_;
+			curr.dates_absences_.push(date);
+		}
+
+		students_.push_front(curr);
+	}
+
+	std::cout << "Reached end of student list" << std::endl;
+	utils::suspend();
 }

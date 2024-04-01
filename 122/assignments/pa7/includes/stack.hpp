@@ -1,14 +1,18 @@
 #pragma once
 
+#include <fstream>
 #include <vector>
 
 template <class T>
 class stack {
 	public:
 		void push(T const &data);
-		void pop();
+		T pop();
 		T peek() const;
 		bool is_empty() const;
+
+		void read(std::ifstream &fstream, int const &size);
+		void write(std::ofstream &fstream, char delim = ' ') const;
 
 	private:
 		std::vector<T> data_;
@@ -19,17 +23,38 @@ void stack<T>::push(T const &data) {
 	data_.push_back(data);
 }
 
+// pre-condition: stack is not empty
 template <class T>
-void stack<T>::pop() {
-	if (!is_empty()) data_.pop_back();
+T stack<T>::pop() {
+	T tmp = peek();
+	data_.pop_back();
+
+	return tmp;
 }
 
+// pre-condition: stack is not empty
 template <class T>
 T stack<T>::peek() const {
-	if (!is_empty()) return data_[data_.size() - 1];
+	return data_[data_.size() - 1];
 }
 
 template <class T>
 bool stack<T>::is_empty() const {
 	return data_.size() == 0;
+}
+
+template <class T>
+void stack<T>::read(std::ifstream &fstream, int const &size) {
+	data_.resize(size);
+	for (auto &data : data_)
+		fstream >> data;
+}
+
+template <class T>
+void stack<T>::write(std::ofstream &fstream, char delim) const {
+	if (data_.size() == 0) return;
+
+	fstream << data_[0];
+	for (int i = 1; i < data_.size(); ++i)
+		fstream << delim << data_[i];
 }

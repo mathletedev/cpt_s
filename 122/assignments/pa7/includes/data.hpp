@@ -19,5 +19,6 @@ class data {
 		int num_absences_;
 		stack<std::string> dates_absences_;
 
-		friend std::ifstream &operator>>(std::ifstream &lhs, data &rhs);
+		bool read(std::ifstream &lhs, bool const &include_dates);
+		void write(std::ofstream &lhs) const;
 };

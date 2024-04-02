@@ -1,3 +1,11 @@
+/*
+ * Programming Assignment 7
+ * Author: Neal Wang
+ * Lab: 05
+ * Due date: 2024-04-05
+ * Linked list node class
+ */
+
 #pragma once
 
 template <class T>

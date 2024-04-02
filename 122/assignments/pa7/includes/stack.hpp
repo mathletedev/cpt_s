@@ -1,3 +1,11 @@
+/*
+ * Programming Assignment 7
+ * Author: Neal Wang
+ * Lab: 05
+ * Due date: 2024-04-05
+ * Stack class (using vectors)
+ */
+
 #pragma once
 
 #include <fstream>
@@ -43,6 +51,7 @@ bool stack<T>::is_empty() const {
 	return data_.size() == 0;
 }
 
+// reads a stack from a filestream
 template <class T>
 void stack<T>::read(std::ifstream &fstream, int const &size) {
 	data_.resize(size);
@@ -50,6 +59,7 @@ void stack<T>::read(std::ifstream &fstream, int const &size) {
 		fstream >> data;
 }
 
+// writes a stack to a filestream (separated by delimiter)
 template <class T>
 void stack<T>::write(std::ofstream &fstream, char delim) const {
 	if (data_.size() == 0) return;

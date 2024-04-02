@@ -1,11 +1,14 @@
 #include "app.hpp"
 
 app::app() {
+	srand(time(0));
+
 	std::string warning = "";
 
 	while (true) {
 		system(CLEAR);
 
+		// menu
 		std::cout << "1. Import course list" << std::endl;
 		std::cout << "2. Load master list" << std::endl;
 		std::cout << "3. Store master list" << std::endl;
@@ -46,6 +49,12 @@ app::app() {
 			break;
 		case 4:
 			mark();
+			break;
+		case 5:
+			edit();
+			break;
+		case 6:
+			generate();
 			break;
 		case 7:
 			return;
@@ -127,10 +136,10 @@ void app::mark() {
 		std::cout << "Date: " << date << std::endl;
 
 		data curr = tmp.pop_front();
-		std::cout << curr.name_ << " absent? y/n (n): ";
+		std::cout << curr.name_ << " absent? y/n: ";
 
 		char c;
-		std::cin.get(c);
+		std::cin >> c;
 
 		if (c == 'y' || c == 'Y') {
 			++curr.num_absences_;
@@ -140,6 +149,99 @@ void app::mark() {
 		students_.push_front(curr);
 	}
 
+	// ignore enter key
+	std::cin.ignore();
+
+	system(CLEAR);
+
 	std::cout << "Reached end of student list" << std::endl;
 	utils::suspend();
+}
+
+void app::edit() {
+	std::cout << "Work in progress" << std::endl;
+	utils::suspend();
+}
+
+void app::generate() {
+	std::ofstream fstream;
+	fstream.open("data/report.txt");
+
+	std::string warning = "";
+	int option;
+
+	while (true) {
+		system(CLEAR);
+
+		std::cout << "1. Generate report for all students" << std::endl;
+		std::cout << "2. Generate report for students matching or "
+			     "exceeding threshold"
+			  << std::endl;
+		std::cout << std::endl;
+
+		if (warning != "") {
+			std::cout << warning << std::endl;
+			std::cout << std::endl;
+		}
+		warning = "";
+
+		std::cout << "Select an option: ";
+
+		// https://stackoverflow.com/a/60967987
+		if (!(std::cin >> option).good() || option < 1 || option > 2) {
+			warning = "Invalid option";
+			continue;
+		}
+
+		// ignore following newline
+		std::cin.ignore();
+		break;
+	}
+
+	system(CLEAR);
+
+	int threshold;
+	if (option == 2) {
+		std::cout << "Enter absence threshold: ";
+		std::cin >> threshold;
+		std::cin.ignore();
+
+		fstream << "Threshold: " << threshold << " absences\n";
+
+		system(CLEAR);
+	} else
+		fstream << "Full student report\n";
+
+	list<data> tmp;
+
+	// O(N) time complexity because peek() is O(1)
+	// O(N) space complexity because of tmp list
+	while (!students_.is_empty()) {
+		data curr = students_.pop_front();
+		tmp.push_front(curr);
+
+		if (option == 1) {
+			fstream << curr.name_ << ": " << curr.num_absences_
+				<< " absences";
+			if (curr.num_absences_ > 0)
+				fstream << " (" << curr.dates_absences_.peek()
+					<< ")";
+			fstream << "\n";
+
+			continue;
+		}
+
+		// check threshold
+		if (curr.num_absences_ >= threshold)
+			fstream << curr.name_ << "\n";
+	}
+
+	// put back data into linked list
+	while (!tmp.is_empty())
+		students_.push_front(tmp.pop_front());
+
+	std::cout << "Report generated successfully!" << std::endl;
+	utils::suspend();
+
+	fstream.close();
 }

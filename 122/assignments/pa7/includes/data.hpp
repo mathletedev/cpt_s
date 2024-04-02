@@ -1,3 +1,11 @@
+/*
+ * Programming Assignment 7
+ * Author: Neal Wang
+ * Lab: 05
+ * Due date: 2024-04-05
+ * Data storage class
+ */
+
 #pragma once
 
 #include "stack.hpp"

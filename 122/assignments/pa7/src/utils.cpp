@@ -45,6 +45,12 @@ void utils::ignore_line(std::ifstream &fstream) {
 
 // get current date from computer
 std::string utils::get_date() {
+#ifdef USE_RANDOM_DATES
+	// generate a random date for testing
+	return std::to_string(rand() % 10000) + "-" +
+	       std::to_string(rand() % 12 + 1) + "-" +
+	       std::to_string(rand() % 30 + 1);
+#else
 	// http://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
 	time_t t = time(0);
 	// don't need to delete, memory managed by stdlib
@@ -55,4 +61,5 @@ std::string utils::get_date() {
 			  std::to_string(now->tm_mday);
 
 	return res;
+#endif
 }

@@ -1,8 +1,18 @@
+/*
+ * Programming Assignment 7
+ * Author: Neal Wang
+ * Lab: 05
+ * Due date: 2024-04-05
+ * Utility functions
+ */
+
 #pragma once
 
+#include "config.hpp"
 #include <fstream>
 #include <iostream>
 #include <limits>
+#include <stdlib.h>
 #include <string>
 
 // used in system(CLEAR)

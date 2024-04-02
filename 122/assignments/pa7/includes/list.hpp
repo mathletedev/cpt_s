@@ -1,3 +1,11 @@
+/*
+ * Programming Assignment 7
+ * Author: Neal Wang
+ * Lab: 05
+ * Due date: 2024-04-05
+ * Linked list class
+ */
+
 #pragma once
 
 #include "node.hpp"
@@ -68,6 +76,7 @@ bool list<T>::is_empty() const {
 	return p_head_ == nullptr;
 }
 
+// recursively delete linked list nodes
 template <class T>
 void list<T>::clear(node<T> *const &p_curr) {
 	if (p_curr == nullptr) return;

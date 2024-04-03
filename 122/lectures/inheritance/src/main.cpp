@@ -1,5 +1,6 @@
 #include "employee.hpp"
 #include "manager.hpp"
+#include <vector>
 
 void print_pay(employee &e);
 
@@ -22,6 +23,28 @@ int main() {
 
 	delete p_e2;
 	delete p_m2;
+
+	std::cout << "--------" << std::endl;
+
+	std::cout << "Enter number of employees: ";
+	int num;
+	std::cin >> num;
+
+	std::vector<employee *> employees(num);
+
+	for (int i = 0; i < num; ++i) {
+		std::cout << "Enter employee type - 1. Basic, 2. Manager: ";
+		int type;
+		std::cin >> type;
+
+		if (type == 1) employees[i] = new employee;
+		if (type == 2) employees[i] = new manager;
+	}
+
+	for (int i = 0; i < num; ++i)
+		delete employees[i];
+
+	std::cout << "--------" << std::endl;
 
 	return 0;
 }

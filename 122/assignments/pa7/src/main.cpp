@@ -1,7 +1,7 @@
-#include "app.hpp"
+#include "menu.hpp"
 
 int main() {
-	app _ = app();
+	menu _ = menu();
 
 	return 0;
 }

@@ -1,6 +1,6 @@
-#include "app.hpp"
+#include "menu.hpp"
 
-app::app() {
+menu::menu() {
 	srand(time(0));
 
 	std::string warning = "";
@@ -62,7 +62,7 @@ app::app() {
 	}
 }
 
-void app::import() {
+void menu::import() {
 	students_.clear();
 
 	std::ifstream fstream;
@@ -81,7 +81,7 @@ void app::import() {
 	fstream.close();
 }
 
-void app::load() {
+void menu::load() {
 	students_.clear();
 
 	std::ifstream fstream;
@@ -99,7 +99,7 @@ void app::load() {
 	fstream.close();
 }
 
-void app::store() {
+void menu::store() {
 	std::ofstream fstream;
 	fstream.open("data/master.csv");
 
@@ -124,7 +124,7 @@ void app::store() {
 	fstream.close();
 }
 
-void app::mark() {
+void menu::mark() {
 	list<data> tmp;
 	while (!students_.is_empty())
 		tmp.push_front(students_.pop_front());
@@ -158,12 +158,12 @@ void app::mark() {
 	utils::suspend();
 }
 
-void app::edit() {
+void menu::edit() {
 	std::cout << "Work in progress" << std::endl;
 	utils::suspend();
 }
 
-void app::generate() {
+void menu::generate() {
 	std::ofstream fstream;
 	fstream.open("data/report.txt");
 

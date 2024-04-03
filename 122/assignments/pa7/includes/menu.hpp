@@ -3,7 +3,7 @@
  * Author: Neal Wang
  * Lab: 05
  * Due date: 2024-04-05
- * Main app wrapper class
+ * Menu wrapper class
  */
 
 #pragma once
@@ -18,9 +18,9 @@
 #include <time.h>
 
 // menu wrapper class
-class app {
+class menu {
 	public:
-		app();
+		menu();
 
 		void import();
 		void load();

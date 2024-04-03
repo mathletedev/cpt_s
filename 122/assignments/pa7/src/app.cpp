@@ -136,14 +136,14 @@ void app::mark() {
 		std::cout << "Date: " << date << std::endl;
 
 		data curr = tmp.pop_front();
-		std::cout << curr.name_ << " absent? y/n: ";
+		std::cout << curr.get_name() << " absent? y/n: ";
 
 		char c;
 		std::cin >> c;
 
 		if (c == 'y' || c == 'Y') {
-			++curr.num_absences_;
-			curr.dates_absences_.push(date);
+			curr.set_num_absences(curr.get_num_absences() + 1);
+			curr.get_dates_absences().push(date);
 		}
 
 		students_.push_front(curr);
@@ -214,17 +214,22 @@ void app::generate() {
 
 	list<data> tmp;
 
+	// put data into second linked list
+	while (!students_.is_empty())
+		tmp.push_front(students_.pop_front());
+
 	// O(N) time complexity because peek() is O(1)
 	// O(N) space complexity because of tmp list
-	while (!students_.is_empty()) {
-		data curr = students_.pop_front();
-		tmp.push_front(curr);
+	while (!tmp.is_empty()) {
+		data curr = tmp.pop_front();
+		students_.push_front(curr);
 
 		if (option == 1) {
-			fstream << curr.name_ << ": " << curr.num_absences_
-				<< " absences";
-			if (curr.num_absences_ > 0)
-				fstream << " (" << curr.dates_absences_.peek()
+			fstream << curr.get_name() << ": "
+				<< curr.get_num_absences() << " absences";
+			if (curr.get_num_absences() > 0)
+				fstream << " ("
+					<< curr.get_dates_absences().peek()
 					<< ")";
 			fstream << "\n";
 
@@ -232,13 +237,9 @@ void app::generate() {
 		}
 
 		// check threshold
-		if (curr.num_absences_ >= threshold)
-			fstream << curr.name_ << "\n";
+		if (curr.get_num_absences() >= threshold)
+			fstream << curr.get_name() << "\n";
 	}
-
-	// put back data into linked list
-	while (!tmp.is_empty())
-		students_.push_front(tmp.pop_front());
 
 	std::cout << "Report generated successfully!" << std::endl;
 	utils::suspend();

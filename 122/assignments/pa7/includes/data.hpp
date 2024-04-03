@@ -15,6 +15,64 @@
 
 class data {
 	public:
+		int const &get_record() const {
+			return record_;
+		};
+		int const &get_id() const {
+			return id_;
+		}
+		std::string const &get_name() const {
+			return name_;
+		}
+		std::string const &get_email() const {
+			return email_;
+		}
+		int const &get_units() const {
+			return units_;
+		}
+		std::string const &get_major() const {
+			return major_;
+		}
+		std::string const &get_level() const {
+			return level_;
+		}
+		int const &get_num_absences() const {
+			return num_absences_;
+		}
+		// not constant to allow for operations on stack
+		stack<std::string> &get_dates_absences() {
+			return dates_absences_;
+		}
+
+		void set_record(int const &record) {
+			record_ = record;
+		};
+		void set_id(int const &id) {
+			id_ = id;
+		}
+		void set_name(std::string const &name) {
+			name_ = name;
+		}
+		void set_email(std::string const &email) {
+			email_ = email;
+		}
+		void set_units(int const &units) {
+			units_ = units;
+		}
+		void set_major(std::string const &major) {
+			major_ = major;
+		}
+		void set_level(std::string const &level) {
+			level_ = level;
+		}
+		void set_num_absences(int const &num_absences) {
+			num_absences_ = num_absences;
+		}
+
+		bool read(std::ifstream &lhs, bool const &include_dates);
+		void write(std::ofstream &lhs) const;
+
+	private:
 		int record_;
 		int id_;
 		std::string name_;
@@ -26,7 +84,4 @@ class data {
 		// added fields
 		int num_absences_;
 		stack<std::string> dates_absences_;
-
-		bool read(std::ifstream &lhs, bool const &include_dates);
-		void write(std::ofstream &lhs) const;
 };

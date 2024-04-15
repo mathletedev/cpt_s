@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.26)
+cmake_minimum_required(VERSION 3.28)
 
 project(sfml-test)
 
@@ -15,8 +15,3 @@ find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
 add_executable(${EXEC} ${SOURCES})
 
 target_link_libraries(${EXEC} sfml-graphics sfml-audio)
-
-add_custom_command(
-	TARGET ${EXEC} POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy "../static/person.jpg" "./static/person.jpg"
-)

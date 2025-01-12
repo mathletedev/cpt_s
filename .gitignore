@@ -1,6 +1,7 @@
 *
 !*/
 !*.*
+!Makefile
 *.zip
 *.log
 .idea

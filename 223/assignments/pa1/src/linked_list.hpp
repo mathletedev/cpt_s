@@ -28,7 +28,7 @@ class LinkedList {
 				}
 			}
 
-			throw;
+			throw "index out of bounds";
 		}
 
 		void push(T const &data) {
@@ -41,7 +41,7 @@ class LinkedList {
 		// use a predicate to find node to remove
 		void remove(std::function<bool(T const &data)> const &f) {
 			if (this->p_head_ == nullptr) {
-				throw;
+				throw "list is empty";
 			}
 
 			if (f(this->p_head_->data)) {
@@ -68,7 +68,7 @@ class LinkedList {
 				return;
 			}
 
-			throw;
+			throw "item not found";
 		}
 
 	private:

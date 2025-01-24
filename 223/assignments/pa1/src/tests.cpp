@@ -13,16 +13,25 @@ bool test_insert_front() {
 }
 
 bool test_remove() {
-	LinkedList<int> l;
+	LinkedList<int> l1;
 
-	l.push(1);
-	l.push(2);
-	l.push(3);
-	l.push(4);
+	l1.push(1);
+	l1.push(2);
+	l1.push(3);
+	l1.push(4);
 
-	l.remove([](int const &data) { return data == 3; });
+	l1.remove([](int const &data) { return data == 3; });
 
-	return l.nth(0) == 4 && l.nth(1) == 2 && l.nth(2) == 1;
+	LinkedList<int> l2;
+
+	bool l2_passed = false;
+	try {
+		l2.remove([](int const &data) { return data == 3; });
+	} catch (...) {
+		l2_passed = true;
+	}
+
+	return l1.nth(0) == 4 && l1.nth(1) == 2 && l1.nth(2) == 1 && l2_passed;
 }
 
 bool test_all() {

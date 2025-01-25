@@ -1,4 +1,6 @@
+#include "data.hpp"
 #include "tests.hpp"
+#include <fstream>
 #include <iostream>
 
 int main(int arc, char **argv) {
@@ -9,7 +11,12 @@ int main(int arc, char **argv) {
 		return !passed;
 	}
 
-	std::cout << "Hello, world!" << std::endl;
+	std::ifstream file("data/commands.csv");
+
+	LinkedList<CommandData> commands = CommandData::from_csv_all(file);
+	commands.display();
+
+	file.close();
 
 	return 0;
 }

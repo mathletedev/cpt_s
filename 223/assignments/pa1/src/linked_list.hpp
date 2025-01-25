@@ -1,10 +1,13 @@
 #pragma once
 
 #include <functional>
+#include <iostream>
 
+/// generic linked list class
 template <typename T>
 class LinkedList {
 	private:
+		/// private node class
 		class Node {
 			public:
 				T data;
@@ -15,19 +18,24 @@ class LinkedList {
 		};
 
 		Node *p_head_;
+		int length_;
 
 	public:
-		LinkedList() {
-			this->p_head_ = nullptr;
-		}
+		LinkedList() : p_head_(nullptr), length_(0) {}
 
 		~LinkedList() {
-			Node *p_curr, *p_next;
-			for (p_curr = this->p_head_; p_curr != nullptr;
-			     p_curr = p_next) {
+			for (Node *p_curr = this->p_head_, *p_next;
+			     p_curr != nullptr; p_curr = p_next) {
 				p_next = p_curr->p_next;
 				delete p_curr;
 			}
+
+			this->p_head_ = nullptr;
+			this->length_ = 0;
+		}
+
+		int length() const {
+			return this->length_;
 		}
 
 		T const &nth(int n) const {
@@ -47,9 +55,11 @@ class LinkedList {
 
 			p_node->p_next = this->p_head_;
 			this->p_head_ = p_node;
+
+			++this->length_;
 		}
 
-		// use a predicate to find node to remove
+		// use a predicate f to find node to remove
 		void remove(std::function<bool(T const &data)> const &f) {
 			if (this->p_head_ == nullptr) {
 				throw "list is empty";
@@ -60,11 +70,12 @@ class LinkedList {
 				delete this->p_head_;
 				this->p_head_ = p_next;
 
+				--this->length_;
+
 				return;
 			}
 
-			Node *p_curr;
-			for (p_curr = this->p_head_;
+			for (Node *p_curr = this->p_head_;
 			     // look ahead "twice"
 			     p_curr != nullptr && p_curr->p_next != nullptr;
 			     p_curr = p_curr->p_next) {
@@ -76,9 +87,18 @@ class LinkedList {
 				delete p_curr->p_next;
 				p_curr->p_next = p_next;
 
+				--this->length_;
+
 				return;
 			}
 
 			throw "item not found";
+		}
+
+		void display() const {
+			for (Node *p_curr = this->p_head_; p_curr != nullptr;
+			     p_curr = p_curr->p_next) {
+				std::cout << p_curr->data << std::endl;
+			}
 		}
 };

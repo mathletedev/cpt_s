@@ -26,11 +26,9 @@ class CommandData {
 		std::string const &name() const {
 			return this->name_;
 		}
-
 		std::string const &description() const {
 			return this->description_;
 		}
-
 		int value() const {
 			return this->value_;
 		}
@@ -56,7 +54,6 @@ class PlayerData {
 		std::string const &name() const {
 			return this->name_;
 		}
-
 		int score() const {
 			return this->score_;
 		}

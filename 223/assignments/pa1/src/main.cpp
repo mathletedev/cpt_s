@@ -1,6 +1,5 @@
-#include "data.hpp"
+#include "game_manager.hpp"
 #include "tests.hpp"
-#include <fstream>
 #include <iostream>
 
 int main(int arc, char **argv) {
@@ -11,12 +10,8 @@ int main(int arc, char **argv) {
 		return !passed;
 	}
 
-	std::ifstream file("data/commands.csv");
-
-	LinkedList<CommandData> commands = CommandData::from_csv_all(file);
-	commands.display();
-
-	file.close();
+	GameManager gm;
+	gm.run();
 
 	return 0;
 }

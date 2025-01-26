@@ -16,36 +16,12 @@ class CommandData {
 			    std::string const &description, int value)
 		    : name_(name), description_(description), value_(value) {}
 
-		static CommandData from_csv(std::ifstream &file) {
-			std::string name, description, value_s;
-			int value;
-
-			std::getline(file, name, ',');
-			std::getline(file, description, ',');
-			std::getline(file, value_s, '\n');
-
-			// trim off quotes
-			description =
-			    description.substr(1, description.size() - 2);
-			value = std::stoi(value_s);
-
-			return CommandData(name, description, value);
-		}
-
+		static CommandData from_csv(std::ifstream &file);
 		static LinkedList<CommandData>
-		from_csv_all(std::ifstream &file) {
-			LinkedList<CommandData> res;
-
-			while (true) {
-				try {
-					res.push(CommandData::from_csv(file));
-				} catch (...) {
-					break;
-				}
-			}
-
-			return res;
-		}
+		from_csv_all(std::ifstream &file);
+		void to_csv(std::ofstream &file) const;
+		static void to_csv_all(std::ofstream &file,
+				       LinkedList<CommandData> const &commands);
 
 		std::string const &name() const {
 			return this->name_;

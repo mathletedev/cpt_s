@@ -6,25 +6,25 @@ rmdir,"Delete a directory",1
 rm,"Delete a file",1
 cp,"Copy",1
 mv,"Move a file",1
-ssh,"",2
-scp,"",2
-man,"",2
-g++,"",2
-gcc,"",2
-make,"",2
-ps,"",2
-kill,"",2
-top,"",2
-who,"",3
-chmod,"",3
-cat,"",3
-alias,"",3
-chown,"",3
-df,"",3
-grep,"",3
-echo,"",2
-find,"",4
-clear,"",1
-diff,"",2
-env,"",4
-free,"",3
+ssh,"Access a remote machine over a network",2
+scp,"Copy file between machines",2
+man,"Manual page",2
+g++,"GNU C++ compiler",2
+gcc,"GNU C compiler",2
+make,"Build system",2
+ps,"Displays process information",2
+kill,"Terminate a process",2
+top,"Monitor system processes",2
+who,"Displays logged-in users",3
+chmod,"Change file permissions",3
+cat,"Displays file contents",3
+alias,"Creates an alternative name for a command",3
+chown,"Change file owner",3
+df,"Displays free disk space",3
+grep,"Finds text",3
+echo,"Displays text",2
+find,"Finds files",4
+clear,"Removes all text from the terminal",1
+diff,"Reveals differences between files",2
+env,"Displays environment variables",4
+free,"Displays free memory",3

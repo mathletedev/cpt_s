@@ -24,6 +24,9 @@ class CommandData {
 			std::getline(file, description, ',');
 			std::getline(file, value_s, '\n');
 
+			// trim off quotes
+			description =
+			    description.substr(1, description.size() - 2);
 			value = std::stoi(value_s);
 
 			return CommandData(name, description, value);

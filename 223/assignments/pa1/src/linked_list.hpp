@@ -13,56 +13,78 @@ class LinkedList {
 				T data;
 				Node *p_next;
 
-				Node(T const &data)
+				Node(const T &data)
 				    : data(data), p_next(nullptr) {}
 		};
 
 		Node *p_head_;
+		Node *p_tail_;
 		int length_;
 
 	public:
-		LinkedList() : p_head_(nullptr), length_(0) {}
+		LinkedList() : p_head_(nullptr), p_tail_(nullptr), length_(0) {}
+		LinkedList(const LinkedList<T> &other);
+		LinkedList(const std::initializer_list<T> &data);
 		~LinkedList();
 
 		void clear();
 		int length() const {
-			return this->length_;
+			return length_;
 		}
 		T const &nth(int n) const;
 
-		void push(T const &data);
-		void remove(std::function<bool(T const &data)> const &f);
+		void push_front(const T &data);
+		void push_back(const T &data);
+		void remove(std::function<bool(const T &data)> const &f);
 
 		template <typename U>
-		LinkedList<U> map(std::function<U(T const &data)> const &f);
+		LinkedList<U> map(std::function<U(const T &data)> const &f);
 		void
-		for_each(std::function<void(T const &data)> const &f) const;
+		for_each(std::function<void(const T &data)> const &f) const;
 		void display() const;
 
-		LinkedList<T> &operator=(LinkedList<T> const &other);
+		// https://stackoverflow.com/a/3279550/14946864
+		LinkedList<T> &operator=(LinkedList<T> other);
+		template <typename U>
+		friend void swap(LinkedList<U> &a, LinkedList<U> &b);
 };
 
 template <typename T>
+LinkedList<T>::LinkedList(const LinkedList<T> &other) {
+	for (Node *p_curr = other.p_head_; p_curr != nullptr;
+	     p_curr = p_curr->p_next) {
+		push_back(p_curr->data);
+	}
+}
+
+template <typename T>
+LinkedList<T>::LinkedList(const std::initializer_list<T> &data) {
+	for (const T &d : data) {
+		push_back(d);
+	}
+}
+
+template <typename T>
 LinkedList<T>::~LinkedList() {
-	this->clear();
+	clear();
 }
 
 template <typename T>
 void LinkedList<T>::clear() {
-	for (Node *p_curr = this->p_head_, *p_next; p_curr != nullptr;
+	for (Node *p_curr = p_head_, *p_next; p_curr != nullptr;
 	     p_curr = p_next) {
 		p_next = p_curr->p_next;
 		delete p_curr;
 	}
 
-	this->p_head_ = nullptr;
-	this->length_ = 0;
+	p_head_ = nullptr;
+	length_ = 0;
 }
 
 template <typename T>
-T const &LinkedList<T>::nth(int n) const {
+const T &LinkedList<T>::nth(int n) const {
 	int i = 0;
-	for (Node *p_curr = this->p_head_; p_curr != nullptr;
+	for (Node *p_curr = p_head_; p_curr != nullptr;
 	     p_curr = p_curr->p_next, ++i) {
 		if (i == n) {
 			return p_curr->data;
@@ -73,32 +95,51 @@ T const &LinkedList<T>::nth(int n) const {
 }
 
 template <typename T>
-void LinkedList<T>::push(T const &data) {
+void LinkedList<T>::push_front(const T &data) {
 	Node *p_node = new Node(data);
 
-	p_node->p_next = this->p_head_;
-	this->p_head_ = p_node;
+	p_node->p_next = p_head_;
+	p_head_ = p_node;
 
-	++this->length_;
+	if (p_tail_ == nullptr) {
+		p_tail_ = p_head_;
+	}
+
+	++length_;
 }
 
 template <typename T>
-void LinkedList<T>::remove(std::function<bool(T const &data)> const &f) {
-	if (this->p_head_ == nullptr) {
+void LinkedList<T>::push_back(const T &data) {
+	Node *p_node = new Node(data);
+
+	if (p_head_ == nullptr) {
+		p_head_ = p_tail_ = p_node;
+		length_ = 1;
+		return;
+	}
+
+	p_tail_->p_next = p_node;
+	p_tail_ = p_node;
+	++length_;
+}
+
+template <typename T>
+void LinkedList<T>::remove(const std::function<bool(const T &data)> &f) {
+	if (p_head_ == nullptr) {
 		throw "list is empty";
 	}
 
-	if (f(this->p_head_->data)) {
-		Node *p_next = this->p_head_->p_next;
-		delete this->p_head_;
-		this->p_head_ = p_next;
+	if (f(p_head_->data)) {
+		Node *p_next = p_head_->p_next;
+		delete p_head_;
+		p_head_ = p_next;
 
-		--this->length_;
+		--length_;
 
 		return;
 	}
 
-	for (Node *p_curr = this->p_head_;
+	for (Node *p_curr = p_head_;
 	     // look awhohead "twice"
 	     p_curr != nullptr && p_curr->p_next != nullptr;
 	     p_curr = p_curr->p_next) {
@@ -111,7 +152,7 @@ void LinkedList<T>::remove(std::function<bool(T const &data)> const &f) {
 		delete p_curr->p_next;
 		p_curr->p_next = p_next;
 
-		--this->length_;
+		--length_;
 
 		return;
 	}
@@ -121,12 +162,12 @@ void LinkedList<T>::remove(std::function<bool(T const &data)> const &f) {
 
 template <typename T>
 template <typename U>
-LinkedList<U> LinkedList<T>::map(std::function<U(T const &data)> const &f) {
+LinkedList<U> LinkedList<T>::map(const std::function<U(const T &data)> &f) {
 	LinkedList<U> res;
 
-	for (Node *p_curr = this->p_head_; p_curr != nullptr;
+	for (Node *p_curr = p_head_; p_curr != nullptr;
 	     p_curr = p_curr->p_next) {
-		res.push(f(p_curr->data));
+		res.push_back(f(p_curr->data));
 	}
 
 	return res;
@@ -134,8 +175,8 @@ LinkedList<U> LinkedList<T>::map(std::function<U(T const &data)> const &f) {
 
 template <typename T>
 void LinkedList<T>::for_each(
-    std::function<void(T const &data)> const &f) const {
-	for (Node *p_curr = this->p_head_; p_curr != nullptr;
+    const std::function<void(const T &data)> &f) const {
+	for (Node *p_curr = p_head_; p_curr != nullptr;
 	     p_curr = p_curr->p_next) {
 		f(p_curr->data);
 	}
@@ -143,20 +184,18 @@ void LinkedList<T>::for_each(
 
 template <typename T>
 void LinkedList<T>::display() const {
-	for_each([](T const &data) { std::cout << data << std::endl; });
+	for_each([](const T &data) { std::cout << data << std::endl; });
 }
 
 template <typename T>
-LinkedList<T> &LinkedList<T>::operator=(LinkedList<T> const &other) {
-	if (this == &other) {
-		return *this;
-	}
-
-	this->clear();
-	for (Node *p_curr = other.p_head_; p_curr != nullptr;
-	     p_curr = p_curr->p_next) {
-		this->push(p_curr->data);
-	}
+LinkedList<T> &LinkedList<T>::operator=(LinkedList<T> other) {
+	swap(*this, other);
 
 	return *this;
+}
+
+template <typename T>
+void swap(LinkedList<T> &a, LinkedList<T> &b) {
+	std::swap(a.p_head_, b.p_head_);
+	std::swap(a.length_, b.length_);
 }

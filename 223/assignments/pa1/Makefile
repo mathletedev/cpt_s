@@ -8,3 +8,6 @@ exec:
 
 test:
 	@./main --test
+
+debug:
+	@gdb ./main

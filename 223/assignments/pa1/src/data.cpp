@@ -20,7 +20,7 @@ LinkedList<CommandData> CommandData::from_csv_all(std::ifstream &file) {
 
 	while (true) {
 		try {
-			res.push(CommandData::from_csv(file));
+			res.push_back(CommandData::from_csv(file));
 		} catch (...) {
 			break;
 		}
@@ -30,12 +30,11 @@ LinkedList<CommandData> CommandData::from_csv_all(std::ifstream &file) {
 }
 
 void CommandData::to_csv(std::ofstream &file) const {
-	file << this->name_ << ",\"" << this->description_ << "\","
-	     << this->value_ << "\n";
+	file << name_ << ",\"" << description_ << "\"," << value_ << "\n";
 }
 
 void CommandData::to_csv_all(std::ofstream &file,
-			     LinkedList<CommandData> const &commands) {
+			     const LinkedList<CommandData> &commands) {
 	commands.for_each(
-	    [&file](CommandData const &command) { command.to_csv(file); });
+	    [&file](const CommandData &command) { command.to_csv(file); });
 }

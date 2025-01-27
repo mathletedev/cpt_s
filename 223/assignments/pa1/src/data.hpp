@@ -12,8 +12,8 @@ class CommandData {
 		int value_;
 
 	public:
-		CommandData(std::string const &name,
-			    std::string const &description, int value)
+		CommandData(const std::string &name,
+			    const std::string &description, int value)
 		    : name_(name), description_(description), value_(value) {}
 
 		static CommandData from_csv(std::ifstream &file);
@@ -21,16 +21,16 @@ class CommandData {
 		from_csv_all(std::ifstream &file);
 		void to_csv(std::ofstream &file) const;
 		static void to_csv_all(std::ofstream &file,
-				       LinkedList<CommandData> const &commands);
+				       const LinkedList<CommandData> &commands);
 
-		std::string const &name() const {
-			return this->name_;
+		const std::string &name() const {
+			return name_;
 		}
-		std::string const &description() const {
-			return this->description_;
+		const std::string &description() const {
+			return description_;
 		}
 		int value() const {
-			return this->value_;
+			return value_;
 		}
 
 		friend std::ostream &operator<<(std::ostream &os,
@@ -48,13 +48,13 @@ class PlayerData {
 		int score_;
 
 	public:
-		PlayerData(std::string const &name, int score)
+		PlayerData(const std::string &name, int score)
 		    : name_(name), score_(score) {}
 
-		std::string const &name() const {
-			return this->name_;
+		const std::string &name() const {
+			return name_;
 		}
 		int score() const {
-			return this->score_;
+			return score_;
 		}
 };

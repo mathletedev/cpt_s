@@ -3,14 +3,11 @@
 #include "utils.hpp"
 #include <iostream>
 
-int GameManager::main_menu_() {
-	std::cout << "1. Game Rules" << std::endl;
-	std::cout << "2. Play New Game" << std::endl;
-	std::cout << "3. Load Previous Game" << std::endl;
-	std::cout << "4. Add Command" << std::endl;
-	std::cout << "5. Remove Command" << std::endl;
-	std::cout << "6. Display All Commands" << std::endl;
-	std::cout << "7. Save and Exit" << std::endl;
+int GameManager::prompt_(const LinkedList<std::string> &choices) {
+	int i = 0;
+	choices.for_each([&i](const std::string &choice) {
+		std::cout << ++i << ". " << choice << std::endl;
+	});
 	NEWLINE;
 	std::cout << "λ ";
 
@@ -20,9 +17,17 @@ int GameManager::main_menu_() {
 	return choice;
 }
 
+int GameManager::main_menu_() {
+	LinkedList<std::string> choices = {
+	    "Game Rules",   "Play New Game",  "Load Previous Game",
+	    "Add Command",  "Remove Command", "Display All Commands",
+	    "Save and Exit"};
+	return prompt_(choices);
+}
+
 void GameManager::display_commands_() {
 	int i = 0;
-	this->commands_.for_each([&i](CommandData const &command) {
+	commands_.for_each([&i](const CommandData &command) {
 		std::cout << ++i << ". " << command.name() << ": "
 			  << command.description() << " (" << command.value()
 			  << ")" << std::endl;
@@ -34,7 +39,7 @@ void GameManager::display_commands_() {
 
 GameManager::GameManager() {
 	std::ifstream commands_file("target/commands.csv");
-	this->commands_ = CommandData::from_csv_all(commands_file);
+	commands_ = CommandData::from_csv_all(commands_file);
 	commands_file.close();
 }
 
@@ -42,7 +47,7 @@ void GameManager::run() {
 	bool running = true;
 	while (running) {
 		CLEAR;
-		int choice = this->main_menu_();
+		int choice = main_menu_();
 
 		CLEAR;
 		switch (choice) {
@@ -55,15 +60,15 @@ void GameManager::run() {
 		case 4:
 			break;
 		case 5:
-			std::cout << this->commands_.length() << std::endl;
+			std::cout << commands_.length() << std::endl;
 			PAUSE;
 			break;
 		case 6:
-			this->display_commands_();
+			display_commands_();
 			break;
 		case 7:
 			std::ofstream commands_file("target/commands.csv");
-			CommandData::to_csv_all(commands_file, this->commands_);
+			CommandData::to_csv_all(commands_file, commands_);
 			commands_file.close();
 
 			running = false;

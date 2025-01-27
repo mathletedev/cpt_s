@@ -1,25 +1,25 @@
 #include "tests.hpp"
 #include "linked_list.hpp"
 
-bool test_insert_front() {
+bool test_push() {
 	LinkedList<int> l;
 
-	l.push(1);
-	l.push(2);
-	l.push(3);
-	l.push(4);
+	l.push_front(1);
+	l.push_front(2);
+	l.push_back(3);
+	l.push_back(4);
 
-	return l.nth(0) == 4 && l.nth(1) == 3 && l.nth(2) == 2 &&
-	       l.nth(3) == 1 && l.length() == 4;
+	return l.nth(0) == 2 && l.nth(1) == 1 && l.nth(2) == 3 &&
+	       l.nth(3) == 4 && l.length() == 4;
 }
 
 bool test_remove() {
 	LinkedList<int> l1;
 
-	l1.push(1);
-	l1.push(2);
-	l1.push(3);
-	l1.push(4);
+	l1.push_back(1);
+	l1.push_back(2);
+	l1.push_back(3);
+	l1.push_back(4);
 
 	l1.remove([](int const &data) { return data == 3; });
 
@@ -32,10 +32,10 @@ bool test_remove() {
 		l2_passed = true;
 	}
 
-	return l1.nth(0) == 4 && l1.nth(1) == 2 && l1.nth(2) == 1 &&
+	return l1.nth(0) == 1 && l1.nth(1) == 2 && l1.nth(2) == 4 &&
 	       l1.length() == 3 && l2_passed && l2.length() == 0;
 }
 
 bool test_all() {
-	return test_insert_front() && test_remove();
+	return test_push() && test_remove();
 }

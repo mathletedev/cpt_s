@@ -51,6 +51,9 @@ class LinkedList {
 
 template <typename T>
 LinkedList<T>::LinkedList(const LinkedList<T> &other) {
+	p_head_ = p_tail_ = nullptr;
+	length_ = 0;
+
 	for (Node *p_curr = other.p_head_; p_curr != nullptr;
 	     p_curr = p_curr->p_next) {
 		push_back(p_curr->data);
@@ -59,6 +62,9 @@ LinkedList<T>::LinkedList(const LinkedList<T> &other) {
 
 template <typename T>
 LinkedList<T>::LinkedList(const std::initializer_list<T> &data) {
+	p_head_ = p_tail_ = nullptr;
+	length_ = 0;
+
 	for (const T &d : data) {
 		push_back(d);
 	}
@@ -77,7 +83,7 @@ void LinkedList<T>::clear() {
 		delete p_curr;
 	}
 
-	p_head_ = nullptr;
+	p_head_ = p_tail_ = nullptr;
 	length_ = 0;
 }
 

@@ -10,6 +10,7 @@ class GameManager {
 
 		int prompt_(const LinkedList<std::string> &choices);
 		int main_menu_();
+		void game_rules_();
 		void add_command_();
 		void remove_command_();
 		void display_commands_();

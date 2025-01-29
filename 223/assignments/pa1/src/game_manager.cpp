@@ -18,6 +18,9 @@ int GameManager::prompt_(const LinkedList<std::string> &choices) {
 }
 
 int GameManager::main_menu_() {
+	std::cout << "Main menu:" << std::endl;
+	NEWLINE;
+
 	LinkedList<std::string> choices = {
 	    "Game Rules",   "Play New Game",  "Load Previous Game",
 	    "Add Command",  "Remove Command", "Display All Commands",
@@ -25,9 +28,30 @@ int GameManager::main_menu_() {
 	return prompt_(choices);
 }
 
+void GameManager::game_rules_() {
+	std::cout << "Game rules:" << std::endl;
+	NEWLINE;
+
+	std::cout << "- Match Linux commands with their descriptions"
+		  << std::endl;
+	std::cout
+	    << "- Win or lose points based on correct or incorrect matches"
+	    << std::endl;
+	std::cout << "- Commands may have different point values" << std::endl;
+	std::cout
+	    << "- Use utility functions to edit player profiles and commands"
+	    << std::endl;
+	std::cout << "- Have fun!" << std::endl;
+
+	NEWLINE;
+	PAUSE;
+}
+
 void GameManager::add_command_() {
-	std::string name, description;
-	int value;
+	std::cout << "Add command:" << std::endl;
+	NEWLINE;
+
+	std::string name;
 	std::cout << "Name: ";
 	std::cin >> name;
 
@@ -41,8 +65,11 @@ void GameManager::add_command_() {
 		return;
 	}
 
+	std::string description;
 	std::cout << "Description: ";
 	std::cin >> description;
+
+	int value;
 	std::cout << "Value: ";
 	std::cin >> value;
 
@@ -53,7 +80,7 @@ void GameManager::add_command_() {
 }
 
 void GameManager::remove_command_() {
-	std::cout << "Select index of command to remove" << std::endl;
+	std::cout << "Remove command by index:" << std::endl;
 	NEWLINE;
 
 	int choice = prompt_(commands_.map<std::string>(
@@ -79,6 +106,9 @@ void GameManager::remove_command_() {
 }
 
 void GameManager::display_commands_() {
+	std::cout << "All commands:" << std::endl;
+	NEWLINE;
+
 	int i = 0;
 	commands_.for_each([&i](const CommandData &command) {
 		std::cout << ++i << ". " << command.name() << ": "
@@ -105,6 +135,7 @@ void GameManager::run() {
 		CLEAR;
 		switch (choice) {
 		case 1:
+			game_rules_();
 			break;
 		case 2:
 			break;

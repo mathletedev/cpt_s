@@ -41,6 +41,7 @@ class LinkedList {
 		LinkedList<U> map(std::function<U(const T &data)> const &f);
 		void
 		for_each(std::function<void(const T &data)> const &f) const;
+		bool any(std::function<bool(const T &data)> const &f) const;
 		void display() const;
 
 		// https://stackoverflow.com/a/3279550/14946864
@@ -104,13 +105,14 @@ template <typename T>
 void LinkedList<T>::push_front(const T &data) {
 	Node *p_node = new Node(data);
 
-	p_node->p_next = p_head_;
-	p_head_ = p_node;
-
-	if (p_tail_ == nullptr) {
-		p_tail_ = p_head_;
+	if (p_head_ == nullptr) {
+		p_head_ = p_tail_ = p_node;
+		length_ = 1;
+		return;
 	}
 
+	p_node->p_next = p_head_;
+	p_head_ = p_node;
 	++length_;
 }
 
@@ -189,6 +191,19 @@ void LinkedList<T>::for_each(
 }
 
 template <typename T>
+bool LinkedList<T>::any(std::function<bool(const T &data)> const &f) const {
+	bool res = false;
+
+	for_each([&res, &f](const T &data) {
+		if (f(data)) {
+			res = true;
+		}
+	});
+
+	return res;
+}
+
+template <typename T>
 void LinkedList<T>::display() const {
 	for_each([](const T &data) { std::cout << data << std::endl; });
 }
@@ -203,5 +218,6 @@ LinkedList<T> &LinkedList<T>::operator=(LinkedList<T> other) {
 template <typename T>
 void swap(LinkedList<T> &a, LinkedList<T> &b) {
 	std::swap(a.p_head_, b.p_head_);
+	std::swap(a.p_tail_, b.p_tail_);
 	std::swap(a.length_, b.length_);
 }

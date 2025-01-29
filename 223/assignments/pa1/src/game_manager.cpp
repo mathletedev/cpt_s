@@ -25,6 +25,33 @@ int GameManager::main_menu_() {
 	return prompt_(choices);
 }
 
+void GameManager::add_command_() {
+	std::string name, description;
+	int value;
+	std::cout << "Name: ";
+	std::cin >> name;
+
+	if (commands_.any([&name](const CommandData &command) {
+		    return command.name() == name;
+	    })) {
+		NEWLINE;
+		std::cout << "Command already exists!" << std::endl;
+		PAUSE;
+
+		return;
+	}
+
+	std::cout << "Description: ";
+	std::cin >> description;
+	std::cout << "Value: ";
+	std::cin >> value;
+
+	commands_.push_back(CommandData(name, description, value));
+
+	NEWLINE;
+	PAUSE;
+}
+
 void GameManager::display_commands_() {
 	int i = 0;
 	commands_.for_each([&i](const CommandData &command) {
@@ -58,6 +85,7 @@ void GameManager::run() {
 		case 3:
 			break;
 		case 4:
+			add_command_();
 			break;
 		case 5:
 			std::cout << commands_.length() << std::endl;

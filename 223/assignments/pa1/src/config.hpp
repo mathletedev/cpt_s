@@ -1,0 +1,1 @@
+#define MAX_PROFILES 10

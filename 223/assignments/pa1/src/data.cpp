@@ -38,3 +38,20 @@ void CommandData::to_csv_all(std::ofstream &file,
 	commands.for_each(
 	    [&file](const CommandData &command) { command.to_csv(file); });
 }
+
+PlayerData PlayerData::from_csv(std::ifstream &file) {
+	throw;
+}
+
+PlayerData *PlayerData::from_csv_all(std::ifstream &file) {
+	throw;
+}
+
+void PlayerData::to_csv(std::ofstream &file) const {
+	throw;
+}
+
+void PlayerData::to_csv_all(std::ofstream &file,
+			    const PlayerData *const players, int n) {
+	throw;
+}

@@ -51,6 +51,12 @@ class PlayerData {
 		PlayerData(const std::string &name, int score)
 		    : name_(name), score_(score) {}
 
+		static PlayerData from_csv(std::ifstream &file);
+		static PlayerData *from_csv_all(std::ifstream &file);
+		void to_csv(std::ofstream &file) const;
+		static void to_csv_all(std::ofstream &file,
+				       const PlayerData *const players, int n);
+
 		const std::string &name() const {
 			return name_;
 		}

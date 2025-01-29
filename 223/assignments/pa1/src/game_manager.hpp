@@ -1,5 +1,6 @@
 #pragma once
 
+#include "config.hpp"
 #include "data.hpp"
 #include "linked_list.hpp"
 #include <string>
@@ -7,6 +8,8 @@
 class GameManager {
 	private:
 		LinkedList<CommandData> commands_;
+		PlayerData players_[MAX_PROFILES];
+		PlayerData *p_player_;
 
 		int prompt_(const LinkedList<std::string> &choices);
 		int main_menu_();

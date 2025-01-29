@@ -124,6 +124,8 @@ GameManager::GameManager() {
 	std::ifstream commands_file("target/commands.csv");
 	commands_ = CommandData::from_csv_all(commands_file);
 	commands_file.close();
+
+	std::ifstream players_file("target/players.csv");
 }
 
 void GameManager::run() {

@@ -59,19 +59,20 @@ void GameManager::remove_command_() {
 	int choice = prompt_(commands_.map<std::string>(
 	    [](const CommandData &command) { return command.name(); }));
 
-	if (choice < 1 || choice > commands_.length()) {
-		CLEAR;
+	CLEAR;
+
+	try {
+		int i = 0;
+		commands_.remove([&choice, &i](const CommandData &_) {
+			return ++i == choice;
+		});
+	} catch (...) {
 		std::cout << "Invalid index!" << std::endl;
 		NEWLINE;
 		PAUSE;
 		return;
 	}
 
-	int i = 0;
-	commands_.remove(
-	    [&choice, &i](const CommandData &_) { return ++i == choice; });
-
-	CLEAR;
 	std::cout << "Successfully removed command!" << std::endl;
 	NEWLINE;
 	PAUSE;

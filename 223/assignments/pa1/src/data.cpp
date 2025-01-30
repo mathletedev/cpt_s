@@ -83,10 +83,13 @@ std::unique_ptr<PlayerData[]> PlayerData::init_csv(std::ofstream &file, int n) {
 }
 
 void PlayerData::to_csv(std::ofstream &file) const {
-	throw;
+	file << (active_ ? "1" : "0") << ",\"" << name_ << "\"," << score_
+	     << "\n";
 }
 
 void PlayerData::to_csv_all(std::ofstream &file,
 			    const PlayerData *const players, int n) {
-	throw;
+	for (int i = 0; i < n; ++i) {
+		players[i].to_csv(file);
+	}
 }

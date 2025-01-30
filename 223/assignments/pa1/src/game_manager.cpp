@@ -210,6 +210,13 @@ void GameManager::run() {
 			CommandData::to_csv_all(commands_file, commands_);
 			commands_file.close();
 
+			std::ofstream players_file("target/players.csv");
+			// cannot pass unique_ptr to to_csv_all, so convert to
+			// raw pointer first
+			PlayerData::to_csv_all(players_file, players_.get(),
+					       MAX_PROFILES);
+			players_file.close();
+
 			running = false;
 			break;
 		}

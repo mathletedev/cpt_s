@@ -2,6 +2,7 @@
 
 #include "linked_list.hpp"
 #include <fstream>
+#include <memory>
 #include <string>
 
 /// command data: name, description, value
@@ -44,15 +45,20 @@ class CommandData {
 /// player data: name, score
 class PlayerData {
 	private:
+		bool active_;
 		std::string name_;
 		int score_;
 
 	public:
-		PlayerData(const std::string &name, int score)
-		    : name_(name), score_(score) {}
+		PlayerData(bool active = false, const std::string &name = "",
+			   int score = 0)
+		    : active_(active), name_(name), score_(score) {}
 
 		static PlayerData from_csv(std::ifstream &file);
-		static PlayerData *from_csv_all(std::ifstream &file);
+		static std::unique_ptr<PlayerData[]>
+		from_csv_all(std::ifstream &file, int n);
+		static std::unique_ptr<PlayerData[]>
+		init_csv(std::ofstream &file, int n);
 		void to_csv(std::ofstream &file) const;
 		static void to_csv_all(std::ofstream &file,
 				       const PlayerData *const players, int n);

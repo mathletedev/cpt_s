@@ -40,11 +40,46 @@ void CommandData::to_csv_all(std::ofstream &file,
 }
 
 PlayerData PlayerData::from_csv(std::ifstream &file) {
-	throw;
+	std::string active_s, name, score_s;
+	bool active;
+	int score;
+
+	std::getline(file, active_s, ',');
+	std::getline(file, name, ',');
+	std::getline(file, score_s, '\n');
+
+	active = active_s == "1";
+	name = name.substr(1, name.size() - 2);
+	score = std::stoi(score_s);
+
+	return PlayerData(active, name, score);
 }
 
-PlayerData *PlayerData::from_csv_all(std::ifstream &file) {
-	throw;
+std::unique_ptr<PlayerData[]> PlayerData::from_csv_all(std::ifstream &file,
+						       int n) {
+	std::unique_ptr<PlayerData[]> res =
+	    std::unique_ptr<PlayerData[]>(new PlayerData[n]);
+
+	try {
+		for (int i = 0; i < n; ++i) {
+			res[i] = PlayerData::from_csv(file);
+		}
+	} catch (...) {
+		throw "error reading player data";
+	}
+
+	return res;
+}
+
+std::unique_ptr<PlayerData[]> PlayerData::init_csv(std::ofstream &file, int n) {
+	std::unique_ptr<PlayerData[]> res =
+	    std::unique_ptr<PlayerData[]>(new PlayerData[n]);
+
+	for (int i = 0; i < n; ++i) {
+		file << "0,\"\",0\n";
+	}
+
+	return res;
 }
 
 void PlayerData::to_csv(std::ofstream &file) const {

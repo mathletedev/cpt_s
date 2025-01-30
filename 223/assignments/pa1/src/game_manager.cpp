@@ -125,7 +125,17 @@ GameManager::GameManager() {
 	commands_ = CommandData::from_csv_all(commands_file);
 	commands_file.close();
 
-	std::ifstream players_file("target/players.csv");
+	try {
+		std::ifstream players_file("target/players.csv");
+		players_ = PlayerData::from_csv_all(players_file, MAX_PROFILES);
+		players_file.close();
+	} catch (...) {
+		std::ofstream players_file("target/players.csv");
+		players_ = PlayerData::init_csv(players_file, MAX_PROFILES);
+		players_file.close();
+	}
+
+	p_player_ = nullptr;
 }
 
 void GameManager::run() {

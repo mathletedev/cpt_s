@@ -3,12 +3,13 @@
 #include "config.hpp"
 #include "data.hpp"
 #include "linked_list.hpp"
+#include <memory>
 #include <string>
 
 class GameManager {
 	private:
 		LinkedList<CommandData> commands_;
-		PlayerData players_[MAX_PROFILES];
+		std::unique_ptr<PlayerData[]> players_;
 		PlayerData *p_player_;
 
 		int prompt_(const LinkedList<std::string> &choices);

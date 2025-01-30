@@ -49,6 +49,45 @@ void GameManager::game_rules_() {
 	PAUSE;
 }
 
+void GameManager::load_game_() {
+	std::cout << "Load player profile by index:" << std::endl;
+	NEWLINE;
+
+	for (int i = 0; i < MAX_PROFILES; ++i) {
+		if (!players_[i].active()) {
+			std::cout << i + 1 << ". [Empty]" << std::endl;
+			continue;
+		}
+
+		std::cout << i + 1 << ". " << players_[i].name() << " ("
+			  << players_[i].score() << ")" << std::endl;
+	}
+
+	NEWLINE;
+	std::cout << "λ ";
+
+	int choice;
+	std::cin >> choice;
+
+	CLEAR;
+
+	if (choice < 1 || choice > MAX_PROFILES ||
+	    !players_[choice - 1].active()) {
+		std::cout << "Profile not found!" << std::endl;
+		NEWLINE;
+		PAUSE;
+		return;
+	}
+
+	std::cout << "Now playing as " << players_[choice - 1].name()
+		  << " with " << players_[choice - 1].score() << " points!"
+		  << std::endl;
+	p_player_ = &players_[choice - 1];
+
+	NEWLINE;
+	PAUSE;
+}
+
 void GameManager::add_command_() {
 	std::cout << "Add command:" << std::endl;
 	NEWLINE;
@@ -63,7 +102,6 @@ void GameManager::add_command_() {
 		NEWLINE;
 		std::cout << "Command already exists!" << std::endl;
 		PAUSE;
-
 		return;
 	}
 
@@ -156,6 +194,7 @@ void GameManager::run() {
 		case 2:
 			break;
 		case 3:
+			load_game_();
 			break;
 		case 4:
 			add_command_();

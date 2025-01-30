@@ -63,6 +63,9 @@ class PlayerData {
 		static void to_csv_all(std::ofstream &file,
 				       const PlayerData *const players, int n);
 
+		bool active() const {
+			return active_;
+		}
 		const std::string &name() const {
 			return name_;
 		}

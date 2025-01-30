@@ -27,22 +27,32 @@ class LinkedList {
 		LinkedList(const std::initializer_list<T> &data);
 		~LinkedList();
 
+		/// removes all elements from the list
 		void clear();
+		/// returns the length of the list
 		int length() const {
 			return length_;
 		}
+		/// returns the nth element of the list
 		T const &nth(int n) const;
 
+		/// appends an element to the head of the list
 		void push_front(const T &data);
+		/// appends an element to the tail of the list
 		void push_back(const T &data);
+		/// removes the first element that satisfies the predicate
 		void remove(std::function<bool(const T &data)> const &f);
 
 		template <typename U>
 		LinkedList<U>
+		/// maps f onto each element of the list, returns the new list
 		map(std::function<U(const T &data)> const &f) const;
 		void
+		/// calls f on each element of the list
 		for_each(std::function<void(const T &data)> const &f) const;
+		/// returns true if any element satisfies the predicate
 		bool any(std::function<bool(const T &data)> const &f) const;
+		/// prints each element of the list to stdout
 		void display() const;
 
 		// https://stackoverflow.com/a/3279550/14946864

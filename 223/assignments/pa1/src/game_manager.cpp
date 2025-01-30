@@ -49,6 +49,60 @@ void GameManager::game_rules_() {
 	PAUSE;
 }
 
+void GameManager::play_() {
+	if (p_player_ != nullptr) {
+		std::cout << "Loaded existing game:" << std::endl;
+		NEWLINE;
+
+		std::string choice;
+		std::cout << "Would you like to create a new profile? (y/n): ";
+		std::cin >> choice;
+
+		if (choice == "y" || choice == "Y") {
+			p_player_ = nullptr;
+		}
+
+		CLEAR;
+	}
+
+	if (p_player_ == nullptr) {
+		int empty_idx = -1;
+		for (int i = 0; i < MAX_PROFILES; ++i) {
+			if (!players_[i].active()) {
+				empty_idx = i;
+				break;
+			}
+		}
+
+		if (empty_idx == -1) {
+			std::cout
+			    << "Player data is full! Please remove a player or "
+			       "load an existing profile"
+			    << std::endl;
+			NEWLINE;
+			PAUSE;
+			return;
+		}
+
+		std::cout << "Create new player profile:" << std::endl;
+		NEWLINE;
+
+		std::string name;
+		std::cout << "Name: ";
+		std::getline(std::cin, name);
+		std::getline(std::cin, name);
+
+		p_player_ = &players_[empty_idx];
+		*p_player_ = PlayerData(true, name, 0);
+
+		CLEAR;
+
+		std::cout << "Now playing as " << name << "!" << std::endl;
+		NEWLINE;
+		PAUSE_NOIGNORE;
+	}
+}
+
 void GameManager::load_game_() {
 	std::cout << "Load player profile by index:" << std::endl;
 	NEWLINE;
@@ -79,10 +133,9 @@ void GameManager::load_game_() {
 		return;
 	}
 
-	std::cout << "Now playing as " << players_[choice - 1].name()
-		  << " with " << players_[choice - 1].score() << " points!"
-		  << std::endl;
 	p_player_ = &players_[choice - 1];
+	std::cout << "Now playing as " << p_player_->name() << " with "
+		  << p_player_->score() << " points!" << std::endl;
 
 	NEWLINE;
 	PAUSE;
@@ -107,7 +160,9 @@ void GameManager::add_command_() {
 
 	std::string description;
 	std::cout << "Description: ";
-	std::cin >> description;
+	// ignore the queued input
+	std::getline(std::cin, description);
+	std::getline(std::cin, description);
 
 	int value;
 	std::cout << "Value: ";
@@ -192,6 +247,7 @@ void GameManager::run() {
 			game_rules_();
 			break;
 		case 2:
+			play_();
 			break;
 		case 3:
 			load_game_();

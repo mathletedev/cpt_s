@@ -72,4 +72,8 @@ class PlayerData {
 		int score() const {
 			return score_;
 		}
+
+		void add_score(int points) {
+			score_ += points;
+		}
 };

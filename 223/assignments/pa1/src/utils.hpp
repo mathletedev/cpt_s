@@ -8,3 +8,6 @@
 	std::cin.ignore();                                                     \
 	std::cout << "Press Enter to continue...";                             \
 	getchar()
+#define PAUSE_NOIGNORE                                                         \
+	std::cout << "Press Enter to continue...";                             \
+	getchar()

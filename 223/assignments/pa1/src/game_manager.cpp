@@ -5,9 +5,11 @@
 
 int GameManager::prompt_(const LinkedList<std::string> &choices) {
 	int i = 0;
-	choices.for_each([&i](const std::string &choice) {
-		std::cout << ++i << ". " << choice << std::endl;
-	});
+	choices
+	    .map<std::string>([&i](const std::string &choice) {
+		    return std::to_string(++i) + ". " + choice;
+	    })
+	    .display();
 	NEWLINE;
 	std::cout << "λ ";
 
@@ -110,11 +112,13 @@ void GameManager::display_commands_() {
 	NEWLINE;
 
 	int i = 0;
-	commands_.for_each([&i](const CommandData &command) {
-		std::cout << ++i << ". " << command.name() << ": "
-			  << command.description() << " (" << command.value()
-			  << ")" << std::endl;
-	});
+	commands_
+	    .map<std::string>([&i](const CommandData &command) {
+		    return std::to_string(++i) + ". " + command.name() + ": " +
+			   command.description() + " (" +
+			   std::to_string(command.value()) + ")";
+	    })
+	    .display();
 
 	NEWLINE;
 	PAUSE;

@@ -38,7 +38,8 @@ class LinkedList {
 		void remove(std::function<bool(const T &data)> const &f);
 
 		template <typename U>
-		LinkedList<U> map(std::function<U(const T &data)> const &f);
+		LinkedList<U>
+		map(std::function<U(const T &data)> const &f) const;
 		void
 		for_each(std::function<void(const T &data)> const &f) const;
 		bool any(std::function<bool(const T &data)> const &f) const;
@@ -170,13 +171,10 @@ void LinkedList<T>::remove(const std::function<bool(const T &data)> &f) {
 
 template <typename T>
 template <typename U>
-LinkedList<U> LinkedList<T>::map(const std::function<U(const T &data)> &f) {
+LinkedList<U>
+LinkedList<T>::map(const std::function<U(const T &data)> &f) const {
 	LinkedList<U> res;
-
-	for (Node *p_curr = p_head_; p_curr != nullptr;
-	     p_curr = p_curr->p_next) {
-		res.push_back(f(p_curr->data));
-	}
+	for_each([&res, &f](const T &data) { res.push_back(f(data)); });
 
 	return res;
 }
@@ -193,7 +191,6 @@ void LinkedList<T>::for_each(
 template <typename T>
 bool LinkedList<T>::any(std::function<bool(const T &data)> const &f) const {
 	bool res = false;
-
 	for_each([&res, &f](const T &data) {
 		if (f(data)) {
 			res = true;

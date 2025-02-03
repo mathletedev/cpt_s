@@ -1,7 +1,9 @@
 #include "game_manager.hpp"
 
+#include "config.hpp"
 #include "utils.hpp"
 #include <iostream>
+#include <random>
 
 int GameManager::prompt_(const LinkedList<std::string> &choices) {
 	int i = 0;
@@ -51,7 +53,8 @@ void GameManager::game_rules_() {
 
 void GameManager::play_() {
 	if (p_player_ != nullptr) {
-		std::cout << "Loaded existing game:" << std::endl;
+		std::cout << "Loaded existing game (" << p_player_->name()
+			  << "):" << std::endl;
 		NEWLINE;
 
 		std::string choice;
@@ -89,7 +92,7 @@ void GameManager::play_() {
 
 		std::string name;
 		std::cout << "Name: ";
-		std::getline(std::cin, name);
+		IGNORE;
 		std::getline(std::cin, name);
 
 		p_player_ = &players_[empty_idx];
@@ -101,6 +104,84 @@ void GameManager::play_() {
 		NEWLINE;
 		PAUSE_NOIGNORE;
 	}
+
+	CLEAR;
+
+	std::cout << "Initialising game:" << std::endl;
+	NEWLINE;
+
+	int num_questions = 0;
+	std::cout << "Enter number of questions: ";
+	std::cin >> num_questions;
+
+	NEWLINE;
+	PAUSE;
+
+	std::mt19937 rng(std::random_device{}());
+
+	for (int i = 1; i <= num_questions; ++i) {
+		CLEAR;
+
+		std::cout << "Question " << i << ":" << std::endl;
+		NEWLINE;
+
+		LinkedList<int> indices;
+		while (indices.length() < NUM_CHOICES) {
+			std::uniform_int_distribution<int> dist1(
+			    0, commands_.length() - 1);
+			int choice = dist1(rng);
+
+			if (!indices.elem(choice)) {
+				indices.push_back(choice);
+			}
+		}
+
+		std::uniform_int_distribution<int> dist2(0, NUM_CHOICES - 1);
+		int target = dist2(rng);
+		CommandData command = commands_.nth(indices.nth(target));
+
+		// BUG: displays descriptions in the wrong order (doesn't
+		// consider randomisation)
+		//
+		// int j = 0;
+		// LinkedList<std::string> descriptions =
+		//     commands_
+		// 	.filter([&indices, &j](const CommandData &command) {
+		// 		return indices.elem(j++);
+		// 	})
+		// 	.map<std::string>([](const CommandData &command) {
+		// 		return command.description();
+		// 	});
+
+		LinkedList<std::string> descriptions =
+		    indices.map<std::string>([this](const int &i) {
+			    return commands_.nth(i).description();
+		    });
+
+		std::cout << command.name() << ":" << std::endl;
+
+		// for some reason, this is necessary to clear the input
+		int choice = prompt_(descriptions);
+
+		NEWLINE;
+
+		if (choice == target + 1) {
+			std::cout << "Correct! +" << command.value()
+				  << std::endl;
+			p_player_->add_score(command.value());
+		} else {
+			std::cout << "Incorrect! -1" << std::endl;
+			p_player_->add_score(-1);
+		}
+		NEWLINE;
+		PAUSE;
+	}
+
+	CLEAR;
+
+	std::cout << "End of game" << std::endl;
+	NEWLINE;
+	PAUSE_NOIGNORE;
 }
 
 void GameManager::load_game_() {
@@ -161,7 +242,7 @@ void GameManager::add_command_() {
 	std::string description;
 	std::cout << "Description: ";
 	// ignore the queued input
-	std::getline(std::cin, description);
+	IGNORE;
 	std::getline(std::cin, description);
 
 	int value;

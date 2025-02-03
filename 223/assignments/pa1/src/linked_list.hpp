@@ -43,6 +43,10 @@ class LinkedList {
 		/// removes the first element that satisfies the predicate
 		void remove(std::function<bool(const T &data)> const &f);
 
+		/// returns a new list with all elements that satisfy the
+		/// predicate
+		LinkedList<T>
+		filter(std::function<bool(const T &data)> const &f) const;
 		template <typename U>
 		LinkedList<U>
 		/// maps f onto each element of the list, returns the new list
@@ -52,6 +56,8 @@ class LinkedList {
 		for_each(std::function<void(const T &data)> const &f) const;
 		/// returns true if any element satisfies the predicate
 		bool any(std::function<bool(const T &data)> const &f) const;
+		/// returns true if element is in the list
+		bool elem(const T &data) const;
 		/// prints each element of the list to stdout
 		void display() const;
 
@@ -180,6 +186,19 @@ void LinkedList<T>::remove(const std::function<bool(const T &data)> &f) {
 }
 
 template <typename T>
+LinkedList<T>
+LinkedList<T>::filter(std::function<bool(const T &data)> const &f) const {
+	LinkedList<T> res;
+	for_each([&res, &f](const T &data) {
+		if (f(data)) {
+			res.push_back(data);
+		}
+	});
+
+	return res;
+}
+
+template <typename T>
 template <typename U>
 LinkedList<U>
 LinkedList<T>::map(const std::function<U(const T &data)> &f) const {
@@ -208,6 +227,11 @@ bool LinkedList<T>::any(std::function<bool(const T &data)> const &f) const {
 	});
 
 	return res;
+}
+
+template <typename T>
+bool LinkedList<T>::elem(const T &data) const {
+	return any([&data](const T &x) { return x == data; });
 }
 
 template <typename T>

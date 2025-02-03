@@ -1,13 +1,16 @@
 #pragma once
 
 #include <iostream>
+#include <limits>
 
 #define NEWLINE std::cout << std::endl
 #define CLEAR system("clear")
+#define IGNORE                                                                 \
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n')
 #define PAUSE                                                                  \
-	std::cin.ignore();                                                     \
+	IGNORE;                                                                \
 	std::cout << "Press Enter to continue...";                             \
-	getchar()
+	IGNORE
 #define PAUSE_NOIGNORE                                                         \
 	std::cout << "Press Enter to continue...";                             \
-	getchar()
+	IGNORE

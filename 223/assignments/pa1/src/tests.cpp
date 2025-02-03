@@ -1,6 +1,9 @@
 #include "tests.hpp"
 #include "linked_list.hpp"
 
+// TODO: implement equality comparison for linked list
+// TODO: test functional methods
+
 bool test_push() {
 	LinkedList<int> l;
 

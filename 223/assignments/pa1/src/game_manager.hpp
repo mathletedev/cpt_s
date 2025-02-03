@@ -1,6 +1,5 @@
 #pragma once
 
-#include "config.hpp"
 #include "data.hpp"
 #include "linked_list.hpp"
 #include <memory>

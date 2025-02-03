@@ -2,6 +2,18 @@
 
 > Linux commands matching game
 
+## Running
+
+```sh
+make build # compiles the project; copies over data files
+make exec # runs the game
+
+cat target/commands.csv # displays saved commands
+cat target/players.csv # displays saved players
+
+make debug # OPTIONAL: runs gdb
+```
+
 ## Questions
 
 What is one advantage and one disadvantage of using a linked list data structure to store commands?

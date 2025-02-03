@@ -7,7 +7,7 @@
 What is one advantage and one disadvantage of using a linked list data structure to store commands?
 
 - **Advantage**: Allows for dynamic resizing of the list. When adding a command, a simple `commands_.push_back()` @ `src/game_manager.cpp:252` requires $O(1)$ time. If an array were to be used, a maximum size would need to be specified, or the array would need to be re-allocated for every resize, costing $O(n)$ time to copy.
-- **Disadvantage**: Requires $O(n)$ time to get the $n$th command. For instance, at `commands_.nth()` @ `src/game_manager.cpp:158`, where random commands are selected, each query requires $O(n)$ time as opposed to an array, which would require $O(1)$ time.
+- **Disadvantage**: Requires $O(n)$ time to get the $n$ th command. For instance, at `commands_.nth()` @ `src/game_manager.cpp:158`, where random commands are selected, each query requires $O(n)$ time as opposed to an array, which would require $O(1)$ time.
 
 What is one advantage and one disadvantage of using an array to store user profiles?
 

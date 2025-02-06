@@ -1,0 +1,46 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,enumitem}
+
+\begin{document}
+
+\begin{center}
+  \Large CPT\_S 223 Homework 1
+\end{center}
+
+\begin{tabular}{rl}
+  WSU ID: & 11870028 \\
+  Name: & Neal Wang \\
+  Due Date: & 16 February 2025
+\end{tabular}
+
+\section*{Problem 1}
+
+Let $N(k)$ be the number of nodes of a complete binary tree at level $k$. \\
+Hypothesis: $N(k) = 2^k$. \\
+Base case: If $k = 0$, then $N(0) = 1$. \\
+Inductive case: Each node has exactly two children
+\begin{equation}
+  \begin{split}
+    N(k) & = 2N(k - 1) \\
+    & = 2 \cdot 2N(k - 2) \\
+    & = 2^mN(k - m) \\
+    & = 2^kN(k - k) \\
+    & = 2^kN(0) \\
+    & = 2^k \cdot 1 \\
+    & = 2^k
+  \end{split}
+\end{equation}
+Therefore, $N(k) = 2^k$.
+
+\section*{Problem 2}
+
+\section*{Problem 3}
+
+\section*{Problem 4}
+
+\begin{enumerate}[label=(\alph*)]
+  \item (your solution)
+  \item (your solution)
+\end{enumerate}
+
+\end{document}

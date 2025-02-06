@@ -1,26 +1,33 @@
 \documentclass[12pt]{article}
-\usepackage{amsmath,enumitem}
+\usepackage[fleqn]{amsmath}
+\usepackage{amsthm,enumitem,minted}
+\newtheorem{thm}{Theorem}
 
 \begin{document}
 
 \begin{center}
-  \Large CPT\_S 223 Homework 1
+  {\Large CPT\_S 223 Homework 1}
+  $ $\\
+  $ $\\
+  \begin{tabular}{rl}
+    WSU ID: & 11870028 \\
+    Name: & Neal Wang \\
+    Due Date: & 16 February 2025
+  \end{tabular}
 \end{center}
-
-\begin{tabular}{rl}
-  WSU ID: & 11870028 \\
-  Name: & Neal Wang \\
-  Due Date: & 16 February 2025
-\end{tabular}
 
 \section*{Problem 1}
 
-Let $N(k)$ be the number of nodes of a complete binary tree at level $k$. \\
-Hypothesis: $N(k) = 2^k$. \\
-Base case: If $k = 0$, then $N(0) = 1$. \\
-Inductive case: Each node has exactly two children
-\begin{equation}
-  \begin{split}
+\begin{thm}
+  If $N(k)$ is the number of nodes of a complete binary tree at level
+  $k$, then $N(k) = 2^k$.
+\end{thm}
+
+\begin{proof}
+  $ $\\
+  Base case: If $k = 0$, then $N(0) = 1$. \\
+  Inductive case: Each node has exactly two children
+  \begin{align*}
     N(k) & = 2N(k - 1) \\
     & = 2 \cdot 2N(k - 2) \\
     & = 2^mN(k - m) \\
@@ -28,11 +35,21 @@ Inductive case: Each node has exactly two children
     & = 2^kN(0) \\
     & = 2^k \cdot 1 \\
     & = 2^k
-  \end{split}
-\end{equation}
-Therefore, $N(k) = 2^k$.
+  \end{align*}
+  Therefore, $N(k) = 2^k$.
+\end{proof}
 
 \section*{Problem 2}
+
+\begin{minted}{cpp}
+int height(Node *p_node, int h = 0) {
+  if (p_node == nullptr) {
+    return h;
+  }
+
+  return std::max(height(p_node->left, h + 1), height(p_node->right, h + 1));
+}
+\end{minted}
 
 \section*{Problem 3}
 

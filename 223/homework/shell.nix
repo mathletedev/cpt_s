@@ -3,6 +3,10 @@
 let
   texlive = pkgs.texliveBasic.withPackages (ps: with ps; [
     enumitem
+    fancyvrb
+    minted
+    pkgs.python3Packages.pygments
+    upquote
   ]);
 in
 pkgs.mkShell {

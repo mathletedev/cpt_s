@@ -1,4 +1,5 @@
 *.aux
+*.pyg
 *.pdf
 *.log
 

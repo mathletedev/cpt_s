@@ -1,7 +1,12 @@
 \documentclass[12pt]{article}
 \usepackage[fleqn]{amsmath}
-\usepackage{amsthm,enumitem,minted}
+\usepackage{amsthm,amsfonts,amssymb,braket,enumitem,minted}
 \newtheorem{thm}{Theorem}
+\newenvironment{solution}
+{\renewcommand\qedsymbol{$\blacksquare$}
+\begin{proof}[Solution]}
+  {
+\end{proof}}
 
 \begin{document}
 
@@ -53,11 +58,46 @@ int height(Node *p_node, int h = 0) {
 
 \section*{Problem 3}
 
+\[
+  T(n) =
+  \begin{cases}
+    3, & n = 1 \\
+    3T(n / 3) + n, & n > 1 \land n \in \set{n \mid n = 3^k, k \in \mathbb N}
+  \end{cases}
+\]
+
+\begin{solution}
+  \begin{align*}
+    T(n) & = 3T\left(\dfrac{n}{3}\right) + n \\
+    & = 3 \cdot \left(3T\left(\dfrac{n}{3 \cdot 3}\right) + n / 3\right) + n \\
+    & = 3 \cdot 3T\left(\dfrac{n}{3 \cdot 3}\right) + n + n \\
+    & = 3^kT\left(\dfrac{n}{3^k}\right) + kn \\
+    & = 3^{\log_3 n}T\left(\dfrac{n}{3^{\log_3 n}}\right) + \log_3 n \cdot n \\
+    & = nT\left(\dfrac{n}{n}\right) + n \log_3 n \\
+    & = nT(1) + n \log_3 n \\
+    & = 3n + n \log_3 n \\
+  \end{align*}
+  Therefore, $T(n) = n \log_3 n + 3n$.
+\end{solution}
+
 \section*{Problem 4}
 
 \begin{enumerate}[label=(\alph*)]
-  \item (your solution)
-  \item (your solution)
+  \item
+    \begin{enumerate}[label=(\roman*)]
+      \item Lambda expressions and \verb|<functional>|: Introduced
+        functional programming paradigm.
+      \item \verb|nullptr|: A strongly-typed null pointer that
+        replaced the bug-prone \verb|NULL| macro.
+    \end{enumerate}
+  \item How C++ handles null pointers:
+    \begin{minted}{cpp}
+int square(int x) { return x * x; }
+square(NULL); // bad: implicit conversion, may cause ub
+square(nullptr); // good: causes compile error
+    \end{minted}
+  \item C++ 14 introduced generic lambdas, which allow for the use of
+    \verb|auto| in lambda function parameters.
 \end{enumerate}
 
 \end{document}

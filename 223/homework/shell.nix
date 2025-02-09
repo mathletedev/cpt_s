@@ -3,6 +3,7 @@
 let
   texlive = pkgs.texliveBasic.withPackages (ps: with ps; [
     braket
+    cleveref
     enumitem
     fancyvrb
     minted

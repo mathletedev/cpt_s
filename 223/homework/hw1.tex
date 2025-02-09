@@ -1,7 +1,12 @@
 \documentclass[12pt]{article}
 \usepackage[fleqn]{amsmath}
-\usepackage{amsthm,amsfonts,amssymb,braket,enumitem,minted}
-\newtheorem{thm}{Theorem}
+\usepackage{amsthm,amsfonts,amssymb,braket,cleveref,enumitem,minted}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
 \newenvironment{solution}
 {\renewcommand\qedsymbol{$\blacksquare$}
 \begin{proof}[Solution]}
@@ -21,16 +26,16 @@
   \end{tabular}
 \end{center}
 
-\section*{Problem 1}
+\section{Problem 1}
 
-\begin{thm}
-  If $N(k)$ is the number of nodes of a complete binary tree at level
-  $k$, then $N(k) = 2^k$.
-\end{thm}
+\begin{theorem}
+  Let $N(k)$ denote the number of nodes of a complete binary tree at level
+  $k$. Then $N(k) = 2^k$.
+\end{theorem}
 
 \begin{proof}
-  $ $\\
-  Base case: If $k = 0$, then $N(0) = 1$. \\
+  Base case: If $k = 0$, then $N(0) = 1$.
+
   Inductive case: Each node has exactly two children
   \begin{align*}
     N(k) & = 2N(k - 1) \\
@@ -41,22 +46,25 @@
     & = 2^k \cdot 1 \\
     & = 2^k
   \end{align*}
+
   Therefore, $N(k) = 2^k$.
 \end{proof}
 
-\section*{Problem 2}
+\section{Problem 2}
 
 \begin{minted}{cpp}
 int height(Node *p_node, int h = 0) {
+  // base case: no node
   if (p_node == nullptr) {
     return h;
   }
 
+  // return the greater height between the left and right subtrees
   return std::max(height(p_node->left, h + 1), height(p_node->right, h + 1));
 }
 \end{minted}
 
-\section*{Problem 3}
+\section{Problem 3}
 
 \[
   T(n) =
@@ -77,10 +85,11 @@ int height(Node *p_node, int h = 0) {
     & = nT(1) + n \log_3 n \\
     & = 3n + n \log_3 n \\
   \end{align*}
+
   Therefore, $T(n) = n \log_3 n + 3n$.
 \end{solution}
 
-\section*{Problem 4}
+\section{Problem 4}
 
 \begin{enumerate}[label=(\alph*)]
   \item
@@ -99,5 +108,141 @@ square(nullptr); // good: causes compile error
   \item C++ 14 introduced generic lambdas, which allow for the use of
     \verb|auto| in lambda function parameters.
 \end{enumerate}
+
+\section{Problem 5}
+
+\begin{definition}[Clockwise-adjacent]
+  A peg $I$ is clockwise-adjacent to a peg $J$ if $I$ is reachable from
+  $J$ in 1 clockwise move.
+\end{definition}
+
+\begin{definition}[Counterclockwise-adjacent]
+  A peg $I$ is counterclockwise-adjacent to a peg $J$ if $I$ is reachable from
+  $J$ in 2 clockwise moves.
+\end{definition}
+
+\begin{lemma}
+  \label{basecases}
+  For $Q(1) = 1$, we can transfer a single disk from $A \to B$ using 1
+  clockwise move.
+
+  Similarly, for $R(1) = 2$ we can transfer a single disk
+  from $A \to C$ using 2 clockwise moves.
+\end{lemma}
+
+\begin{lemma}
+  \label{minmoves}
+  The minimum number of moves required to transfer $n$ disks from $A
+  \to B$ using $C$ is equivalent to the minimum number of moves
+  required to transfer $n$ disks from $B \to C$ using $A$.
+\end{lemma}
+
+\begin{proof}
+  This can be shown by simply renaming the pegs by one clockwise
+  rotation. I.e. $A = B, B = C, C = A$.
+\end{proof}
+
+And a consequence of \cref{minmoves} is the statement in the
+next corollary.
+
+\begin{corollary}
+  \label{genfuncs}
+  $Q(n)$ is equivalent to the minimum number of moves required to transfer $n$
+  disks from any peg to its clockwise-adjacent peg.
+
+  Similarly, $R(n)$ is equivalent to the minimum number of moves required to
+  transfer $n$ disks from any peg to its counterclockwise-adjacent
+  peg.
+\end{corollary}
+
+\begin{lemma}
+  \label{q}
+  If $n > 1$, then $Q(n) = 2R(n - 1) + 1$.
+\end{lemma}
+
+\begin{proof}
+  First, we transfer $n - 1$ disks to their
+  counterclockwise-adjacent peg. By \cref{genfuncs}, this requires
+  $R(n - 1)$ moves.
+
+  Next, we transfer the largest disk to its clockwise-adjacent peg. By
+  \cref{basecases}, this requires 1 move.
+
+  Finally, we transfer the $n - 1$ disks to their
+  counterclockwise-adjacent peg. By \cref{genfuncs}, this requires
+  $R(n - 1)$ moves.
+
+  In total, we used $R(n - 1) + 1 + R(n - 1) = 2R(n - 1) + 1$ moves.
+
+  Because no empty peg is unused, we can conclude that this is the
+  minimum number of moves required.
+
+  Therefore, $Q(n) = 2R(n - 1) + 1$.
+\end{proof}
+
+\begin{lemma}
+  \label{r}
+  If $n > 1$, then $R(n) = Q(n) + Q(n - 1) + 1$.
+\end{lemma}
+
+\begin{proof}
+  We observe that the proof for \cref{q} will not work for $R$.
+  This is because we cannot transfer the largest disk across a stack
+  of smaller disks. Thus, we will use an alternative approach.
+
+  First, we transfer $n - 1$ disks to their
+  counterclockwise-adjacent peg. By \cref{genfuncs}, this
+  requires $R(n - 1)$ moves. This creates a gap to transfer the largest disk.
+
+  Next, we transfer the largest disk to its clockwise-adjacent
+  peg. By \cref{basecases}, this requires 1 move.
+
+  Next, we transfer the $n - 1$ disks to their
+  clockwise-adjacent peg. By \cref{genfuncs}, this requires
+  $Q(n - 1)$ moves. This creates another gap to transfer the largest disk.
+
+  Next, we transfer the largest disk to its clockwise-adjacent
+  peg. By \cref{basecases}, this requires 1 move.
+
+  Finally, we transfer the $n - 1$ disks to their
+  counterclockwise-adjacent peg. By \cref{genfuncs}, this
+  requires $R(n - 1)$ moves.
+
+  In total, we used $R(n - 1) + 1 + Q(n - 1) + 1 + R(n - 1)$ moves.
+
+  We observe that $Q(n) = 2R(n - 1) + 1$, so we can rewrite this as
+  $Q(n) + Q(n - 1) + 1$.
+
+  Therefore, $R(n) = Q(n) + Q(n - 1) + 1$.
+\end{proof}
+
+\begin{theorem}[Tower of Hanoi]
+  \leavevmode
+  \begin{enumerate}[label=(\arabic*)]
+    \item \[
+        Q(n) =
+        \begin{cases}
+          1, & n = 1 \\
+          2R(n - 1) + 1, & n > 1
+        \end{cases}
+      \]
+    \item \[
+        R(n) =
+        \begin{cases}
+          2, & n = 1 \\
+          Q(n) + Q(n - 1) + 1, & n > 1
+        \end{cases}
+      \]
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+  For $n = 1$, we apply \cref{basecases}, which gives $Q(1) = 1$ and $R(1) = 2$.
+
+  For $n > 1$, we apply \cref{q,r}, which gives $Q(n) = 2R(n - 1) +
+  1$ and $R(n) = Q(n) + Q(n - 1) + 1$.
+
+  Therefore, the piecewise definitions hold, completing the proof.
+\end{proof}
 
 \end{document}

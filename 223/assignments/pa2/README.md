@@ -29,7 +29,7 @@ It is also important to note that IO is expensive, which may skew the results. T
 > How does `N` impact runtime compared to `M`?
 
 Time complexities:
-`ListMyJosephus`: $O(N \times M)$
+`ListMyJosephus`: $O(N \times M)$ \
 `VectorMyJosephus`: $O(N \times (N + M))$ or $O(N^2 + N \times M)$
 
 A breakdown of the time complexities:

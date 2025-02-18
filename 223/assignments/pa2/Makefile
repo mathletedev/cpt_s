@@ -4,7 +4,8 @@ build:
 	cp -nr data/. target
 
 exec:
-	@./main
+	@read -p "Enter variant to test: " VARIANT; \
+	./main $$VARIANT
 
 test:
 	@./main --test

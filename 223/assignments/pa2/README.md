@@ -33,10 +33,10 @@ Time complexities:
 - `VectorMyJosephus`: $O(N \times (N + M))$ or $O(N^2 + N \times M)$
 
 A breakdown of the time complexities:
-- `O(N)` for the outer `while (current_size() > 1)` loop (`current_size()` shrinks by 1 each iteration)
-- `O(M)` for the inner `std::next()` advancement of the iterator
-- `O(1)` for `std::list.erase()`
-- `O(N)` for `std::vector.erase()`
+- $O(N)$ for the outer `while (current_size() > 1)` loop (`current_size()` shrinks by 1 each iteration)
+- $O(M)$ for the inner `std::next()` advancement of the iterator
+- $O(1)$ for `std::list.erase()`
+- $O(N)$ for `std::vector.erase()`
 
 Thus, both `N` and `M` are equally impactful for `ListMyJosephus`, but `N` is more impactful (makes runtime slower) than `M` for `VectorMyJosephus`. \
 We can also see that `ListMyJosephus` is more efficient for large values of `N` and `M`. \

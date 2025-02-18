@@ -28,6 +28,7 @@ void test_list_my_josephus() {
 		std::random_device seed;
 		std::mt19937 rng(seed());
 		std::uniform_int_distribution<int> dist(0, i - 1);
+		// int M = 100; // testing for constistency
 		int M = dist(rng);
 
 		// make a new list with first `i` elements
@@ -54,7 +55,7 @@ void test_list_my_josephus() {
 		clock_t end = clock();
 		times[i - 1] = (double)(end - start) / CLOCKS_PER_SEC;
 		std::cout << "(ListMyJosephus) N = " << i << ", M = " << M
-			  << " time: " << times[i - 1] << std::endl;
+			  << " time: " << times[i - 1] << "s" << std::endl;
 	}
 
 	double total_time = std::accumulate(times.begin(), times.end(), 0.0);

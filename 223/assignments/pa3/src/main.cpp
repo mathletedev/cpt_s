@@ -11,6 +11,8 @@ int main() {
 	map.insert(4, 40);
 	map.insert(5, 50);
 
+	map.erase(5);
+
 	std::for_each(map.begin(), map.end(), [](const std::pair<int, int> &x) {
 		std::cout << x.first << " " << x.second << std::endl;
 	});

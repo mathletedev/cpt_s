@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <cassert>
 #include <utility>
 
@@ -14,12 +15,12 @@ class AvlMap {
 			public:
 				std::pair<K, V> data;
 				Node *p_left, *p_right, *p_parent;
-				int bf;
+				int height;
 
 				Node(const K &k, const V &v)
 				    : data(k, v), p_left(nullptr),
 				      p_right(nullptr), p_parent(nullptr),
-				      bf(0) {}
+				      height(0) {}
 		};
 
 		Node *root_;
@@ -27,6 +28,10 @@ class AvlMap {
 		// finds smallest node that is greater than p_node
 		Node *successor_(const Node *p_node) const;
 		void destroy_(Node *p_node);
+
+		int unwrap_height_(const Node *p_node) const {
+			return p_node ? p_node->height : 0;
+		}
 
 		void insert_(Node *&p_node, Node *p_prev, const K &key,
 			     const V &value);
@@ -91,7 +96,7 @@ AvlMap<K, V>::successor_(const Node *p_node) const {
 	// find smallest node that is greater than p_node (leftmost of right
 	// subtree)
 	Node *p_curr;
-	for (p_curr = p_curr->p_right; p_curr && p_curr->p_left;
+	for (p_curr = p_node->p_right; p_curr && p_curr->p_left;
 	     p_curr = p_curr->p_left)
 		;
 
@@ -123,14 +128,14 @@ void AvlMap<K, V>::insert_(Node *&p_node, Node *p_prev, const K &key,
 		return;
 	}
 
-	if (key < p_node->data.first) {
-		insert_(p_node->p_left, p_node, key, value);
-		--p_node->bf;
-		return;
-	}
+	Node *&p_next =
+	    key < p_node->data.first ? p_node->p_left : p_node->p_right;
+	insert_(p_next, p_node, key, value);
 
-	insert_(p_node->p_right, p_node, key, value);
-	++p_node->bf;
+	// update height
+	p_node->height = std::max(unwrap_height_(p_node->p_left),
+				  unwrap_height_(p_node->p_right)) +
+			 1;
 }
 
 template <typename K, typename V>
@@ -140,31 +145,39 @@ void AvlMap<K, V>::erase_(Node *&p_node, const K &key) {
 	}
 
 	// if key not found, continue searching
-	if (key < p_node->data.first) {
-		erase_(p_node->p_left, key);
-		++p_node->bf;
-		return;
-	}
-	if (key > p_node->data.first) {
-		erase_(p_node->p_right, key);
-		--p_node->bf;
+	if (key != p_node->data.first) {
+		Node *&p_next =
+		    key < p_node->data.first ? p_node->p_left : p_node->p_right;
+		erase_(p_next, key);
+
+		p_node->height = std::max(unwrap_height_(p_node->p_left),
+					  unwrap_height_(p_node->p_right)) +
+				 1;
 		return;
 	}
 
+	Node *p_tmp = nullptr;
+	bool incomplete = false;
 	// case 1: 0 children or only right child
 	if (!p_node->p_left) {
-		Node *p_tmp = p_node->p_right;
-		p_tmp->p_parent = p_node->p_parent;
-		delete p_node;
-		p_node = p_tmp;
+		p_tmp = p_node->p_right;
+		incomplete = true;
 	}
 	// case 2: only left child
-	if (!p_node->p_right) {
-		Node *p_tmp = p_node->p_left;
-		p_tmp->p_parent = p_node->p_parent;
+	else if (!p_node->p_right) {
+		p_tmp = p_node->p_left;
+		incomplete = true;
+	}
+
+	if (incomplete) {
+		if (p_tmp) {
+			p_tmp->p_parent = p_node->p_parent;
+		}
 		delete p_node;
 		p_node = p_tmp;
+		return;
 	}
+
 	// case 3: both children
 	Node *p_succ = successor_(p_node);
 	p_node->data.first = p_succ->data.first;

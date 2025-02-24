@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <utility>
 
 template <typename K, typename V>
@@ -29,9 +30,23 @@ class AvlMap {
 		Node *successor_(const Node *p_node) const;
 		void destroy_(Node *p_node);
 
+		// returns the height of p_node if it exists, else -1
 		int unwrap_height_(const Node *p_node) const {
-			return p_node ? p_node->height : 0;
+			return p_node ? p_node->height : -1;
 		}
+		// returns the balance factor of p_node
+		int bf_(const Node *p_node) const {
+			assert(p_node);
+			return unwrap_height_(p_node->p_right) -
+			       unwrap_height_(p_node->p_left);
+		}
+
+		void left_rotate_(Node *&p_node);
+		void right_rotate_(Node *&p_node);
+		// updates and balances p_node using rotations
+		void update_height_(Node *&p_node, bool rec = true);
+
+		void display_adj_(const Node *p_node) const;
 
 		void insert_(Node *&p_node, Node *p_prev, const K &key,
 			     const V &value);
@@ -43,6 +58,10 @@ class AvlMap {
 
 		~AvlMap() {
 			destroy_(root_);
+		}
+
+		void display_adj() const {
+			display_adj_(root_);
 		}
 
 		void insert(const K &key, const V &value) {
@@ -115,6 +134,100 @@ void AvlMap<K, V>::destroy_(Node *p_node) {
 }
 
 template <typename K, typename V>
+void AvlMap<K, V>::left_rotate_(Node *&p_node) {
+	assert(p_node && p_node->p_right);
+
+	Node *p_root = p_node;
+	p_node = p_node->p_right;
+	p_node->p_parent = p_root->p_parent;
+	p_root->p_parent = p_node;
+
+	Node *p_mid = p_node->p_left;
+	p_node->p_left = p_root;
+	p_root->p_right = p_mid;
+
+	update_height_(p_node, false);
+	update_height_(p_root, false);
+}
+
+template <typename K, typename V>
+void AvlMap<K, V>::right_rotate_(Node *&p_node) {
+	assert(p_node && p_node->p_left);
+
+	Node *p_root = p_node;
+	p_node = p_node->p_left;
+	p_node->p_parent = p_root->p_parent;
+	p_root->p_parent = p_node;
+
+	Node *p_mid = p_node->p_right;
+	p_node->p_right = p_root;
+	p_root->p_left = p_mid;
+
+	update_height_(p_node, false);
+	update_height_(p_root, false);
+}
+
+template <typename K, typename V>
+void AvlMap<K, V>::update_height_(Node *&p_node, bool rec) {
+	assert(p_node);
+
+	p_node->height = std::max(unwrap_height_(p_node->p_left),
+				  unwrap_height_(p_node->p_right)) +
+			 1;
+
+	if (!rec || std::abs(bf_(p_node)) <= 1) {
+		// subtree is balanced; nothing to do
+		return;
+	}
+
+	if (bf_(p_node) < 1) {
+		// L cases
+		if (bf_(p_node->p_left) <= 0) {
+			// LL case
+			right_rotate_(p_node);
+		} else {
+			// LR case
+			left_rotate_(p_node->p_left);
+			right_rotate_(p_node);
+		}
+	} else {
+		// R cases
+		if (bf_(p_node->p_right) >= 0) {
+			// RR case
+			left_rotate_(p_node);
+		} else {
+			// RL case
+			right_rotate_(p_node->p_right);
+			left_rotate_(p_node);
+		}
+	}
+
+	// assert that subtree is balanced
+	assert(std::abs(bf_(p_node)) <= 1);
+}
+
+template <typename K, typename V>
+void AvlMap<K, V>::display_adj_(const Node *p_node) const {
+	if (!p_node) {
+		return;
+	}
+
+	std::cout << p_node->data.first << " -> ";
+	if (p_node->p_left) {
+		std::cout << p_node->p_left->data.first;
+		if (p_node->p_right) {
+			std::cout << ", " << p_node->p_right->data.first;
+		}
+	} else if (p_node->p_right) {
+		std::cout << p_node->p_right->data.first;
+	}
+	std::cout << std::endl;
+
+	display_adj_(p_node->p_left);
+	display_adj_(p_node->p_right);
+}
+
+template <typename K, typename V>
 void AvlMap<K, V>::insert_(Node *&p_node, Node *p_prev, const K &key,
 			   const V &value) {
 	if (!p_node) {
@@ -132,10 +245,7 @@ void AvlMap<K, V>::insert_(Node *&p_node, Node *p_prev, const K &key,
 	    key < p_node->data.first ? p_node->p_left : p_node->p_right;
 	insert_(p_next, p_node, key, value);
 
-	// update height
-	p_node->height = std::max(unwrap_height_(p_node->p_left),
-				  unwrap_height_(p_node->p_right)) +
-			 1;
+	update_height_(p_node);
 }
 
 template <typename K, typename V>
@@ -150,9 +260,7 @@ void AvlMap<K, V>::erase_(Node *&p_node, const K &key) {
 		    key < p_node->data.first ? p_node->p_left : p_node->p_right;
 		erase_(p_next, key);
 
-		p_node->height = std::max(unwrap_height_(p_node->p_left),
-					  unwrap_height_(p_node->p_right)) +
-				 1;
+		update_height_(p_node);
 		return;
 	}
 

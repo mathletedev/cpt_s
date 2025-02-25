@@ -12,8 +12,8 @@
 int main() {
 	std::ifstream data("./target/uszips.csv");
 
-	AvlMap<int, USCity> avl_map;
-	std::map<int, USCity> std_map;
+	AvlMap<int, UsCity> avl_map;
+	std::map<int, UsCity> std_map;
 	// NOTE: used vector instead of list due to faster indexing and
 	// `std::shuffle()`
 	std::vector<int> zips;
@@ -27,7 +27,7 @@ int main() {
 
 		std::string zip_s = columns[0];
 		int zip = std::stoi(zip_s);
-		USCity city(columns);
+		UsCity city(columns);
 
 		avl_map.insert(zip, city);
 		std_map.insert(std::make_pair(zip, city));

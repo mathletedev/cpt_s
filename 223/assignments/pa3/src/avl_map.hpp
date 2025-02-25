@@ -93,6 +93,10 @@ class AvlMap {
 					assert(p_curr_);
 					return p_curr_->data;
 				}
+				std::pair<K, V> *operator->() {
+					assert(p_curr_);
+					return &p_curr_->data;
+				}
 
 				bool operator==(const Iterator &other) const {
 					return p_curr_ == other.p_curr_;
@@ -146,8 +150,9 @@ void AvlMap<K, V>::left_rotate_(Node *&p_node) {
 	p_node->p_left = p_root;
 	p_root->p_right = p_mid;
 
-	update_height_(p_node, false);
+	// NOTE: update child height before updating parent height
 	update_height_(p_root, false);
+	update_height_(p_node, false);
 }
 
 template <typename K, typename V>
@@ -163,8 +168,8 @@ void AvlMap<K, V>::right_rotate_(Node *&p_node) {
 	p_node->p_right = p_root;
 	p_root->p_left = p_mid;
 
-	update_height_(p_node, false);
 	update_height_(p_root, false);
+	update_height_(p_node, false);
 }
 
 template <typename K, typename V>

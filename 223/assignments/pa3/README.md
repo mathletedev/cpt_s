@@ -1,6 +1,6 @@
 # Programming Assignment 3
 
-> AVL Map
+> AVL Map vs. `std::map`
 
 ## Instructions
 

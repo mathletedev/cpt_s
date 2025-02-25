@@ -14,6 +14,7 @@ int main() {
 
 	AvlMap<int, USCity> avl_map;
 	std::map<int, USCity> std_map;
+	// NOTE: used vector instead of list due to faster indexing
 	std::vector<int> zips;
 
 	std::string line;

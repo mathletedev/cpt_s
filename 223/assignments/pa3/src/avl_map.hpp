@@ -185,7 +185,7 @@ void AvlMap<K, V>::update_height_(Node *&p_node, bool rec) {
 		return;
 	}
 
-	if (bf_(p_node) < 1) {
+	if (bf_(p_node) < 0) {
 		// L cases
 		if (bf_(p_node->p_left) <= 0) {
 			// LL case

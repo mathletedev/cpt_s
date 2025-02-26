@@ -6,6 +6,7 @@ let
     cleveref
     enumitem
     fancyvrb
+    hyperref
     minted
     pkgs.python3Packages.pygments
     upquote

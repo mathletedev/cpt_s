@@ -1,0 +1,137 @@
+\documentclass[12pt]{article}
+\usepackage[fleqn]{amsmath}
+\usepackage{amsthm,amsfonts,amssymb,braket,enumitem,minted,hyperref,cleveref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newenvironment{solution}
+{\renewcommand\qedsymbol{$\blacksquare$}
+\begin{proof}[Solution]}
+  {
+\end{proof}}
+\hypersetup{
+  colorlinks=true,
+  urlcolor=violet,
+}
+
+\begin{document}
+
+\begin{center}
+  {\Large CPT\_S 223 Homework 2}
+  $ $\\
+  $ $\\
+  \begin{tabular}{rl}
+    WSU ID: & 11870028 \\
+    Name: & Neal Wang \\
+    Due Date: & 2 March 2025
+  \end{tabular}
+\end{center}
+
+\section{Problem 1}
+
+\begin{minted}{c}
+node *reverse(node *head) {
+  node *prev = NULL;
+  node *curr = head;
+
+  while (curr != NULL) {
+    node *next = curr->next;
+    curr->next = prev;
+    prev = curr;
+    curr = next;
+  }
+
+  return prev;
+}
+\end{minted}
+
+\newpage
+
+\section{Problem 2}
+
+This is an application of
+\href{https://en.wikipedia.org/wiki/Cycle_detection#Floyd's_tortoise_and_hare}
+{Floyd's tortoise and hare algorithm}. I've previously implemented
+this algorithm in C++ for a Codeforces contest:
+\href{https://github.com/mathletedev/cp/blob/main/Codeforces/1137D.cpp}{GitHub}
+
+Here is an algorithmic pseudocode for cycle detection:
+
+\begin{minted}{c}
+// to avoid null dereference
+node *next(node *curr) {
+  return curr == NULL ? NULL : curr->next;
+}
+
+bool cyclic(node *head) {
+  node *hare = head, *tortoise = head;
+
+  while (NULL) {
+    hare = next(next(hare));
+    tortoise = next(tortoise);
+
+    // list terminates, thus is acyclic
+    if (hare == NULL) {
+      return false;
+    }
+
+    // hare and tortoise meet, thus is cyclic
+    if (hare == tortoise) {
+      return true;
+    }
+  }
+}
+\end{minted}
+
+Since the hare travels at twice the speed of the tortoise, it
+advances one extra node per iteration. Once the hare leaves the
+starting node, the only way for the hare to encounter the tortoise
+again is if there is a cycle in the linked list.
+
+\newpage
+
+\section{Problem 3}
+
+(a), (b), (d), and (f) all apply.
+
+\section{Problem 4}
+
+$37, 2 / N, \sqrt N, N, N \log(\log N), \set{N \log N, N \log N^2}, N \log^2
+N, \\ N^{1.5}, N^2, N^2 \log N, N^3, 2^{N / 2}, 2^N$
+
+\section{Problem 5}
+
+\subsection{}
+
+Prove that $5 \log N = o(N \log N)$.
+
+\subsection{}
+
+Prove that $2 \log N = O(\sqrt N)$.
+
+\begin{lemma}
+  \label{growth}
+  $\log N \ll \sqrt N$ ($\sqrt N$ grows faster than $\log N$).
+\end{lemma}
+
+\begin{proof}
+  We will analyse $\lim_{N \to \infty} \dfrac{\log N}{\sqrt N}$.
+
+  \begin{align*}
+    \lim_{N \to \infty} \dfrac{\log N}{\sqrt N} & =
+    \lim_{N \to \infty} \dfrac{\frac{d}{dN} \log N}{\frac{d}{dN}
+    \sqrt N} \quad \text{(By
+    L'Hôpital's Rule)} \\
+    & = \lim_{N \to \infty} \dfrac{\frac{1}{N}}{\frac{1}{2 \sqrt N}} \\
+    & = \lim_{N \to \infty} \dfrac{2 \sqrt N}{N} \\
+    & = \lim_{N \to \infty} \dfrac{1}{\sqrt N} \\
+    & = 0
+  \end{align*}
+
+  Therefore, $\log N \ll \sqrt N$.
+\end{proof}
+
+\end{document}

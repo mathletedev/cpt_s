@@ -15,6 +15,7 @@
 \hypersetup{
   colorlinks=true,
   urlcolor=violet,
+  linkcolor=blue,
 }
 
 \begin{document}
@@ -34,16 +35,21 @@
 
 \begin{minted}{c}
 node *reverse(node *head) {
+  // keep track of previous node to replace next with
   node *prev = NULL;
   node *curr = head;
 
   while (curr != NULL) {
+    // reverse link
     node *next = curr->next;
     curr->next = prev;
+
+    // move to next node
     prev = curr;
     curr = next;
   }
 
+  // return new head (aka last node)
   return prev;
 }
 \end{minted}
@@ -97,41 +103,130 @@ again is if there is a cycle in the linked list.
 
 (a), (b), (d), and (f) all apply.
 
+(a) works with $c = 1$ and $n_0 = 20$.
+
+(b) works with $c = 1$ and $n_0 = 1$.
+
+(d) works with $c_1 = \frac{1}{200}$, $c_2 = 1$, and $n_0 = 20$.
+
+(f) works because:
+
+$\lim_{n \to \infty} \dfrac{\frac{n^3}{100} + 10n^2
++ n + 3}{n^2} = \lim_{n \to \infty} \dfrac{n^3}{n^2} = \lim_{n \to
+\infty} n = \infty$.
+
 \section{Problem 4}
 
-$37, 2 / N, \sqrt N, N, N \log(\log N), \set{N \log N, N \log N^2}, N \log^2
+$2 / N, 37, \sqrt N, N, N \log(\log N), \set{N \log N, N \log N^2}, N \log^2
 N, \\ N^{1.5}, N^2, N^2 \log N, N^3, 2^{N / 2}, 2^N$
 
 \section{Problem 5}
 
 \subsection{}
 
-Prove that $5 \log N = o(N \log N)$.
+\begin{quote}
+  Prove that $5 \lg n = o(n \lg n)$.
+\end{quote}
+
+\begin{theorem}
+  $5 \lg n = o(n \lg n)$
+\end{theorem}
+
+\begin{proof}
+  First, we will show that $\lim_{n \to \infty} \dfrac{5 \lg n}{n \lg n} = 0$.
+
+  $\lim_{n \to \infty} \dfrac{5 \lg n}{n \lg n} = \lim_{n \to
+  \infty} \dfrac{5}{n} = 0.$
+
+  Then $5 \lg n \ll n \lg n$ ($n \lg n$ grows faster than $5 \lg n$).
+
+  Then
+  $$ \exists c, n_0 \in \mathbb R, \forall n \in \mathbb R (n \geq
+  n_0 \implies 5 \lg n < cn \lg n). $$
+
+  Therefore, $5 \lg n = o(n \lg n)$.
+\end{proof}
+
+\newpage
 
 \subsection{}
 
-Prove that $2 \log N = O(\sqrt N)$.
+\begin{quote}
+  Prove that $2 \lg n = O(\sqrt n)$.
+\end{quote}
 
 \begin{lemma}
   \label{growth}
-  $\log N \ll \sqrt N$ ($\sqrt N$ grows faster than $\log N$).
+  $\lg n \ll \sqrt n$.
 \end{lemma}
 
 \begin{proof}
-  We will analyse $\lim_{N \to \infty} \dfrac{\log N}{\sqrt N}$.
+  We will show that $\lim_{n \to \infty} \dfrac{\lg n}{\sqrt n} = 0$.
 
   \begin{align*}
-    \lim_{N \to \infty} \dfrac{\log N}{\sqrt N} & =
-    \lim_{N \to \infty} \dfrac{\frac{d}{dN} \log N}{\frac{d}{dN}
-    \sqrt N} \quad \text{(By
+    \lim_{n \to \infty} \dfrac{\lg n}{\sqrt n} & =
+    \lim_{n \to \infty} \dfrac{\frac{d}{dn} \lg n}{\frac{d}{dn}
+    \sqrt n} \quad \text{(By
     L'Hôpital's Rule)} \\
-    & = \lim_{N \to \infty} \dfrac{\frac{1}{N}}{\frac{1}{2 \sqrt N}} \\
-    & = \lim_{N \to \infty} \dfrac{2 \sqrt N}{N} \\
-    & = \lim_{N \to \infty} \dfrac{1}{\sqrt N} \\
-    & = 0
+    & = \lim_{n \to \infty} \dfrac{\frac{1}{n \ln 2}}{\frac{1}{2 \sqrt n}} \\
+    & = \lim_{n \to \infty} \dfrac{2 \sqrt n}{n \ln 2} \\
+    & = \lim_{n \to \infty} \dfrac{2}{\ln(2) \sqrt n} \\
+    & = 0.
   \end{align*}
 
-  Therefore, $\log N \ll \sqrt N$.
+  Therefore, $\lg n \ll \sqrt n$.
 \end{proof}
+
+\begin{theorem}
+  $2 \lg n = O(\sqrt n)$.
+\end{theorem}
+
+\begin{proof}
+  For $c = 2$, we have $2 \lg n \ll 2 \sqrt n$, which is equivalent to
+  $\lg n \ll \sqrt n$ (\cref{growth}).
+
+  For $n_0 = 1$, we have $2 \lg n = 0$ and $\sqrt n = 1$. $0 < 1$.
+
+  Then, with $c = 2$ and $n_0 = 1$,
+  $$ \forall n \in \mathbb R (n \geq 1 \implies 2 \lg n \leq
+  2 \sqrt n). $$
+
+  Therefore, $2 \lg n = O(\sqrt n)$.
+\end{proof}
+
+\newpage
+
+\section{Problem 6}
+
+\subsection{}
+
+\begin{quote}
+  Worst-case running time complexity: $\Theta (n^2)$.
+\end{quote}
+
+In this case, a swap is required at every index. We end up
+constructing a "triangle" of operations, with $n - 1$ rows and $n - i$
+operations per row. This would require $\sum_{i = 0}^{n - 1} (n - i)
+= \sum_{i = 1}^{n} i = \frac{1}{2}n(n + 1) = \frac{n^2}{2} +
+\frac{n}{2}$ operations.
+
+With this polynomial, we take the most significant term to get a
+worst-case running time complexity of $\Theta (n^2)$.
+
+\subsection{}
+
+\begin{quote}
+  Best-case running time complexity: $\Theta (n)$.
+\end{quote}
+
+In this case, the algorithm scans the entire array only once,
+determines that $\neg \exists x \in A (x < A_1)$, and halts.
+
+The algorithm scans $n$ elements, so the best-case running time complexity is
+$\Theta (n)$.
+
+Note: If the algorithm is poorly designed such that it only searches
+for $x = \min A$, not halting when $A$ is already sorted, then the
+best-case running time complexity is $\Theta (n^2)$.
 
 \end{document}

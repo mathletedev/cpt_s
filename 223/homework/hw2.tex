@@ -75,7 +75,7 @@ node *next(node *curr) {
 bool cyclic(node *head) {
   node *hare = head, *tortoise = head;
 
-  while (NULL) {
+  while (true) {
     hare = next(next(hare));
     tortoise = next(tortoise);
 

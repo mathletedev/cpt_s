@@ -1,13 +1,14 @@
+// NOTE: copied from PA1
 #pragma once
 
 #include <functional>
 #include <iostream>
 
-/// generic linked list class
+// generic linked list class
 template <typename T>
 class LinkedList {
 	private:
-		/// private node class
+		// private node class
 		class Node {
 			public:
 				T data;
@@ -27,38 +28,40 @@ class LinkedList {
 		LinkedList(const std::initializer_list<T> &data);
 		~LinkedList();
 
-		/// removes all elements from the list
+		// removes all elements from the list
 		void clear();
-		/// returns the length of the list
+		// returns the length of the list
 		int length() const {
 			return length_;
 		}
-		/// returns the nth element of the list
+		// returns the nth element of the list
 		T const &nth(int n) const;
 
-		/// appends an element to the head of the list
+		// appends an element to the head of the list
 		void push_front(const T &data);
-		/// appends an element to the tail of the list
+		// appends an element to the tail of the list
 		void push_back(const T &data);
-		/// removes the first element that satisfies the predicate
+		// removes the head of the list and returns its value
+		T pop_front();
+		// removes the first element that satisfies the predicate
 		void remove(std::function<bool(const T &data)> const &f);
 
-		/// returns a new list with all elements that satisfy the
-		/// predicate
+		// returns a new list with all elements that satisfy the
+		// predicate
 		LinkedList<T>
 		filter(std::function<bool(const T &data)> const &f) const;
 		template <typename U>
 		LinkedList<U>
-		/// maps f onto each element of the list, returns the new list
+		// maps f onto each element of the list, returns the new list
 		map(std::function<U(const T &data)> const &f) const;
 		void
-		/// calls f on each element of the list
+		// calls f on each element of the list
 		for_each(std::function<void(const T &data)> const &f) const;
-		/// returns true if any element satisfies the predicate
+		// returns true if any element satisfies the predicate
 		bool any(std::function<bool(const T &data)> const &f) const;
-		/// returns true if element is in the list
+		// returns true if element is in the list
 		bool elem(const T &data) const;
-		/// prints each element of the list to stdout
+		// prints each element of the list to stdout
 		void display() const;
 
 		// https://stackoverflow.com/a/3279550/14946864
@@ -146,6 +149,20 @@ void LinkedList<T>::push_back(const T &data) {
 	p_tail_->p_next = p_node;
 	p_tail_ = p_node;
 	++length_;
+}
+
+template <typename T>
+T LinkedList<T>::pop_front() {
+	assert(p_head_ != nullptr);
+
+	T data = p_head_->data;
+
+	Node *p_next = p_head_->p_next;
+	delete p_head_;
+	p_head_ = p_next;
+	--length_;
+
+	return data;
 }
 
 template <typename T>

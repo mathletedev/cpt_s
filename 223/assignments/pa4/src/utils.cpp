@@ -23,7 +23,8 @@ LinkedList<std::string> utils::parse_csv(const std::string &input) {
 
 		if (c == '"') {
 			// escaped quotes
-			if (i + 1 < input.size() && input[i + 1] == '"') {
+			if (i + 1 < input.size() && input[i + 1] == '"' &&
+			    !(i + 2 < input.size() && input[i + 2] == ',')) {
 				curr += '"';
 				++i;
 				continue;

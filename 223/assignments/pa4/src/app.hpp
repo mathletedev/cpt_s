@@ -3,7 +3,9 @@
 #include "avl_map.hpp"
 #include "hash_map.hpp"
 #include "linked_list.hpp"
+#include "product.hpp"
 #include <functional>
+#include <memory>
 #include <string>
 
 class App {
@@ -12,7 +14,8 @@ class App {
 		AvlMap<std::string,
 		       std::function<void(LinkedList<std::string> &)>>
 		    commands_;
-		HashMap<std::string, std::string> ids_;
+		// store in pointers so hash map isn't too big
+		HashMap<std::string, std::shared_ptr<Product>> ids_;
 		HashMap<std::string, LinkedList<std::string>> categories_;
 
 		void quit_();

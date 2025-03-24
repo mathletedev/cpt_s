@@ -1,6 +1,7 @@
 // NOTE: copied from PA1
 #pragma once
 
+#include <cassert>
 #include <functional>
 #include <iostream>
 

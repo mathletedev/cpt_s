@@ -24,25 +24,24 @@ void App::bootstrap_() {
 
 	while (std::getline(dataset, line)) {
 		LinkedList<std::string> cols = utils::parse_csv(line);
-		std::string id = cols.nth(0);
-		std::string name = cols.nth(1);
-		std::string categories_s = cols.nth(4);
+		std::shared_ptr<Product> p_product =
+		    std::make_shared<Product>(cols);
+		std::string id = p_product->uniq_id;
 
 		// insert into ids_
-		ids_[id] = name;
+		ids_[id] = p_product;
 
 		// insert into categories_
 		LinkedList<std::string> categories =
-		    utils::split(categories_s, " | ");
-		std::string details = id + " | " + name;
+		    utils::split(p_product->category, " | ");
 		if (categories.length() > 0) {
 			categories.for_each(
-			    [this, &details](const std::string &category) {
-				    categories_[category].push_back(details);
+			    [this, &id](const std::string &category) {
+				    categories_[category].push_back(id);
 			    });
 		} else {
 			// empty category column
-			categories_["NA"].push_back(details);
+			categories_["NA"].push_back(id);
 		}
 	}
 }
@@ -70,7 +69,7 @@ void App::find_(LinkedList<std::string> &args) {
 		return;
 	}
 
-	std::cout << ids_[args.nth(0)] << std::endl;
+	ids_[args.nth(0)]->display();
 }
 
 void App::list_inventory_(LinkedList<std::string> &args) {
@@ -86,8 +85,10 @@ void App::list_inventory_(LinkedList<std::string> &args) {
 		return;
 	}
 
-	categories_[category].for_each([](const std::string &details) {
-		std::cout << details << std::endl;
+	categories_[category].for_each([this](const std::string &id) {
+		std::shared_ptr<Product> p_product = ids_[id];
+		std::cout << p_product->uniq_id << " | "
+			  << p_product->product_name << std::endl;
 	});
 }
 

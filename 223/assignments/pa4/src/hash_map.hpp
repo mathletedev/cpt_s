@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <cassert>
 #include <functional>
-#include <iostream>
 
 #define LF_CUTOFF 0.75
 #define MAX_CAPACITY 100000
@@ -80,7 +79,7 @@ HashMap<Key, Value>::HashMap(int capacity) {
 	assert(capacity > 0);
 
 	capacity_ = capacity;
-	table_ = new std::pair<Key, Value> *[capacity];
+	table_ = new std::pair<Key, Value> *[capacity]();
 
 	// initialise sieve of eratosthenes
 	std::fill(sieve_, sieve_ + MAX_CAPACITY, true);

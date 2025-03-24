@@ -1,5 +1,6 @@
 #include "app.hpp"
 #include "utils.hpp"
+#include <fstream>
 #include <iostream>
 
 App::App() {
@@ -21,6 +22,18 @@ void App::bootstrap_() {
 	commands_.insert("find", [this](auto args) { find_(args); });
 	commands_.insert("listInventory",
 			 [this](auto args) { list_inventory_(args); });
+
+	// load dataset
+	std::ifstream dataset("data/dataset.csv");
+	std::string line;
+	// skip header
+	std::getline(dataset, line);
+
+	while (std::getline(dataset, line)) {
+		LinkedList<std::string> args = utils::parse_csv(line);
+		std::string id = args.pop_front();
+		ids_[id] = args.pop_front();
+	}
 }
 
 void App::quit_() {
@@ -41,11 +54,11 @@ void App::help_() const {
 	    << std::endl;
 }
 
-void App::find_(const LinkedList<std::string> &args) const {
-	std::cout << "YET TO IMPLEMENT!" << std::endl;
+void App::find_(LinkedList<std::string> &args) {
+	std::cout << ids_[args.pop_front()] << std::endl;
 }
 
-void App::list_inventory_(const LinkedList<std::string> &args) const {
+void App::list_inventory_(LinkedList<std::string> &args) {
 	std::cout << "YET TO IMPLEMENT!" << std::endl;
 }
 
@@ -56,7 +69,7 @@ LinkedList<std::string> App::split_(const std::string &input) const {
 	for (char c : input) {
 		if (c == ' ') {
 			res.push_back(curr);
-			curr = "";
+			curr.clear();
 			continue;
 		}
 
@@ -68,13 +81,7 @@ LinkedList<std::string> App::split_(const std::string &input) const {
 }
 
 bool App::valid_command_(const std::string &input) const {
-	for (auto &[key, value] : commands_) {
-		if (key == input) {
-			return true;
-		}
-	}
-
-	return false;
+	return commands_.find(input) != commands_.end();
 }
 
 void App::run_() {
@@ -95,7 +102,7 @@ void App::run_() {
 		}
 
 		// evaluate the command
-		commands_.find(input)->second(args);
+		commands_.find(command_name)->second(args);
 
 		if (!running_) {
 			break;

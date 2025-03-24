@@ -25,6 +25,20 @@ Note: `make data` pulls the CSV file from my personal Dropbox. Alternatively, do
     - My implementation uses quadratic probing and rehashing to resolve hash collisions.
     - I use `std::hash` to hash `id` and `category` strings.
 
+Sample REPL commands:
+
+```
+> find 4c69b61db1fc16e7013b43fc926e502d
+ID: ...
+Name: ...
+Brand: ...
+...
+> listInventory Sports & Outdoors
+4c69b61db1fc16e7013b43fc926e502d | DB Longboards CoreFlex Crossbow 41" Bamboo Fiberglass Longboard Complete
+5bb4a9aa52085ada20006d166b1e2f87 | Franklin Sports Eye Black Stickers for Kids - Customizable Lettering Baseball and Football Eye Black Stickers - White Pencil Included
+...
+```
+
 ## Citations
 
 - Kaggle Amazon sample dataset: https://kaggle.com

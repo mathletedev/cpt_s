@@ -1,5 +1,18 @@
 #include "utils.hpp"
 
+LinkedList<std::string> utils::split(std::string input, std::string delimiter) {
+	LinkedList<std::string> res;
+
+	for (size_t i = input.find(delimiter); i != std::string::npos;
+	     i = input.find(delimiter)) {
+		res.push_back(input.substr(0, i));
+		input = input.substr(i + delimiter.size());
+	}
+	res.push_back(input);
+
+	return res;
+}
+
 LinkedList<std::string> utils::parse_csv(const std::string &input) {
 	LinkedList<std::string> res;
 	std::string curr;

@@ -11,7 +11,7 @@ preprocess:
 	./main --preprocess
 
 build:
-	g++ src/*.cpp -g -Wall -std=c++17 -o main
+	g++ src/*.cpp -g -Wall -std=c++14 -o main
 
 exec:
 	@./main

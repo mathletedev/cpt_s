@@ -3,13 +3,6 @@
 #include <fstream>
 #include <iostream>
 
-App::App() {
-	bootstrap_();
-	NEWLINE;
-
-	run_();
-}
-
 void App::bootstrap_() {
 	std::cout << "Welcome to the Amazon Inventory Query System!"
 		  << std::endl;
@@ -30,9 +23,27 @@ void App::bootstrap_() {
 	std::getline(dataset, line);
 
 	while (std::getline(dataset, line)) {
-		LinkedList<std::string> args = utils::parse_csv(line);
-		std::string id = args.pop_front();
-		ids_[id] = args.pop_front();
+		LinkedList<std::string> cols = utils::parse_csv(line);
+		std::string id = cols.nth(0);
+		std::string name = cols.nth(1);
+		std::string categories_s = cols.nth(4);
+
+		// insert into ids_
+		ids_[id] = name;
+
+		// insert into categories_
+		LinkedList<std::string> categories =
+		    utils::split(categories_s, " | ");
+		std::string details = id + " | " + name;
+		if (categories.length() > 0) {
+			categories.for_each(
+			    [this, &details](const std::string &category) {
+				    categories_[category].push_back(details);
+			    });
+		} else {
+			// empty category column
+			categories_["NA"].push_back(details);
+		}
 	}
 }
 
@@ -42,24 +53,42 @@ void App::quit_() {
 
 void App::help_() const {
 	// TODO: traverse commands_?
+	// for now, just hard-code descriptions
 	std::cout << "Supported list of commands:" << std::endl;
-	std::cout
-	    << " 1. find <inventoryid> - Finds if the inventory exists. If "
-	       "exists, prints details. If not, prints 'Inventory not found'."
-	    << std::endl;
-	std::cout
-	    << " 2. listInventory <category_string> - Lists just the id and "
-	       "name of all inventory belonging to the specified category. If "
-	       "the category doesn't exists, prints 'Invalid Category'."
-	    << std::endl;
+	std::cout << " 1. find <inventory_id> - Displays inventory details. If "
+		     "inventory doesn't exist, prints 'Inventory not found'."
+		  << std::endl;
+	std::cout << " 2. listInventory <category> - Lists the id and name of "
+		     "all inventory belonging to the specified category. If "
+		     "category doesn't exist, prints 'Invalid category'."
+		  << std::endl;
 }
 
 void App::find_(LinkedList<std::string> &args) {
-	std::cout << ids_[args.pop_front()] << std::endl;
+	if (!ids_.contains(args.nth(0))) {
+		std::cout << "Inventory not found" << std::endl;
+		return;
+	}
+
+	std::cout << ids_[args.nth(0)] << std::endl;
 }
 
 void App::list_inventory_(LinkedList<std::string> &args) {
-	std::cout << "YET TO IMPLEMENT!" << std::endl;
+	// join args with spaces
+	std::string category = args.foldr<std::string>(
+	    [](std::string prev, const std::string &curr) {
+		    return prev.empty() ? curr : prev + " " + curr;
+	    },
+	    "");
+
+	if (!categories_.contains(category)) {
+		std::cout << "Invalid category" << std::endl;
+		return;
+	}
+
+	categories_[category].for_each([](const std::string &details) {
+		std::cout << details << std::endl;
+	});
 }
 
 LinkedList<std::string> App::split_(const std::string &input) const {
@@ -110,4 +139,11 @@ void App::run_() {
 
 		std::cout << "> ";
 	}
+}
+
+App::App() {
+	bootstrap_();
+	NEWLINE;
+
+	run_();
 }

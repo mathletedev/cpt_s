@@ -58,6 +58,7 @@ void HashMap<Key, Value>::rehash_() {
 		++new_capacity;
 	}
 
+	// motivation: create new hash map and swap
 	HashMap<Key, Value> new_map(new_capacity);
 	for (int i = 0; i < capacity_; ++i) {
 		if (table_[i] == nullptr) {
@@ -114,7 +115,7 @@ Value &HashMap<Key, Value>::operator[](const Key &key) {
 			return (*this)[key];
 		}
 
-		element = new std::pair(key, Value());
+		element = new std::pair<Key, Value>(key, Value());
 	}
 
 	return element->second;

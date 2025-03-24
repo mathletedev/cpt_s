@@ -50,12 +50,16 @@ class LinkedList {
 		// predicate
 		LinkedList<T>
 		filter(std::function<bool(const T &data)> const &f) const;
+		// maps f onto each element of the list, returns the new list
 		template <typename U>
 		LinkedList<U>
-		// maps f onto each element of the list, returns the new list
 		map(std::function<U(const T &data)> const &f) const;
-		void
+		// folds the list from right to left
+		template <typename U>
+		U foldr(std::function<U(U, const T &data)> const &f,
+			U init) const;
 		// calls f on each element of the list
+		void
 		for_each(std::function<void(const T &data)> const &f) const;
 		// returns true if any element satisfies the predicate
 		bool any(std::function<bool(const T &data)> const &f) const;
@@ -221,6 +225,17 @@ LinkedList<U>
 LinkedList<T>::map(const std::function<U(const T &data)> &f) const {
 	LinkedList<U> res;
 	for_each([&res, &f](const T &data) { res.push_back(f(data)); });
+
+	return res;
+}
+
+template <typename T>
+template <typename U>
+U LinkedList<T>::foldr(const std::function<U(U, const T &data)> &f,
+		       U init) const {
+	U res = init;
+
+	for_each([&res, &f](const T &data) { res = f(res, data); });
 
 	return res;
 }

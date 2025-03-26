@@ -1,0 +1,60 @@
+\documentclass[12pt]{article}
+\usepackage[fleqn]{amsmath}
+\usepackage{amsthm,amsfonts,amssymb,braket,enumitem,minted,hyperref,cleveref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newenvironment{solution}
+{\renewcommand\qedsymbol{$\blacksquare$}
+\begin{proof}[Solution]}
+  {
+\end{proof}}
+\hypersetup{
+  colorlinks=true,
+  urlcolor=violet,
+  linkcolor=blue,
+}
+
+\begin{document}
+
+\begin{center}
+  {\Large CPT\_S 223 Homework 3}
+  $ $\\
+  $ $\\
+  \begin{tabular}{rl}
+    WSU ID: & 11870028 \\
+    Name: & Neal Wang \\
+    Due Date: & 27 March 2025
+  \end{tabular}
+\end{center}
+
+\section{Problem 1}
+
+\begin{enumerate}[label=(\alph*)]
+  \item 13
+  \item 7
+  \item 5
+  \item 3
+  \item 2
+  \item Post-order: G H F K L M J I B D E C A \\
+    Pre-order: A B F G H I K J L M C D E
+  \item Level-order: A B C F I D E G H K J L M \\
+    In-order: G F H B K I L J M A D C E
+\end{enumerate}
+
+\section{Problem 2}
+
+\section{Problem 3}
+
+A tree with $n$ nodes has exactly $n - 1$ edges. This is because each
+node has exactly one edge to its parent, but the root node has no parent.
+
+Another way to think about this is that a tree is an acyclic
+connected graph. There must be at least $n - 1$ edges in a connected
+graph. There also can't be more than $n - 1$ edges, since this would
+result in a cyclic graph due to the Pigeonhole Principle.
+
+\end{document}

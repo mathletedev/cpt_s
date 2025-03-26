@@ -4,7 +4,8 @@
 #include <cassert>
 #include <functional>
 
-#define LF_CUTOFF 0.75
+// guarantees an empty slot is available for insertion
+#define LF_CUTOFF 0.5
 #define MAX_CAPACITY 100000
 
 template <typename Key, typename Value>
@@ -38,12 +39,13 @@ double HashMap<Key, Value>::lf_() const {
 template <typename Key, typename Value>
 std::pair<Key, Value> *&HashMap<Key, Value>::get_(const Key &key) const {
 	std::hash<Key> hash;
-	int index = hash(key) % capacity_;
+	int init = hash(key) % capacity_;
 
 	// quadratic probing
+	int index = init;
 	int i = 1;
 	while (table_[index] != nullptr && table_[index]->first != key) {
-		index = (index + i * i) % capacity_;
+		index = (init + i * i) % capacity_;
 		++i;
 	}
 
@@ -109,7 +111,7 @@ Value &HashMap<Key, Value>::operator[](const Key &key) {
 
 	if (element == nullptr) {
 		++size_;
-		if (lf_() > LF_CUTOFF) {
+		if (lf_() >= LF_CUTOFF) {
 			// first rehash, then rerun
 			rehash_();
 			return (*this)[key];

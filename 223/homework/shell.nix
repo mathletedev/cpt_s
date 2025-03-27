@@ -8,6 +8,7 @@ let
     fancyvrb
     hyperref
     minted
+    pgf
     pkgs.python3Packages.pygments
     upquote
   ]);

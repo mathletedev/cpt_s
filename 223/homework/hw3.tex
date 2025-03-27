@@ -1,6 +1,6 @@
 \documentclass[12pt]{article}
 \usepackage[fleqn]{amsmath}
-\usepackage{amsthm,amsfonts,amssymb,braket,enumitem,minted,hyperref,cleveref}
+\usepackage{amsthm,amsfonts,amssymb,braket,enumitem,minted,hyperref,cleveref,tikz}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}{Corollary}[theorem]
@@ -47,6 +47,29 @@
 
 \section{Problem 2}
 
+\begin{tikzpicture}[level distance=1.5cm,
+    level 1/.style={sibling distance=3cm},
+  level 2/.style={sibling distance=1.5cm}]
+  \node{C}
+  child{node{B}
+    child{node{A}}
+    child{node{I}
+      child{node{K}
+        child{node{L}}
+        child{node{M}}
+      }
+      child{node{J}}
+    }
+  }
+  child{node{D}
+    child{node{H}}
+    child{node{E}
+      child{node{G}}
+      child{node{F}}
+    }
+  };
+\end{tikzpicture}
+
 \section{Problem 3}
 
 A tree with $n$ nodes has exactly $n - 1$ edges. This is because each
@@ -56,5 +79,323 @@ Another way to think about this is that a tree is an acyclic
 connected graph. There must be at least $n - 1$ edges in a connected
 graph. There also can't be more than $n - 1$ edges, since this would
 result in a cyclic graph due to the Pigeonhole Principle.
+
+\section{Problem 4}
+
+\begin{enumerate}[label=(\alph*)]
+  \item
+    \begin{enumerate}[label=(\alph*)]
+      \item
+        \begin{tikzpicture}[level distance=1cm,
+          baseline={([yshift=-1em] current bounding box.north)}]
+          \node{8}
+          child{node{7}
+            child{node{1}
+              child{node{}}
+              child{node{6}
+                child{node{2}
+                  child{node{}}
+                  child{node{3}
+                    child{node{}}
+                    child{node{5}
+                      child{node{4}}
+                      child{node{}}
+                    }
+                  }
+                }
+                child{node{}}
+              }
+            }
+            child{node{}}
+          }
+          child{node{}};
+        \end{tikzpicture}
+      \item
+        \begin{tikzpicture}[level distance=1cm,
+            level 1/.style={sibling distance=2cm},
+            level 2/.style={sibling distance=1cm},
+          baseline={([yshift=-1em] current bounding box.north)}]
+          \node{5}
+          child{node{3}
+            child{node{2}
+              child{node{1}}
+              child{node{}}
+            }
+            child{node{4}}
+          }
+          child{node{7}
+            child{node{6}}
+            child{node{8}}
+          };
+        \end{tikzpicture}
+    \end{enumerate}
+  \item The first tree is much taller than the second tree; it's a
+    degenerate binary tree, essentially a linked list. The second
+    tree is much more balanced, meaning operations would be more
+    efficient on it.
+\end{enumerate}
+
+\section{Problem 5}
+
+\subsection{(a)}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{7};
+    \end{tikzpicture}
+  \item
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{7}
+      child{node{5}}
+      child{node{}};
+    \end{tikzpicture}
+  \item
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{7}
+      child{node{5}
+        child{node{2}}
+        child{node{}}
+      }
+      child{node{}};
+    \end{tikzpicture}
+    Node 7 is unbalanced, LL case
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{5}
+      child{node{2}}
+      child{node{7}};
+    \end{tikzpicture}
+  \item
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{5}
+      child{node{2}
+        child{node{}}
+        child{node{4}}
+      }
+      child{node{7}};
+    \end{tikzpicture}
+  \item
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{5}
+      child{node{2}
+        child{node{}}
+        child{node{4}
+          child{node{3}}
+          child{node{}}
+        }
+      }
+      child{node{7}};
+    \end{tikzpicture}
+    Node 2 is unbalanced, RL case
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{5}
+      child{node{3}
+        child{node{2}}
+        child{node{4}}
+      }
+      child{node{7}};
+    \end{tikzpicture}
+  \item
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{5}
+      child{node{3}
+        child{node{2}
+          child{node{1}}
+          child{node{}}
+        }
+        child{node{4}}
+      }
+      child{node{7}};
+    \end{tikzpicture}
+    Node 5 is unbalanced, LL case
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{3}
+      child{node{2}
+        child{node{1}}
+        child{node{}}
+      }
+      child{node{5}
+        child{node{4}}
+        child{node{7}}
+      };
+    \end{tikzpicture}
+\end{enumerate}
+
+\subsection{(b)}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{2};
+    \end{tikzpicture}
+  \item
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{2}
+      child{node{1}}
+      child{node{}};
+    \end{tikzpicture}
+  \item
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{2}
+      child{node{1}}
+      child{node{4}};
+    \end{tikzpicture}
+  \item
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{2}
+      child{node{1}}
+      child{node{4}
+        child{node{}}
+        child{node{5}}
+      };
+    \end{tikzpicture}
+  \item
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{2}
+      child{node{1}}
+      child{node{4}
+        child{node{}}
+        child{node{5}
+          child{node{}}
+          child{node{9}}
+        }
+      };
+    \end{tikzpicture}
+    Node 4 is unbalanced, RR case
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{2}
+      child{node{1}}
+      child{node{5}
+        child{node{4}}
+        child{node{9}}
+      };
+    \end{tikzpicture}
+  \item
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{2}
+      child{node{1}}
+      child{node{5}
+        child{node{4}
+          child{node{3}}
+          child{node{}}
+        }
+        child{node{9}}
+      };
+    \end{tikzpicture}
+    Node 2 is unbalanced, RL case
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{4}
+      child{node{2}
+        child{node{1}}
+        child{node{3}}
+      }
+      child{node{5}
+        child{node{}}
+        child{node{9}}
+      };
+    \end{tikzpicture}
+  \item
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{4}
+      child{node{2}
+        child{node{1}}
+        child{node{3}}
+      }
+      child{node{5}
+        child{node{}}
+        child{node{9}
+          child{node{6}}
+          child{node{}}
+        }
+      };
+    \end{tikzpicture}
+    Node 5 is unbalanced, RL case
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{4}
+      child{node{2}
+        child{node{1}}
+        child{node{3}}
+      }
+      child{node{6}
+        child{node{5}}
+        child{node{9}}
+      };
+    \end{tikzpicture}
+  \item
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=1cm},
+      baseline={([yshift=-1em] current bounding box.north)}]
+      \node{4}
+      child{node{2}
+        child{node{1}}
+        child{node{3}}
+      }
+      child{node{6}
+        child{node{5}}
+        child{node{9}
+          child{node{7}}
+          child{node{}}
+        }
+      };
+    \end{tikzpicture}
+\end{enumerate}
 
 \end{document}

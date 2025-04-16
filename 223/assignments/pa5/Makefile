@@ -12,5 +12,8 @@ build:
 exec:
 	@./main
 
+test:
+	@./main --test
+
 debug:
 	@gdb ./main

@@ -8,7 +8,16 @@ Product::Product(LinkedList<std::string> cols) {
 	category = cols.pop_front();
 	upc_ean_code = cols.pop_front();
 	list_price = cols.pop_front();
+
 	selling_price = cols.pop_front();
+	try {
+		// remove leading "$"
+		selling_price_f = std::stof(selling_price.substr(1));
+	} catch (...) {
+		// if unable to parse, sort element to the end
+		selling_price_f = -1;
+	}
+
 	quantity = cols.pop_front();
 	model_number = cols.pop_front();
 	about_product = cols.pop_front();

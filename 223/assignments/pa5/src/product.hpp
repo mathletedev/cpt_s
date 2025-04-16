@@ -13,6 +13,7 @@ class Product {
 		    dimensions, color, ingredients, direction_to_use,
 		    is_amazon_seller, size_quantity_variant,
 		    product_description;
+		float selling_price_f;
 
 		Product(LinkedList<std::string>);
 

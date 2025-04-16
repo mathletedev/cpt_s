@@ -78,6 +78,10 @@ class LinkedList {
 		LinkedList<T> &operator=(LinkedList<T> other);
 		template <typename U>
 		friend void swap(LinkedList<U> &a, LinkedList<U> &b);
+
+		template <typename U>
+		friend bool operator==(const LinkedList<U> &xs,
+				       const LinkedList<U> &ys);
 };
 
 template <typename T>
@@ -318,4 +322,22 @@ void swap(LinkedList<T> &a, LinkedList<T> &b) {
 	std::swap(a.p_head_, b.p_head_);
 	std::swap(a.p_tail_, b.p_tail_);
 	std::swap(a.length_, b.length_);
+}
+
+template <typename T>
+bool operator==(const LinkedList<T> &xs, const LinkedList<T> &ys) {
+	if (xs.length() != ys.length()) {
+		return false;
+	}
+
+	auto p_x = xs.p_head_;
+	auto p_y = ys.p_head_;
+	for (int i = 0; i < xs.length();
+	     ++i, p_x = p_x->p_next, p_y = p_y->p_next) {
+		if (p_x->data != p_y->data) {
+			return false;
+		}
+	}
+
+	return true;
 }

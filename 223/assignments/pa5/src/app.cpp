@@ -1,4 +1,5 @@
 #include "app.hpp"
+#include "sorting.hpp"
 #include "utils.hpp"
 #include <fstream>
 #include <iostream>
@@ -91,10 +92,35 @@ void App::list_inventory_(LinkedList<std::string> &args) {
 	bool asc = !args.elem("desc");
 	bool merge = args.elem("merge");
 
-	categories_[category].for_each([this](const std::string &id) {
+	auto cmp = [this, &asc](const std::string &id_x,
+				const std::string &id_y) {
+		float x = ids_[id_x]->selling_price_f;
+		float y = ids_[id_y]->selling_price_f;
+		if (x == -1) {
+			return false;
+		}
+		if (y == -1) {
+			return true;
+		}
+		if (asc) {
+			return x <= y;
+		}
+		return x >= y;
+	};
+
+	LinkedList<std::string> sorted;
+	if (merge) {
+		sorted =
+		    sorting::msort<std::string>(categories_[category], cmp);
+	} else {
+		sorted = categories_[category];
+	}
+
+	sorted.for_each([this](const std::string &id) {
 		std::shared_ptr<Product> p_product = ids_[id];
 		std::cout << p_product->uniq_id << " | "
-			  << p_product->product_name << std::endl;
+			  << p_product->product_name << " | "
+			  << p_product->selling_price << std::endl;
 	});
 }
 

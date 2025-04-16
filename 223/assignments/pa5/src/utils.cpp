@@ -13,6 +13,34 @@ LinkedList<std::string> utils::split(std::string input, std::string delimiter) {
 	return res;
 }
 
+LinkedList<std::string> utils::parse_args(const std::string &input) {
+	LinkedList<std::string> res;
+	std::string curr;
+	// quoted args are treated as a single arg
+	bool in_quotes = false;
+
+	for (size_t i = 0; i < input.size(); ++i) {
+		char c = input[i];
+
+		if (c == '"') {
+			in_quotes = !in_quotes;
+			continue;
+		}
+
+		// space separated args
+		if (c == ' ' && !in_quotes) {
+			res.push_back(curr);
+			curr.clear();
+			continue;
+		}
+
+		curr += c;
+	}
+	res.push_back(curr);
+
+	return res;
+}
+
 LinkedList<std::string> utils::parse_csv(const std::string &input) {
 	LinkedList<std::string> res;
 	std::string curr;
@@ -34,6 +62,7 @@ LinkedList<std::string> utils::parse_csv(const std::string &input) {
 			continue;
 		}
 
+		// comma separated values
 		if (c == ',' && !in_quotes) {
 			res.push_back(curr);
 			curr.clear();

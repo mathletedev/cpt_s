@@ -23,7 +23,6 @@ class App {
 		void find_(LinkedList<std::string> &args);
 		void list_inventory_(LinkedList<std::string> &args);
 
-		LinkedList<std::string> split_(const std::string &) const;
 		bool valid_command_(const std::string &) const;
 
 		void bootstrap_();

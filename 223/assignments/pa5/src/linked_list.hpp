@@ -47,6 +47,11 @@ class LinkedList {
 		// removes the first element that satisfies the predicate
 		void remove(std::function<bool(const T &data)> const &f);
 
+		// returns a new list with the first n elements
+		LinkedList<T> take(int n) const;
+		// returns a new list with the last n elements
+		LinkedList<T> drop(int n) const;
+
 		// returns a new list with all elements that satisfy the
 		// predicate
 		LinkedList<T>
@@ -205,6 +210,35 @@ void LinkedList<T>::remove(const std::function<bool(const T &data)> &f) {
 	}
 
 	throw "item not found";
+}
+
+template <typename T>
+LinkedList<T> LinkedList<T>::take(int n) const {
+	assert(n <= length_);
+	LinkedList<T> res;
+
+	Node *p_curr = p_head_;
+	for (int i = 0; i < n; ++i, p_curr = p_curr->p_next) {
+		res.push_back(p_curr->data);
+	}
+
+	return res;
+}
+
+template <typename T>
+LinkedList<T> LinkedList<T>::drop(int n) const {
+	assert(n <= length_);
+	LinkedList<T> res;
+
+	Node *p_curr = p_head_;
+	// skip first n elements
+	for (int i = 0; i < n; ++i, p_curr = p_curr->p_next) {
+	}
+	for (; p_curr != nullptr; p_curr = p_curr->p_next) {
+		res.push_back(p_curr->data);
+	}
+
+	return res;
 }
 
 template <typename T>

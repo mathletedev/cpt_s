@@ -73,41 +73,29 @@ void App::find_(LinkedList<std::string> &args) {
 }
 
 void App::list_inventory_(LinkedList<std::string> &args) {
-	// join args with spaces
-	std::string category = args.foldr<std::string>(
-	    [](std::string prev, const std::string &curr) {
-		    return prev.empty() ? curr : prev + " " + curr;
-	    },
-	    "");
+	// join args with spaces (for pa4)
+	// std::string category = args.foldr<std::string>(
+	//     [](std::string prev, const std::string &curr) {
+	// 	    return prev.empty() ? curr : prev + " " + curr;
+	//     },
+	//     "");
+
+	// now args use quotes (for pa5)
+	std::string category = args.pop_front();
 
 	if (!categories_.contains(category)) {
 		std::cout << "Invalid category" << std::endl;
 		return;
 	}
 
+	bool asc = !args.elem("desc");
+	bool merge = args.elem("merge");
+
 	categories_[category].for_each([this](const std::string &id) {
 		std::shared_ptr<Product> p_product = ids_[id];
 		std::cout << p_product->uniq_id << " | "
 			  << p_product->product_name << std::endl;
 	});
-}
-
-LinkedList<std::string> App::split_(const std::string &input) const {
-	LinkedList<std::string> res;
-
-	std::string curr;
-	for (char c : input) {
-		if (c == ' ') {
-			res.push_back(curr);
-			curr.clear();
-			continue;
-		}
-
-		curr += c;
-	}
-	res.push_back(curr);
-
-	return res;
 }
 
 bool App::valid_command_(const std::string &input) const {
@@ -119,7 +107,7 @@ void App::run_() {
 
 	std::cout << "> ";
 	while (std::getline(std::cin, input)) {
-		LinkedList<std::string> args = split_(input);
+		LinkedList<std::string> args = utils::parse_args(input);
 		std::string command_name = args.pop_front();
 		if (!valid_command_(command_name)) {
 			std::cout

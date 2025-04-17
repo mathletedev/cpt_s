@@ -107,14 +107,10 @@ void App::list_inventory_(LinkedList<std::string> &args) {
 		}
 		return x >= y;
 	};
+	auto sort_f =
+	    merge ? sorting::msort<std::string> : sorting::isort<std::string>;
 
-	LinkedList<std::string> sorted;
-	if (merge) {
-		sorted =
-		    sorting::msort<std::string>(categories_[category], cmp);
-	} else {
-		sorted = categories_[category];
-	}
+	LinkedList<std::string> sorted = sort_f(categories_[category], cmp);
 
 	sorted.for_each([this](const std::string &id) {
 		std::shared_ptr<Product> p_product = ids_[id];

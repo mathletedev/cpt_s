@@ -7,7 +7,12 @@ namespace sorting {
 	// merge sort
 	template <typename T>
 	LinkedList<T>
-	msort(LinkedList<T> const &list,
+	msort(LinkedList<T> const &xs,
+	      std::function<bool(const T &x, const T &y)> const &f);
+	// insert sort
+	template <typename T>
+	LinkedList<T>
+	isort(LinkedList<T> const &xs,
 	      std::function<bool(const T &x, const T &y)> const &f);
 } // namespace sorting
 
@@ -35,13 +40,22 @@ LinkedList<T> merge(LinkedList<T> const &xs, LinkedList<T> const &ys,
 
 template <typename T>
 LinkedList<T>
-sorting::msort(LinkedList<T> const &list,
+sorting::msort(LinkedList<T> const &xs,
 	       std::function<bool(const T &x, const T &y)> const &f) {
-	if (list.length() <= 1) {
-		return list;
+	if (xs.length() <= 1) {
+		return xs;
 	}
 
-	LinkedList<T> left = list.take(list.length() / 2);
-	LinkedList<T> right = list.drop(list.length() / 2);
+	LinkedList<T> left = xs.take(xs.length() / 2);
+	LinkedList<T> right = xs.drop(xs.length() / 2);
 	return merge(msort(left, f), msort(right, f), f);
+}
+
+template <typename T>
+LinkedList<T>
+sorting::isort(LinkedList<T> const &xs,
+	       std::function<bool(const T &x, const T &y)> const &f) {
+	LinkedList<T> res = xs;
+	res.isort(f);
+	return res;
 }

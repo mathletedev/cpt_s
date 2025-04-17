@@ -74,6 +74,11 @@ class LinkedList {
 		// prints each element of the list to stdout
 		void display() const;
 
+		// mutable insertion sort (tied to class because it requires
+		// access to pointers)
+		void
+		isort(std::function<bool(const T &x, const T &y)> const &f);
+
 		// https://stackoverflow.com/a/3279550/14946864
 		LinkedList<T> &operator=(LinkedList<T> other);
 		template <typename U>
@@ -89,8 +94,7 @@ LinkedList<T>::LinkedList(const LinkedList<T> &other) {
 	p_head_ = p_tail_ = nullptr;
 	length_ = 0;
 
-	for (Node *p_curr = other.p_head_; p_curr != nullptr;
-	     p_curr = p_curr->p_next) {
+	for (Node *p_curr = other.p_head_; p_curr; p_curr = p_curr->p_next) {
 		push_back(p_curr->data);
 	}
 }
@@ -112,8 +116,7 @@ LinkedList<T>::~LinkedList() {
 
 template <typename T>
 void LinkedList<T>::clear() {
-	for (Node *p_curr = p_head_, *p_next; p_curr != nullptr;
-	     p_curr = p_next) {
+	for (Node *p_curr = p_head_, *p_next; p_curr; p_curr = p_next) {
 		p_next = p_curr->p_next;
 		delete p_curr;
 	}
@@ -125,8 +128,7 @@ void LinkedList<T>::clear() {
 template <typename T>
 const T &LinkedList<T>::nth(int n) const {
 	int i = 0;
-	for (Node *p_curr = p_head_; p_curr != nullptr;
-	     p_curr = p_curr->p_next, ++i) {
+	for (Node *p_curr = p_head_; p_curr; p_curr = p_curr->p_next, ++i) {
 		if (i == n) {
 			return p_curr->data;
 		}
@@ -139,7 +141,7 @@ template <typename T>
 void LinkedList<T>::push_front(const T &data) {
 	Node *p_node = new Node(data);
 
-	if (p_head_ == nullptr) {
+	if (!p_head_) {
 		p_head_ = p_tail_ = p_node;
 		length_ = 1;
 		return;
@@ -154,7 +156,7 @@ template <typename T>
 void LinkedList<T>::push_back(const T &data) {
 	Node *p_node = new Node(data);
 
-	if (p_head_ == nullptr) {
+	if (!p_head_) {
 		p_head_ = p_tail_ = p_node;
 		length_ = 1;
 		return;
@@ -167,7 +169,7 @@ void LinkedList<T>::push_back(const T &data) {
 
 template <typename T>
 T LinkedList<T>::pop_front() {
-	assert(p_head_ != nullptr);
+	assert(p_head_);
 
 	T data = p_head_->data;
 
@@ -181,7 +183,7 @@ T LinkedList<T>::pop_front() {
 
 template <typename T>
 void LinkedList<T>::remove(const std::function<bool(const T &data)> &f) {
-	if (p_head_ == nullptr) {
+	if (!p_head_) {
 		throw "list is empty";
 	}
 
@@ -197,8 +199,7 @@ void LinkedList<T>::remove(const std::function<bool(const T &data)> &f) {
 
 	for (Node *p_curr = p_head_;
 	     // look ahead "twice"
-	     p_curr != nullptr && p_curr->p_next != nullptr;
-	     p_curr = p_curr->p_next) {
+	     p_curr && p_curr->p_next; p_curr = p_curr->p_next) {
 		// use a predicate f to find node to remove
 		if (!f(p_curr->p_next->data)) {
 			continue;
@@ -238,7 +239,7 @@ LinkedList<T> LinkedList<T>::drop(int n) const {
 	// skip first n elements
 	for (int i = 0; i < n; ++i, p_curr = p_curr->p_next) {
 	}
-	for (; p_curr != nullptr; p_curr = p_curr->p_next) {
+	for (; p_curr; p_curr = p_curr->p_next) {
 		res.push_back(p_curr->data);
 	}
 
@@ -282,8 +283,7 @@ U LinkedList<T>::foldr(const std::function<U(U, const T &data)> &f,
 template <typename T>
 void LinkedList<T>::for_each(
     const std::function<void(const T &data)> &f) const {
-	for (Node *p_curr = p_head_; p_curr != nullptr;
-	     p_curr = p_curr->p_next) {
+	for (Node *p_curr = p_head_; p_curr; p_curr = p_curr->p_next) {
 		f(p_curr->data);
 	}
 }
@@ -308,6 +308,49 @@ bool LinkedList<T>::elem(const T &data) const {
 template <typename T>
 void LinkedList<T>::display() const {
 	for_each([](const T &data) { std::cout << data << std::endl; });
+}
+
+template <typename T>
+void LinkedList<T>::isort(
+    std::function<bool(const T &x, const T &y)> const &f) {
+	if (length() <= 1) {
+		return;
+	}
+
+	// new head of sorted list
+	Node *p_sorted = nullptr;
+
+	while (p_head_) {
+		// unsorted section of list
+		Node *p_curr = p_head_;
+		p_head_ = p_head_->p_next;
+
+		if (!p_sorted || f(p_curr->data, p_sorted->data)) {
+			// already found correct spot to insert
+			p_curr->p_next = p_sorted;
+			p_sorted = p_curr;
+			continue;
+		}
+
+		Node *p_tmp = p_sorted;
+		for (; p_tmp->p_next && !f(p_curr->data, p_tmp->p_next->data);
+		     p_tmp = p_tmp->p_next) {
+			// continue until f evaluates to true
+		}
+
+		p_curr->p_next = p_tmp->p_next;
+		p_tmp->p_next = p_curr;
+	}
+
+	// update head and tail
+	p_head_ = p_sorted;
+
+	p_tail_ = p_head_;
+	if (!p_tail_) {
+		return;
+	}
+	for (; p_tail_->p_next; p_tail_ = p_tail_->p_next) {
+	}
 }
 
 template <typename T>

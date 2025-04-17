@@ -13,13 +13,16 @@ make build
 
 # runs the application
 make exec
+
+# tests the sorting algorithms
+make test
 ```
 
 Note: `make data` pulls the CSV file from my personal Dropbox. Alternatively, download the dataset from [Kaggle](https://kaggle.com/datasets/promptcloud/amazon-product-dataset-2020) and move to `data/dataset.csv`.
 
 ## PA5 Notes
 
-Initially, I implemented `msort()` (merge sort) using immutable linked lists, but copying the list was expensive, resulting in a merge sort time complexity of $O(n^2)$. This meant `msort()` performed similarly (or even worse) than `isort()` (insertion sort).
+Initially, I implemented `msort()` (merge sort) using immutable linked lists, but copying the list was expensive, resulting in a merge sort time complexity of $O(n^2)$. This meant `msort()` performed similarly to (or even worse than) `isort()` (insertion sort).
 
 Therefore, I implemented `msort()` using a mutable linked list, and being able to directly mutate pointers allowed for $O(n \log n)$ time complexity. This became immediately apparent in the results below:
 - `isort()` slightly outperforms `msort()` for small lists (e.g. `> listInventory Toys`)
@@ -27,7 +30,7 @@ Therefore, I implemented `msort()` using a mutable linked list, and being able t
 - `msort()` drastically outperforms `isort()` for large lists (e.g. `> listInventory "Toys & Games"`)
     - `msort()` takes around 0.02s on average, whereas `isort()` takes around 1.9s on average.
 
-This shows how much better merge sort's `O(n \log n)` time complexity is necessary for large datasets, compared to insertion sort's `O(n^2)` time complexity.
+This shows how much better merge sort's $O(n \log n)$ time complexity is necessary for large datasets, compared to insertion sort's $O(n^2)$ time complexity.
 
 Sample REPL commands:
 

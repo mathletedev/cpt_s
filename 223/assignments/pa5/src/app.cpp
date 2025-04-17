@@ -1,6 +1,7 @@
 #include "app.hpp"
 // #include "sorting.hpp"
 #include "utils.hpp"
+#include <ctime>
 #include <fstream>
 #include <iostream>
 
@@ -27,14 +28,14 @@ void App::bootstrap_() {
 		LinkedList<std::string> cols = utils::parse_csv(line);
 		std::shared_ptr<Product> p_product =
 		    std::make_shared<Product>(cols);
-		std::string id = p_product->uniq_id;
+		std::string id = p_product->id();
 
 		// insert into ids_
 		ids_[id] = p_product;
 
 		// insert into categories_
 		LinkedList<std::string> categories =
-		    utils::split(p_product->category, " | ");
+		    utils::split(p_product->category(), " | ");
 		if (categories.length() > 0) {
 			categories.for_each(
 			    [this, &id](const std::string &category) {
@@ -86,7 +87,7 @@ void App::list_inventory_(LinkedList<std::string> &args) {
 	std::string category = args.pop_front();
 
 	if (!categories_.contains(category)) {
-		std::cout << "Invalid category" << std::endl;
+		std::cout << "[ERR] Invalid category" << std::endl;
 		return;
 	}
 
@@ -95,8 +96,8 @@ void App::list_inventory_(LinkedList<std::string> &args) {
 
 	auto cmp = [this, &asc](const std::string &id_x,
 				const std::string &id_y) {
-		float x = ids_[id_x]->selling_price_f;
-		float y = ids_[id_y]->selling_price_f;
+		float x = ids_[id_x]->price();
+		float y = ids_[id_y]->price();
 		if (x == -1) {
 			return false;
 		}
@@ -114,18 +115,24 @@ void App::list_inventory_(LinkedList<std::string> &args) {
 	//     sorting::isort<std::string>;
 
 	LinkedList<std::string> sorted = categories_[category];
+
+	// performance analysis by time
+	clock_t start = clock();
 	if (merge) {
 		sorted.msort(cmp);
 	} else {
 		sorted.isort(cmp);
 	}
+	clock_t end = clock();
+	double elapsed_secs = double(end - start) / CLOCKS_PER_SEC;
 
 	sorted.for_each([this](const std::string &id) {
 		std::shared_ptr<Product> p_product = ids_[id];
-		std::cout << p_product->uniq_id << " | "
-			  << p_product->product_name << " | "
-			  << p_product->selling_price << std::endl;
+		std::cout << p_product->id() << " | " << p_product->name()
+			  << " | " << p_product->price_s() << std::endl;
 	});
+
+	std::cout << "[INFO] Took " << elapsed_secs << "s" << std::endl;
 }
 
 bool App::valid_command_(const std::string &input) const {
@@ -140,10 +147,10 @@ void App::run_() {
 		LinkedList<std::string> args = utils::parse_args(input);
 		std::string command_name = args.pop_front();
 		if (!valid_command_(command_name)) {
-			std::cout
-			    << "Command not supported. Enter \"help\" for "
-			       "list of supported commands."
-			    << std::endl;
+			std::cout << "[ERR] Command not supported. Enter "
+				     "\"help\" for "
+				     "list of supported commands."
+				  << std::endl;
 
 			std::cout << "> ";
 			continue;

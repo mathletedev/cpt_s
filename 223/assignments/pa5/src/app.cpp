@@ -1,5 +1,5 @@
 #include "app.hpp"
-#include "sorting.hpp"
+// #include "sorting.hpp"
 #include "utils.hpp"
 #include <fstream>
 #include <iostream>
@@ -58,7 +58,8 @@ void App::help_() const {
 	std::cout << " 1. find <inventory_id> - Displays inventory details. If "
 		     "inventory doesn't exist, prints 'Inventory not found'."
 		  << std::endl;
-	std::cout << " 2. listInventory <category> - Lists the id and name of "
+	std::cout << " 2. listInventory <category> <merge?> <desc?> - Lists "
+		     "the id and name of "
 		     "all inventory belonging to the specified category. If "
 		     "category doesn't exist, prints 'Invalid category'."
 		  << std::endl;
@@ -107,10 +108,17 @@ void App::list_inventory_(LinkedList<std::string> &args) {
 		}
 		return x >= y;
 	};
-	auto sort_f =
-	    merge ? sorting::msort<std::string> : sorting::isort<std::string>;
+	// this uses sorting::msort(), which is sub-optimal
+	// auto sort_f =
+	//     merge ? sorting::msort<std::string> :
+	//     sorting::isort<std::string>;
 
-	LinkedList<std::string> sorted = sort_f(categories_[category], cmp);
+	LinkedList<std::string> sorted = categories_[category];
+	if (merge) {
+		sorted.msort(cmp);
+	} else {
+		sorted.isort(cmp);
+	}
 
 	sorted.for_each([this](const std::string &id) {
 		std::shared_ptr<Product> p_product = ids_[id];

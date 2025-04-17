@@ -3,6 +3,9 @@
 #include "linked_list.hpp"
 #include <functional>
 
+// WARN: msort() works; however, due to functional design, it runs in O(n^2)
+// time since drop() and take() are unoptimised
+// WARN: use LinkedList::msort() instead for O(n log n) time
 namespace sorting {
 	// merge sort
 	template <typename T>

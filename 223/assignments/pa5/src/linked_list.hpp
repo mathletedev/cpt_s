@@ -23,6 +23,21 @@ class LinkedList {
 		Node *p_tail_;
 		int length_;
 
+		// sets p_tail_ to end of list
+		void reset_tail_();
+
+		// mutable split using tortoise and hare; puts first half in xs
+		// and second half in ys
+		void split_(Node *p_xs, Node *&p_ys, Node *&p_zs);
+		// mutable merge using pointers
+		Node *
+		merge_(Node *p_xs, Node *p_ys,
+		       std::function<bool(const T &x, const T &y)> const &f);
+		// helper function for msort
+		Node *
+		msort_(Node *p_xs,
+		       std::function<bool(const T &x, const T &y)> const &f);
+
 	public:
 		LinkedList() : p_head_(nullptr), p_tail_(nullptr), length_(0) {}
 		LinkedList(const LinkedList<T> &other);
@@ -49,7 +64,7 @@ class LinkedList {
 
 		// returns a new list with the first n elements
 		LinkedList<T> take(int n) const;
-		// returns a new list with the last n elements
+		// returns a new list without the first n elements
 		LinkedList<T> drop(int n) const;
 
 		// returns a new list with all elements that satisfy the
@@ -74,8 +89,10 @@ class LinkedList {
 		// prints each element of the list to stdout
 		void display() const;
 
-		// mutable insertion sort (tied to class because it requires
-		// access to pointers)
+		// mutable merge sort (requires access to pointers)
+		void
+		msort(std::function<bool(const T &x, const T &y)> const &f);
+		// mutable insertion sort (requires access to pointers)
 		void
 		isort(std::function<bool(const T &x, const T &y)> const &f);
 
@@ -88,6 +105,76 @@ class LinkedList {
 		friend bool operator==(const LinkedList<U> &xs,
 				       const LinkedList<U> &ys);
 };
+
+template <typename T>
+void LinkedList<T>::reset_tail_() {
+	p_tail_ = p_head_;
+	if (!p_tail_) {
+		return;
+	}
+	for (; p_tail_->p_next; p_tail_ = p_tail_->p_next) {
+	}
+}
+
+template <typename T>
+void LinkedList<T>::split_(Node *p_xs, Node *&p_ys, Node *&p_zs) {
+	if (!p_xs || !p_xs->p_next) {
+		p_ys = p_xs;
+		p_zs = nullptr;
+		return;
+	}
+
+	// tortoise travels half as fast as hare, so it will split list in half
+	Node *p_tortoise = p_xs, *p_hare = p_xs->p_next;
+
+	while (p_hare && p_hare->p_next) {
+		// hare travels twice as fast as tortoise
+		p_hare = p_hare->p_next->p_next;
+		p_tortoise = p_tortoise->p_next;
+	}
+
+	p_ys = p_xs;
+	p_zs = p_tortoise->p_next;
+	p_tortoise->p_next = nullptr;
+}
+
+template <typename T>
+typename LinkedList<T>::Node *
+LinkedList<T>::merge_(Node *p_xs, Node *p_ys,
+		      std::function<bool(const T &x, const T &y)> const &f) {
+	// return other list if empty
+	if (!p_xs) {
+		return p_ys;
+	}
+	if (!p_ys) {
+		return p_xs;
+	}
+
+	if (f(p_xs->data, p_ys->data)) {
+		// take first element and append rest
+		p_xs->p_next = merge_(p_xs->p_next, p_ys, f);
+		return p_xs;
+	}
+	p_ys->p_next = merge_(p_xs, p_ys->p_next, f);
+	return p_ys;
+}
+
+template <typename T>
+typename LinkedList<T>::Node *
+LinkedList<T>::msort_(Node *p_xs,
+		      std::function<bool(const T &x, const T &y)> const &f) {
+	if (!p_xs || !p_xs->p_next) {
+		return p_xs;
+	}
+
+	Node *p_ys, *p_zs;
+	split_(p_xs, p_ys, p_zs);
+
+	p_ys = msort_(p_ys, f);
+	p_zs = msort_(p_zs, f);
+
+	return merge_(p_ys, p_zs, f);
+}
 
 template <typename T>
 LinkedList<T>::LinkedList(const LinkedList<T> &other) {
@@ -311,6 +398,13 @@ void LinkedList<T>::display() const {
 }
 
 template <typename T>
+void LinkedList<T>::msort(
+    std::function<bool(const T &x, const T &y)> const &f) {
+	p_head_ = msort_(p_head_, f);
+	reset_tail_();
+}
+
+template <typename T>
 void LinkedList<T>::isort(
     std::function<bool(const T &x, const T &y)> const &f) {
 	if (length() <= 1) {
@@ -344,13 +438,7 @@ void LinkedList<T>::isort(
 
 	// update head and tail
 	p_head_ = p_sorted;
-
-	p_tail_ = p_head_;
-	if (!p_tail_) {
-		return;
-	}
-	for (; p_tail_->p_next; p_tail_ = p_tail_->p_next) {
-	}
+	reset_tail_();
 }
 
 template <typename T>

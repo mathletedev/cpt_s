@@ -19,10 +19,27 @@ Note: `make data` pulls the CSV file from my personal Dropbox. Alternatively, do
 
 ## PA5 Notes
 
+Initially, I implemented `msort()` (merge sort) using immutable linked lists, but copying the list was expensive, resulting in a merge sort time complexity of $O(n^2)$. This meant `msort()` performed similarly (or even worse) than `isort()` (insertion sort).
+
+Therefore, I implemented `msort()` using a mutable linked list, and being able to directly mutate pointers allowed for $O(n \log n)$ time complexity. This became immediately apparent in the results below:
+- `isort()` slightly outperforms `msort()` for small lists (e.g. `> listInventory Toys`)
+    - However, the difference is on the scale of microseconds, and is thus negligible
+- `msort()` drastically outperforms `isort()` for large lists (e.g. `> listInventory "Toys & Games"`)
+    - `msort()` takes around 0.02s on average, whereas `isort()` takes around 1.9s on average.
+
+This shows how much better merge sort's `O(n \log n)` time complexity is necessary for large datasets, compared to insertion sort's `O(n^2)` time complexity.
 
 Sample REPL commands:
 
 ```
+> listInventory "Arts & Crafts"
+69fa660abe76a3279733a88b0279e6af | Paper House Productions STM-0013E STM-0013 Unicorn Micro Stickers, 3-pack, Multi 3 Piece | $0.51
+e7ef999c9950e17a5c9356da9d314047 | Crayola Nontoxic Anti-Dust Chalk, White, 12 Sticks/Box (50-1402) | $1.28
+f6c679f8efe9dd23e8c9e2d73f017e73 | Trends International Emoji - Pop Up Stickers | $1.77
+1d00635a17641f25399117fe8107a0f5 | STAEDTLER EF8030-5 Fimo Kids Oven-Bake Modeling Clay, 1.5 oz, Green | $1.80
+2e2d46cee23bf6e46bcfc3202be60176 | Sticko 450188 Stickers, Shimmery Stars | $1.89
+d481dd3a2d7468b91000e21b53828a92 | me & my BIG ideas LABS-37 Stickers, Rose Gold | $1.99
+...
 > listInventory "Sports & Outdoors" merge desc
 e6cbd717f1a76dd5ce59e3a966de88ed | Playcraft Woodbridge Shuffleboard Table | $895.00 - $2,497.50
 ad325dc0fd9634c4e1e5aa3aa9dc134c | Barrington Collection Shuffleboard Table - Available in Multiple Styles | $895.00

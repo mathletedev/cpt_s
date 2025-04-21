@@ -3,3 +3,6 @@ build:
 
 exec:
 	@./main
+
+nc:
+	@nc localhost 8080

@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
 
 		tcp::resolver resolver(io_context);
 		tcp::resolver::results_type endpoints =
-		    resolver.resolve(argv[1], "daytime");
+		    resolver.resolve(argv[1], "8080");
 
 		tcp::socket socket(io_context);
 		boost::asio::connect(socket, endpoints);

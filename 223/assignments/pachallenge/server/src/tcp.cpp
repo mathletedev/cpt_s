@@ -6,17 +6,17 @@ void TCPConnection::handle_read_() {
 	// capture self to keep alive during async operations
 	auto self(shared_from_this());
 	socket_.async_read_some(
-	    boost::asio::buffer(data_, MAX_LENGTH),
-	    [this, self](const boost::system::error_code &ec, size_t length) {
+	    asio::buffer(buf_, BUF_SIZE),
+	    [this, self](const boost::system::error_code &ec, size_t len) {
 		    if (ec) {
 			    std::cerr << ec.message() << std::endl;
 			    return;
 		    }
 
-		    std::string received(data_, length);
+		    std::string received(buf_, len);
 
 		    try {
-			    server_.handle_request(received);
+			    server_.handle_request(received, self);
 		    } catch (std::runtime_error &status_code) {
 			    send(status_code.what());
 		    }
@@ -28,8 +28,8 @@ void TCPConnection::handle_read_() {
 
 void TCPConnection::send(const std::string &message) {
 	auto self(shared_from_this());
-	boost::asio::async_write(
-	    socket_, boost::asio::buffer(message + "\n"),
+	asio::async_write(
+	    socket_, asio::buffer(message + "\n"),
 	    [this, self](const boost::system::error_code &ec, std::size_t) {
 		    if (ec) {
 			    std::cerr << ec.message() << std::endl;
@@ -44,7 +44,7 @@ void TCPServer::start_accept_() {
 	acceptor_.async_accept(new_connection->socket(),
 			       std::bind(&TCPServer::handle_accept_, this,
 					 new_connection,
-					 boost::asio::placeholders::error));
+					 asio::placeholders::error));
 }
 
 void TCPServer::handle_accept_(TCPConnection::Pointer new_connection,

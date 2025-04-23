@@ -1,15 +1,14 @@
 #include "server.hpp"
 #include "tcp.hpp"
 #include <boost/asio.hpp>
-#include <boost/uuid.hpp>
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
 #include <thread>
 
-using namespace boost::asio;
+namespace asio = boost::asio;
 
-#define DEFAULT_PORT 8080
+constexpr uint16_t DEFAULT_PORT = 8080;
 
 int main() {
 	char *port_cstr = std::getenv("PORT");
@@ -19,11 +18,11 @@ int main() {
 	// run sender on a separate thread
 	std::thread sender(&Server::run_sender, &server);
 
-	boost::asio::io_context io_context;
+	asio::io_context io_context;
 	TCPServer tcp_server(io_context, port, server);
 
 	// graceful shutdown
-	boost::asio::signal_set signals(io_context, SIGINT, SIGTERM);
+	asio::signal_set signals(io_context, SIGINT, SIGTERM);
 	signals.async_wait([&](auto, auto) {
 		std::cout << "Server shutting down..." << std::endl;
 		server.stop();

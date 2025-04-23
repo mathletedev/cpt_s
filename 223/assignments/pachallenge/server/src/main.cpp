@@ -7,6 +7,8 @@
 #include <iostream>
 #include <thread>
 
+using namespace boost::asio;
+
 #define DEFAULT_PORT 8080
 
 int main() {

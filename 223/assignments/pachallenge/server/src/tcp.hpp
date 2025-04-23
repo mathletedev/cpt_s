@@ -11,20 +11,25 @@ using boost::asio::ip::tcp;
 
 const unsigned int MAX_LENGTH = 1024;
 
+class Server;
+
 class TCPConnection : public std::enable_shared_from_this<TCPConnection> {
 	private:
 		tcp::socket socket_;
+		Server &server_;
 		char data_[MAX_LENGTH];
 
-		TCPConnection(boost::asio::io_context &io_context)
-		    : socket_(io_context) {}
+		TCPConnection(boost::asio::io_context &io_context,
+			      Server &server)
+		    : socket_(io_context), server_(server) {}
 
 		void handle_read_();
 
 	public:
 		typedef std::shared_ptr<TCPConnection> Pointer;
-		static Pointer create(boost::asio::io_context &io_context) {
-			return Pointer(new TCPConnection(io_context));
+		static Pointer create(boost::asio::io_context &io_context,
+				      Server &server) {
+			return Pointer(new TCPConnection(io_context, server));
 		}
 
 		tcp::socket &socket() {
@@ -36,11 +41,10 @@ class TCPConnection : public std::enable_shared_from_this<TCPConnection> {
 		}
 };
 
-class Server;
-
 class TCPServer {
 	private:
 		boost::asio::io_context &io_context_;
+		Server &server_;
 		tcp::acceptor acceptor_;
 
 		void start_accept_();
@@ -50,7 +54,7 @@ class TCPServer {
 	public:
 		TCPServer(boost::asio::io_context &io_context, uint16_t port,
 			  Server &server)
-		    : io_context_(io_context),
+		    : io_context_(io_context), server_(server),
 		      acceptor_(io_context, tcp::endpoint(tcp::v4(), port)) {
 			start_accept_();
 		}

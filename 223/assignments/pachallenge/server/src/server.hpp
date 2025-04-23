@@ -1,6 +1,7 @@
 #pragma once
 
 #include "tcp.hpp"
+#include "types.hpp"
 #include <atomic>
 #include <boost/asio.hpp>
 #include <boost/uuid.hpp>
@@ -11,21 +12,6 @@
 #include <mutex>
 #include <queue>
 #include <string>
-
-struct Message {
-		boost::uuids::uuid to_id;
-		std::string content;
-		int priority;
-
-		bool operator<(const Message &other) const {
-			return priority < other.priority;
-		}
-};
-
-struct Topic {
-		boost::uuids::uuid owner;
-		std::vector<boost::uuids::uuid> subscribers;
-};
 
 class TCPConnection;
 
@@ -40,9 +26,16 @@ class Server {
 		std::priority_queue<Message> messages_;
 
 	public:
-		void publish(const std::string &topic,
-			     const boost::uuids::uuid &client_id,
+		void create_topic(const boost::uuids::uuid &client_id,
+				  const std::string &topic);
+		void publish(const boost::uuids::uuid &client_id,
+			     const std::string &topic,
 			     const std::string &message);
+		void subscribe(const boost::uuids::uuid &client_id,
+			       const std::string &topic);
+
+		void handle_request(std::string &req);
+
 		void run_sender();
 		void stop();
 };

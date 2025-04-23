@@ -14,7 +14,12 @@ void TCPConnection::handle_read_() {
 		    }
 
 		    std::string received(data_, length);
-		    std::cout << received << std::endl;
+
+		    try {
+			    server_.handle_request(received);
+		    } catch (std::runtime_error &status_code) {
+			    send(status_code.what());
+		    }
 
 		    // loop back unto itself
 		    handle_read_();
@@ -24,7 +29,7 @@ void TCPConnection::handle_read_() {
 void TCPConnection::send(const std::string &message) {
 	auto self(shared_from_this());
 	boost::asio::async_write(
-	    socket_, boost::asio::buffer(message),
+	    socket_, boost::asio::buffer(message + "\n"),
 	    [this, self](const boost::system::error_code &ec, std::size_t) {
 		    if (ec) {
 			    std::cerr << ec.message() << std::endl;
@@ -34,7 +39,7 @@ void TCPConnection::send(const std::string &message) {
 
 void TCPServer::start_accept_() {
 	TCPConnection::Pointer new_connection =
-	    TCPConnection::create(io_context_);
+	    TCPConnection::create(io_context_, server_);
 
 	acceptor_.async_accept(new_connection->socket(),
 			       std::bind(&TCPServer::handle_accept_, this,

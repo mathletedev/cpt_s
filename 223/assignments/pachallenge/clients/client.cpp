@@ -7,7 +7,7 @@ void Client::run_receiver() {
 		size_t len = socket_.read_some(asio::buffer(buf_, BUF_SIZE));
 		std::string message(buf_, len);
 
-		std::cout << message << std::endl;
+		std::cout << "Message received: " << message;
 	}
 }
 

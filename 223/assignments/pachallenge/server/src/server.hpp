@@ -7,11 +7,11 @@
 #include <boost/uuid.hpp>
 #include <condition_variable>
 #include <ctime>
-#include <map>
 #include <memory>
 #include <mutex>
 #include <queue>
 #include <string>
+#include <unordered_map>
 
 namespace uuids = boost::uuids;
 
@@ -22,8 +22,9 @@ class Server {
 		std::mutex mutex_;
 		std::condition_variable cv_;
 		std::atomic<bool> running_;
-		std::map<uuids::uuid, std::shared_ptr<TCPConnection>> clients_;
-		std::map<std::string, std::shared_ptr<Topic>> topics_;
+		std::unordered_map<uuids::uuid, std::shared_ptr<TCPConnection>>
+		    clients_;
+		std::unordered_map<std::string, std::shared_ptr<Topic>> topics_;
 		std::priority_queue<Message> messages_;
 
 	public:

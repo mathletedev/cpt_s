@@ -25,7 +25,7 @@ int main() {
 	json::object req2;
 	req2["method"] = "PUBLISH";
 	req2["topic"] = "Emergency";
-	req2["message"] = "Snoqualmie Closed";
+	req2["message"] = "Snoqualmie Pass closed";
 	client.send(req2);
 
 	receiver.join();

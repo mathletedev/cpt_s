@@ -20,8 +20,9 @@ void Server::create_topic(const uuids::uuid &client_id,
 
 void Server::publish(const uuids::uuid &client_id, const std::string &topic,
 		     const std::string &message) {
-	std::cout << "Message published by Client A, forwarding to subscribers"
-		  << std::endl;
+	std::cout
+	    << "Message published by Client A, forwarding to subscribers..."
+	    << std::endl;
 
 	std::lock_guard<std::mutex> lock(mutex_);
 

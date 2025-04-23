@@ -16,7 +16,7 @@
     - `server` forwards message to "Emergency" subscribers (prints "Message published by Client A, forwarding to subscribers...")
     - Terminals 3 & 4 print "Message received: Snoqualmie Pass closed"
 
-## Works Cited
+## References
 
 - [Boost Asio](https://boost.org/doc/libs/1_87_0/doc/html/boost_asio/tutorial.html): TCP connections
 - [Boost JSON](https://boost.org/doc/libs/1_87_0/libs/json/doc/html/index.html): Structured requests

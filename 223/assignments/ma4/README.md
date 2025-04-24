@@ -27,7 +27,7 @@ However, it was interesting that shell sort outperformed heap sort, even with a 
 
 In order of best to worst performance (lowest to highest average time):
 
-1. `A108870` (Tokuda): $\left\lceil \frac{1}{5} * (9 * \frac{9}{4}^(k - 1) - 4) \right\rceil$
+1. `A108870` (Tokuda): $\left\lceil \dfrac{1}{5} * \left( 9 \cdot \dfrac{9}{4}^{k - 1} - 4 \right) \right\rceil$
 2. `A003462` (Knuth): $\dfrac{3^k - 1}{2}$
 3. `A000225` (Hibbard): $2^k - 1$
 

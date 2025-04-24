@@ -91,6 +91,25 @@ namespace gapSequence {
 		std::reverse(res.begin(), res.end());
 		return res;
 	}
+	std::vector<size_t> A108870(int N) {
+		std::vector<size_t> res;
+
+		int k = 0;
+		while (true) {
+			// ceil(1/5 * (9 * (9/4)^(k - 1) - 4))
+			int x = std::ceil(0.2 *
+					  (9 * std::pow(9.0 / 4.0, k - 1) - 4));
+			if (x >= N) {
+				break;
+			}
+
+			res.push_back(x);
+			++k;
+		}
+
+		std::reverse(res.begin(), res.end());
+		return res;
+	}
 } // namespace gapSequence
 
 void shellSort(std::vector<int> &arr, std::vector<size_t> &gaps) {
@@ -207,11 +226,15 @@ int main() {
 	// generate gap sequence to not be included in the benchmark
 	auto gaps0 = gapSequence::A000225(N);
 	auto shellSort0 = std::bind(shellSort, std::placeholders::_1, gaps0);
-	benchmark(shellSort0, "Shell Sort (A000225)");
+	benchmark(shellSort0, "Shell Sort (A000225 / Hibbard)");
 
 	auto gaps1 = gapSequence::A003462(N);
 	auto shellSort1 = std::bind(shellSort, std::placeholders::_1, gaps1);
-	benchmark(shellSort0, "Shell Sort (A003462)");
+	benchmark(shellSort1, "Shell Sort (A003462 / Knuth)");
+
+	auto gaps2 = gapSequence::A108870(N);
+	auto shellSort2 = std::bind(shellSort, std::placeholders::_1, gaps2);
+	benchmark(shellSort2, "Shell Sort (A003462 / Tokuda)");
 
 	benchmark(heapSort, "Heap Sort");
 

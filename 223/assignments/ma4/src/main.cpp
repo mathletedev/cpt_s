@@ -114,6 +114,7 @@ namespace gapSequence {
 
 void shellSort(std::vector<int> &arr, std::vector<size_t> &gaps) {
 	for (size_t gap : gaps) {
+		// exact same code as insertion sort, but now with gaps
 		for (size_t i = gap; i < arr.size(); ++i) {
 			int key = arr[i];
 			size_t j = i;

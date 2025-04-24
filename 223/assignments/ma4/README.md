@@ -36,6 +36,9 @@ I ended up choosing Tokuda's sequence because it almost always outperformed the 
 ## Screenshots
 
 ![insertion_sort](screenshots/insertion_sort.png)
+
 ![quick_sort](screenshots/quick_sort.png)
+
 ![shell_sort](screenshots/shell_sort.png)
+
 ![heap_sort](screenshots/heap_sort.png)

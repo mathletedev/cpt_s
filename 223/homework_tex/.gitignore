@@ -1,0 +1,9 @@
+*.aux
+*.pyg
+*.out
+*.pdf
+*.log
+
+/_minted*/
+
+/.direnv/

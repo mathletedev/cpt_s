@@ -8,7 +8,7 @@
 - The 3 clients are all located under `clients/`. They all import `clients/client.hpp`, which includes common methods. Each directory `clients/client_*/` contains a Makefile, per the instructions.
 - The server and the clients all use separate threads for sending and receiving messages.
 - The server uses a priority queue to prioritise important messages.
-- The list of topics and subscribers are combined into a single `std::unordered_map`, with pointers to `Topic` structs containing all information. I made this decision to reduce complexity.
+- The list of topics and subscribers are combined into a single `std::unordered_map`, with pointers to `Topic` structs containing all information. I made this decision to reduce code complexity.
 
 ## Running
 
